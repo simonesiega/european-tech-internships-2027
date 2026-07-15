@@ -1,0 +1,85 @@
+schema_version: 1
+internship_keywords:
+  - intern
+  - internship
+  - internships
+  - summer internship
+  - industrial placement
+  - university placement
+  - co-op
+  - coop
+excluded_role_keywords:
+  - senior
+  - staff
+  - principal
+  - lead
+  - manager
+  - director
+  - head of
+  - vice president
+categories:
+  cybersecurity:
+    - application security
+    - cyber security
+    - cybersecurity
+    - information security
+    - security engineer
+  quantitative-development:
+    - quant developer
+    - quantitative developer
+    - quantitative research
+  embedded-systems:
+    - chip design
+    - electrical engineering
+    - embedded
+    - firmware
+    - hardware engineer
+    - hardware engineering
+    - robotics
+    - semiconductor
+    - silicon engineering
+    - systems programming
+  infrastructure:
+    - cloud
+    - devops
+    - infrastructure
+    - kubernetes
+    - platform engineer
+    - site reliability
+    - sre
+  data-engineering:
+    - analytics engineer
+    - data engineer
+    - data engineering
+    - data platform
+  data-science:
+    - data science
+    - data scientist
+  machine-learning:
+    - artificial intelligence
+    - computer vision
+    - deep learning
+    - machine learning
+    - ml engineer
+    - natural language processing
+  research-engineering:
+    - research engineer
+    - research intern
+    - research internship
+    - research scientist
+  software-engineering:
+    - backend
+    - developer tools
+    - frontend
+    - full stack
+    - full-stack
+    - mobile developer
+    - qa engineer
+    - quality assurance
+    - software
+    - software developer
+    - software engineer
+    - software engineering
+    - software test
+    - test automation
+    - web developer

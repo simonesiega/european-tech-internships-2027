@@ -1,0 +1,114 @@
+name: Collect internships
+
+on:
+  workflow_dispatch:
+    inputs:
+      open_pull_request:
+        description: "Open a pull request when README changes"
+        required: false
+        default: false
+        type: boolean
+      allow_state_rebuild:
+        description: "Allow rebuilding SQLite when cached state is incompatible"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: internship-collection
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  collect:
+    if: vars.LINKEDIN_CRAWL_AUTHORIZED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED: "true"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --frozen --dev
+
+      - name: Restore canonical SQLite state
+        id: db-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: data/internships.db
+          key: internship-db-${{ github.run_id }}
+          restore-keys: internship-db-
+
+      - name: Migrate database
+        shell: bash
+        run: |
+          if uv run internships db-upgrade; then
+            exit 0
+          fi
+          if [ "${{ inputs.allow_state_rebuild }}" = "true" ]; then
+            rm -f data/internships.db data/internships.db-*
+            uv run internships db-upgrade
+          else
+            echo "Migration failed; use allow_state_rebuild only after backing up state."
+            exit 1
+          fi
+
+      - name: Scrape, persist, and render README
+        shell: bash
+        run: |
+          set +e
+          uv run internships scrape
+          code=$?
+          set -e
+          if [ "$code" -eq 1 ] || [ "$code" -eq 3 ]; then
+            exit "$code"
+          fi
+          if [ "$code" -eq 2 ]; then
+            echo "Partial success: successful searches were persisted; failed searches changed nothing."
+          fi
+      - name: Validate database and README
+        run: uv run internships validate
+      - name: Checkpoint SQLite
+        run: uv run python -c "import sqlite3; db=sqlite3.connect('data/internships.db'); db.execute('PRAGMA wal_checkpoint(TRUNCATE)'); db.close()"
+
+      - name: Save canonical SQLite state
+        uses: actions/cache/save@v4
+        with:
+          path: data/internships.db
+          key: internship-db-${{ github.run_id }}
+      - name: Upload database backup and README
+        uses: actions/upload-artifact@v4
+        with:
+          name: internship-state-${{ github.run_id }}
+          retention-days: 30
+          path: |
+            data/internships.db
+            README.md
+
+      - name: Open README update pull request
+        if: inputs.open_pull_request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if git diff --quiet -- README.md; then
+            echo "No README changes."
+            exit 0
+          fi
+          branch="automated/readme-update-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add README.md
+          git commit -m "data: update internship table"
+          git push --set-upstream origin "$branch"
+          gh pr create --title "data: update internship table" \
+            --body "Validated LinkedIn → SQLite → README update from run ${GITHUB_RUN_ID}." \
+            --base main --head "$branch"
