@@ -20,7 +20,7 @@ dependencies = [
   "pydantic>=2.8.2,<3",
   "python-dotenv>=1.0.1,<2",
   "pyyaml>=6.0.2,<7",
-  "rich>=13.7.1,<15",
+  "rich>=15.0.0,<16",
   "sqlalchemy>=2.0.31,<3",
   "typer>=0.12.3,<1",
 ]
