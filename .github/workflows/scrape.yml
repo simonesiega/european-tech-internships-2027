@@ -40,7 +40,7 @@ jobs:
 
       - name: Restore canonical SQLite state
         id: db-cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: data/internships.db
           key: internship-db-${{ github.run_id }}
@@ -79,7 +79,7 @@ jobs:
         run: uv run python -c "import sqlite3; db=sqlite3.connect('data/internships.db'); db.execute('PRAGMA wal_checkpoint(TRUNCATE)'); db.close()"
 
       - name: Save canonical SQLite state
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: data/internships.db
           key: internship-db-${{ github.run_id }}
