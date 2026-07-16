@@ -1,0 +1,26 @@
+@layer components {
+  .site-shell {
+    display: flex;
+    width: min(100% - 40px, 1376px);
+    min-height: 100svh;
+    margin: 0 auto;
+    padding-top: 72px;
+    flex-direction: column;
+  }
+
+  .site-shell > main {
+    flex: 1;
+  }
+
+  @media (max-width: 760px) {
+    .site-shell {
+      width: min(100% - 28px, 1376px);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .site-shell {
+      padding-top: 88px;
+    }
+  }
+}

@@ -1,0 +1,64 @@
+@layer components {
+  .opportunities {
+    padding: 44px 0 24px;
+  }
+
+  .directory-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .directory-heading h1 {
+    font-size: 26px;
+    font-weight: 650;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+  }
+
+  .directory-heading p {
+    margin-top: 7px;
+    color: var(--text-soft);
+    font-size: 14px;
+  }
+
+  .directory-count.ui-badge {
+    min-height: 32px;
+    gap: 6px;
+    padding: 0 10px;
+    border-radius: 6px;
+  }
+
+  .directory-count strong {
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .directory-count span {
+    color: var(--text-soft);
+    font-size: 11px;
+  }
+
+  @media (max-width: 600px) {
+    .opportunities {
+      padding: 32px 0 24px;
+    }
+
+    .directory-heading {
+      align-items: flex-start;
+    }
+
+    .directory-heading h1 {
+      font-size: 23px;
+    }
+
+    .directory-heading p {
+      max-width: 260px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  }
+}

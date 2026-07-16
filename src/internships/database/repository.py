@@ -318,6 +318,8 @@ class Repository:
                 location=incoming.location,
                 link=incoming.link,
                 category=incoming.category.value,
+                work_mode=incoming.work_mode.value if incoming.work_mode else None,
+                start_date=incoming.start_date,
                 first_seen_at=observed_at,
                 last_seen_at=observed_at,
                 updated_at=observed_at,
@@ -328,6 +330,10 @@ class Repository:
         else:
             # A delayed run must never move lifecycle timestamps backwards.
             effective_time = max(ensure_utc(row.last_seen_at), ensure_utc(observed_at))
+            # Missing optional metadata is not evidence that a previously observed
+            # value became invalid; public detail markup can omit fields temporarily.
+            next_work_mode = incoming.work_mode.value if incoming.work_mode else row.work_mode
+            next_start_date = incoming.start_date or row.start_date
             changed = any(
                 (
                     row.company != incoming.company,
@@ -335,6 +341,8 @@ class Repository:
                     row.location != incoming.location,
                     row.link != incoming.link,
                     row.category != incoming.category.value,
+                    row.work_mode != next_work_mode,
+                    row.start_date != next_start_date,
                 )
             )
             reopened = row.status == JobStatus.CLOSED.value
@@ -343,6 +351,8 @@ class Repository:
             row.location = incoming.location
             row.link = incoming.link
             row.category = incoming.category.value
+            row.work_mode = next_work_mode
+            row.start_date = next_start_date
             row.last_seen_at = effective_time
             row.status = JobStatus.OPEN.value
             if changed or reopened:
@@ -435,6 +445,8 @@ def _stored_job(row: JobRow) -> StoredJob:
         location=row.location,
         link=row.link,
         category=row.category,
+        work_mode=row.work_mode,
+        start_date=row.start_date,
         first_seen_at=ensure_utc(row.first_seen_at),
         last_seen_at=ensure_utc(row.last_seen_at),
         updated_at=ensure_utc(row.updated_at),

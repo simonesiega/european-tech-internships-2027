@@ -1,0 +1,53 @@
+@layer components {
+  .theme-toggle {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--text-soft);
+  }
+
+  .theme-icon,
+  .theme-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .theme-icon {
+    position: relative;
+    display: block;
+  }
+
+  .theme-icon svg {
+    position: absolute;
+    inset: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.7;
+    transition:
+      opacity 250ms ease,
+      transform 250ms ease;
+  }
+
+  .moon-icon {
+    opacity: 0;
+    transform: rotate(-30deg) scale(0.7);
+  }
+
+  :root[data-theme="dark"] .sun-icon {
+    opacity: 0;
+    transform: rotate(30deg) scale(0.7);
+  }
+
+  :root[data-theme="dark"] .moon-icon {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}

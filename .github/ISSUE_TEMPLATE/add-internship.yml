@@ -1,0 +1,49 @@
+name: Add an internship
+description: Suggest a European technology internship for the 2027 cycle.
+title: "[Internship]: "
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping keep the directory useful and up to date.
+
+  - type: input
+    id: company
+    attributes:
+      label: Company
+      placeholder: Example Ltd.
+    validations:
+      required: true
+
+  - type: input
+    id: role
+    attributes:
+      label: Role
+      placeholder: Software Engineering Intern
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      placeholder: City, Country or Remote
+    validations:
+      required: true
+
+  - type: input
+    id: application-url
+    attributes:
+      label: Official application URL
+      placeholder: https://...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: This internship is based in Europe and is intended for the 2027 cycle.
+          required: true
+        - label: I searched the directory and existing issues for duplicates.
+          required: true

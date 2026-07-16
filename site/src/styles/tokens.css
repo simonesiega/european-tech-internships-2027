@@ -1,0 +1,39 @@
+@layer reset, base, components;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --bg: #f7f7f5;
+    --surface: #ffffff;
+    --surface-hover: #fafaf9;
+    --text: #151515;
+    --text-soft: #62625e;
+    --text-faint: #8b8b86;
+    --border: #dfdfda;
+    --border-strong: #c9c9c3;
+    --accent: #315ee7;
+    --accent-soft: #eaf0ff;
+    --status: #23955a;
+    --status-soft: #e4f5eb;
+    --shadow: 0 1px 2px rgb(18 18 18 / 3%), 0 10px 28px rgb(18 18 18 / 3%);
+    --header-overlay: rgb(247 247 245 / 100%);
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #101110;
+    --surface: #171817;
+    --surface-hover: #1b1c1b;
+    --text: #f2f2ee;
+    --text-soft: #a3a39d;
+    --text-faint: #777772;
+    --border: #2c2d2b;
+    --border-strong: #41423f;
+    --accent: #86a5ff;
+    --accent-soft: #202b49;
+    --status: #63d998;
+    --status-soft: #173625;
+    --shadow: 0 1px 2px rgb(0 0 0 / 14%), 0 16px 36px rgb(0 0 0 / 12%);
+    --header-overlay: rgb(16 17 16 / 100%);
+  }
+}

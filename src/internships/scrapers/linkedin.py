@@ -10,6 +10,7 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
 
+from internships.models.enums import WorkMode
 from internships.models.raw import KnownJob, RawJob
 from internships.models.search import LinkedInSearchConfig
 from internships.scrapers.http import FetchError, TextResponse
@@ -32,6 +33,23 @@ _DATE_POSTED_PARAMETERS = {
     "month": "r2592000",
 }
 _WORKPLACE_PARAMETERS = {"on-site": "1", "remote": "2", "hybrid": "3"}
+_START_DATE_VALUE = (
+    r"(?:spring|summer|autumn|fall|winter|january|february|march|april|may|june|"
+    r"july|august|september|october|november|december)\s+20\d{2}"
+)
+_START_DATE_RE = re.compile(rf"\b{_START_DATE_VALUE}\b", re.IGNORECASE)
+_CONTEXTUAL_START_DATE_RE = re.compile(
+    rf"(?:\b(?:start(?:ing|s)?|begin(?:ning|s)?|commenc(?:e|es|ing)|join(?:\s+our|\s+the)?)\b"
+    rf"[^.\n]{{0,24}}(?P<after>{_START_DATE_VALUE})\b|"
+    rf"\b(?P<before>{_START_DATE_VALUE})\s+(?:start|intake|internship|programme|program)\b)",
+    re.IGNORECASE,
+)
+_WORK_MODE_VALUES = {
+    "remote": WorkMode.REMOTE,
+    "hybrid": WorkMode.HYBRID,
+    "on site": WorkMode.ON_SITE,
+    "onsite": WorkMode.ON_SITE,
+}
 _DEFAULT_INTERNSHIP_TITLE_TERMS = (
     "intern",
     "internship",
@@ -167,7 +185,40 @@ def parse_job_detail(html: str, card: LinkedInSearchCard) -> RawJob:
         locations=[location] if location else [],
         application_url=card.application_url,
         description=description,
+        work_mode=_extract_work_mode(soup, location),
+        start_date=_extract_start_date(title, description),
     )
+
+
+def _extract_work_mode(soup: BeautifulSoup, location: str) -> WorkMode | None:
+    """Extract LinkedIn's structured workplace type when publicly available."""
+    for item in soup.select(".description__job-criteria-item"):
+        if not isinstance(item, Tag):
+            continue
+        heading = _optional_text(item, ".description__job-criteria-subheader")
+        if normalized_key(heading or "") != "workplace type":
+            continue
+        value = normalized_key(_optional_text(item, ".description__job-criteria-text") or "")
+        work_mode = _WORK_MODE_VALUES.get(value)
+        if work_mode is not None:
+            return work_mode
+
+    if "remote" in normalized_key(location):
+        return WorkMode.REMOTE
+    return None
+
+
+def _extract_start_date(title: str, description: str | None) -> str | None:
+    """Extract explicit start metadata without treating unrelated dates as starts."""
+    title_match = _START_DATE_RE.search(title)
+    description_match = _CONTEXTUAL_START_DATE_RE.search(description or "")
+    value = title_match.group(0) if title_match else None
+    if value is None and description_match is not None:
+        value = description_match.group("after") or description_match.group("before")
+    if value is None:
+        return None
+    words = value.split()
+    return f"{words[0].title()} {words[1]}"
 
 
 class LinkedInScraper:

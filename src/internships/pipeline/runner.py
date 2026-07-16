@@ -213,6 +213,8 @@ class CollectionPipeline:
                     location=display_location,
                     link=raw.application_url,
                     category=decision.category,
+                    work_mode=raw.work_mode,
+                    start_date=raw.start_date,
                 )
             except (ValidationError, ValueError):
                 excluded += 1

@@ -1,0 +1,114 @@
+@layer components {
+  .ui-button {
+    display: inline-flex;
+    height: 36px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
+  }
+
+  .ui-button svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .ui-button--default {
+    background: var(--text);
+    color: var(--surface);
+  }
+
+  .ui-button--outline {
+    border-color: var(--border);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 3%);
+  }
+
+  .ui-button--outline:hover:not(:disabled),
+  .ui-button--ghost:hover:not(:disabled) {
+    background: var(--surface-hover);
+  }
+
+  .ui-button--ghost {
+    background: transparent;
+    color: var(--text-soft);
+  }
+
+  .ui-button--sm {
+    height: 32px;
+    padding: 0 10px;
+  }
+
+  .ui-button--icon {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+  }
+
+  .ui-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  .ui-input {
+    width: 100%;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 3%);
+  }
+
+  .ui-input::placeholder {
+    color: var(--text-faint);
+  }
+
+  .ui-input:focus {
+    border-color: var(--text-faint);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--text) 9%, transparent);
+  }
+
+  .ui-badge {
+    display: inline-flex;
+    min-height: 22px;
+    align-items: center;
+    padding: 2px 8px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .ui-badge--default {
+    background: var(--text);
+    color: var(--surface);
+  }
+
+  .ui-badge--secondary {
+    background: color-mix(in srgb, var(--text) 7%, var(--surface));
+    color: var(--text-soft);
+  }
+
+  .ui-badge--outline {
+    border-color: var(--border);
+    background: transparent;
+    color: var(--text-soft);
+  }
+}

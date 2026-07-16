@@ -39,6 +39,14 @@ class InternshipCategory(StrEnum):
     UNKNOWN = "unknown"
 
 
+class WorkMode(StrEnum):
+    """Enumerate normalized workplace arrangements."""
+
+    REMOTE = "remote"
+    HYBRID = "hybrid"
+    ON_SITE = "on-site"
+
+
 class JobStatus(StrEnum):
     """Enumerate job lifecycle states."""
 

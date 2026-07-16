@@ -58,6 +58,8 @@ class JobRow(Base):
     location: Mapped[str] = mapped_column(String(500), nullable=False)
     link: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
     category: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    work_mode: Mapped[str | None] = mapped_column(String(20))
+    start_date: Mapped[str | None] = mapped_column(String(100))
     first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

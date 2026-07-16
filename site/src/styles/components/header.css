@@ -1,0 +1,134 @@
+@layer components {
+  .header-fixed {
+    position: fixed;
+    z-index: 50;
+    top: 0;
+    right: 0;
+    left: 0;
+    background: var(--header-overlay);
+    backdrop-filter: blur(28px) saturate(120%);
+    -webkit-backdrop-filter: blur(28px) saturate(120%);
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease;
+  }
+
+  .header-fixed::after {
+    position: absolute;
+    right: 0;
+    bottom: -16px;
+    left: 0;
+    height: 16px;
+    background: linear-gradient(to bottom, var(--header-overlay), transparent);
+    content: "";
+    pointer-events: none;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    mask-image: linear-gradient(to bottom, black, transparent);
+  }
+
+  .site-header {
+    width: 100%;
+    min-height: 72px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .site-header-content {
+    display: flex;
+    width: min(calc(100% - 40px), 1376px);
+    min-height: 72px;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-actions,
+  .header-link {
+    display: flex;
+    align-items: center;
+  }
+
+  .brand {
+    font-size: 20px;
+    font-weight: 550;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+
+  .header-actions {
+    gap: 32px;
+  }
+
+  .header-link {
+    color: var(--text-soft);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    transition: color 180ms ease;
+  }
+
+  .header-link:hover {
+    color: var(--text);
+  }
+
+  .github-link {
+    gap: 4px;
+  }
+
+  .compact-link-label {
+    display: none;
+  }
+
+  .github-link svg {
+    width: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.4;
+  }
+
+  @media (max-width: 760px) {
+    .site-header-content {
+      width: min(calc(100% - 28px), 1376px);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .site-header,
+    .site-header-content {
+      min-height: 88px;
+    }
+
+    .brand {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .brand {
+      max-width: 130px;
+      overflow: hidden;
+      font-size: 15px;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      gap: 10px;
+    }
+
+    .header-link {
+      font-size: 13px;
+    }
+
+    .full-link-label {
+      display: none;
+    }
+
+    .compact-link-label {
+      display: inline;
+    }
+  }
+}
