@@ -6,6 +6,7 @@ export type Internship = {
   link: string;
   category: string;
   workMode: string | null;
+  employmentType: string | null;
   startDate: string | null;
   firstSeenAt: string;
 };

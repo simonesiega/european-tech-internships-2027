@@ -16,6 +16,7 @@ const OPEN_INTERNSHIPS_QUERY = `
     link,
     category,
     work_mode AS workMode,
+    employment_type AS employmentType,
     start_date AS startDate,
     first_seen_at AS firstSeenAt
   FROM jobs
@@ -57,6 +58,7 @@ export function getOpenInternships(): Internship[] {
         link,
         category,
         workMode,
+        employmentType,
         startDate,
         firstSeenAt,
       }) => ({
@@ -67,6 +69,7 @@ export function getOpenInternships(): Internship[] {
         link,
         category,
         workMode,
+        employmentType,
         startDate,
         firstSeenAt,
       })

@@ -319,6 +319,9 @@ class Repository:
                 link=incoming.link,
                 category=incoming.category.value,
                 work_mode=incoming.work_mode.value if incoming.work_mode else None,
+                employment_type=(
+                    incoming.employment_type.value if incoming.employment_type else None
+                ),
                 start_date=incoming.start_date,
                 first_seen_at=observed_at,
                 last_seen_at=observed_at,
@@ -333,6 +336,9 @@ class Repository:
             # Missing optional metadata is not evidence that a previously observed
             # value became invalid; public detail markup can omit fields temporarily.
             next_work_mode = incoming.work_mode.value if incoming.work_mode else row.work_mode
+            next_employment_type = (
+                incoming.employment_type.value if incoming.employment_type else row.employment_type
+            )
             next_start_date = incoming.start_date or row.start_date
             changed = any(
                 (
@@ -342,6 +348,7 @@ class Repository:
                     row.link != incoming.link,
                     row.category != incoming.category.value,
                     row.work_mode != next_work_mode,
+                    row.employment_type != next_employment_type,
                     row.start_date != next_start_date,
                 )
             )
@@ -352,6 +359,7 @@ class Repository:
             row.link = incoming.link
             row.category = incoming.category.value
             row.work_mode = next_work_mode
+            row.employment_type = next_employment_type
             row.start_date = next_start_date
             row.last_seen_at = effective_time
             row.status = JobStatus.OPEN.value
@@ -446,6 +454,7 @@ def _stored_job(row: JobRow) -> StoredJob:
         link=row.link,
         category=row.category,
         work_mode=row.work_mode,
+        employment_type=row.employment_type,
         start_date=row.start_date,
         first_seen_at=ensure_utc(row.first_seen_at),
         last_seen_at=ensure_utc(row.last_seen_at),

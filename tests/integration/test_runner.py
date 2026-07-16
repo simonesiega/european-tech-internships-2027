@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from internships.config.rules import ClassificationRules
 from internships.config.settings import Settings
 from internships.database.repository import Repository
-from internships.models.enums import InternshipCategory, WorkMode
+from internships.models.enums import EmploymentType, InternshipCategory, WorkMode
 from internships.models.job import DiscoveredJob
 from internships.models.raw import KnownJob, RawJob
 from internships.models.search import LinkedInSearchConfig
@@ -128,6 +128,7 @@ def test_overlapping_search_timestamps_remain_monotonic(
         link="https://www.linkedin.com/jobs/view/1111111111",
         category=InternshipCategory.SOFTWARE_ENGINEERING,
         work_mode=WorkMode.HYBRID,
+        employment_type=EmploymentType.INTERNSHIP,
         start_date="Summer 2027",
     )
     repository.persist_success(
@@ -145,7 +146,9 @@ def test_overlapping_search_timestamps_remain_monotonic(
     repository.persist_success(
         run_id="00000000-0000-0000-0000-000000000002",
         search=second,
-        jobs=[job.model_copy(update={"work_mode": None, "start_date": None})],
+        jobs=[
+            job.model_copy(update={"work_mode": None, "employment_type": None, "start_date": None})
+        ],
         confirmed_unavailable_ids=(),
         found_count=1,
         excluded_count=0,
@@ -158,6 +161,7 @@ def test_overlapping_search_timestamps_remain_monotonic(
     assert stored.first_seen_at == later
     assert stored.last_seen_at == later
     assert stored.work_mode == WorkMode.HYBRID
+    assert stored.employment_type == EmploymentType.INTERNSHIP
     assert stored.start_date == "Summer 2027"
 
     health = repository.search_health()

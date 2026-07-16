@@ -15,6 +15,19 @@ export function getCategoryHue(category: string): number {
   return [...category].reduce((hash, character) => (hash * 17 + character.charCodeAt(0)) % 360, 0);
 }
 
+export function getEmploymentTypeHue(employmentType: string): number {
+  const hues: Record<string, number> = {
+    "full-time": 215,
+    "part-time": 185,
+    internship: 265,
+    contract: 35,
+    temporary: 50,
+    volunteer: 330,
+    other: 210,
+  };
+  return hues[employmentType] ?? 210;
+}
+
 export function getWorkModeHue(workMode: string): number {
   const hues: Record<string, number> = {
     remote: 205,

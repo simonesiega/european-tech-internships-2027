@@ -74,6 +74,47 @@ def test_linkedin_job_detail_parser_extracts_description(
     assert "Summer 2027" in job.description
     assert job.start_date == "Summer 2027"
     assert job.work_mode == "hybrid"
+    assert job.employment_type == "internship"
+
+
+def test_linkedin_job_detail_extracts_full_time_employment(
+    fixture_html: Callable[[str], str],
+) -> None:
+    card = parse_search_page(fixture_html("linkedin_search_page_1.html")).cards[1]
+    job = parse_job_detail(fixture_html("linkedin_job_detail_2222222222.html"), card)
+
+    assert job.employment_type == "full-time"
+    assert job.work_mode is None
+
+
+def test_linkedin_job_detail_extracts_work_mode_from_explicit_description(
+    fixture_html: Callable[[str], str],
+) -> None:
+    card = parse_search_page(fixture_html("linkedin_search_page_1.html")).cards[0]
+    html = """<!doctype html>
+    <h1 class="top-card-layout__title">Software Engineering Intern 2027</h1>
+    <a class="topcard__org-name-link">Test Technology</a>
+    <div class="show-more-less-html__markup">We follow a hybrid working model.</div>
+    """
+
+    job = parse_job_detail(html, card)
+
+    assert job.work_mode == "hybrid"
+
+
+def test_linkedin_job_detail_ignores_ambiguous_remote_description(
+    fixture_html: Callable[[str], str],
+) -> None:
+    card = parse_search_page(fixture_html("linkedin_search_page_1.html")).cards[0]
+    html = """<!doctype html>
+    <h1 class="top-card-layout__title">Cybersecurity Intern 2027</h1>
+    <a class="topcard__org-name-link">Test Technology</a>
+    <div class="show-more-less-html__markup">Build secure remote access tooling.</div>
+    """
+
+    job = parse_job_detail(html, card)
+
+    assert job.work_mode is None
 
 
 def test_linkedin_job_detail_does_not_treat_graduation_date_as_start_date(

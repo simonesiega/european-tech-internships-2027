@@ -18,7 +18,7 @@
 
   .ui-table {
     width: 100%;
-    min-width: 1120px;
+    min-width: 1240px;
     border-collapse: collapse;
     caption-side: bottom;
     font-size: 13px;
@@ -48,7 +48,7 @@
     color: var(--text-soft);
     font-size: 11px;
     font-weight: 550;
-    text-align: left;
+    text-align: center;
     white-space: nowrap;
   }
 
@@ -68,18 +68,18 @@
 
   .ui-table-head:nth-child(2),
   .ui-table-cell:nth-child(2) {
-    width: 9%;
+    width: 8%;
     padding-left: 4px;
   }
 
   .ui-table-head:nth-child(3),
   .ui-table-cell:nth-child(3) {
-    width: 30%;
+    width: 26%;
   }
 
   .ui-table-head:nth-child(4),
   .ui-table-cell:nth-child(4) {
-    width: 12%;
+    width: 11%;
   }
 
   .ui-table-head:nth-child(5),
@@ -89,19 +89,24 @@
 
   .ui-table-head:nth-child(6),
   .ui-table-cell:nth-child(6) {
-    width: 14%;
+    width: 11%;
   }
 
   .ui-table-head:nth-child(7),
-  .ui-table-cell:nth-child(7),
+  .ui-table-cell:nth-child(7) {
+    width: 13%;
+  }
+
   .ui-table-head:nth-child(8),
-  .ui-table-cell:nth-child(8) {
-    width: 10%;
+  .ui-table-cell:nth-child(8),
+  .ui-table-head:nth-child(9),
+  .ui-table-cell:nth-child(9) {
+    width: 8%;
   }
 
   .column-sort-button {
     height: 30px;
-    margin-left: -10px;
+    margin: 0 auto;
     padding: 0 10px;
     color: inherit;
     font-size: 11px;
@@ -111,6 +116,12 @@
     width: 13px;
     height: 13px;
     opacity: 0.55;
+  }
+
+  .ui-table-cell:nth-child(4),
+  .ui-table-cell:nth-child(5),
+  .ui-table-cell:nth-child(6) {
+    text-align: center;
   }
 
   .company-name {
@@ -154,6 +165,11 @@
 
   .nowrap-cell {
     white-space: nowrap;
+  }
+
+  .empty-date-cell {
+    display: block;
+    text-align: center;
   }
 
   .open-role-button svg {
@@ -234,7 +250,7 @@
 
   @media (max-width: 600px) {
     .ui-table {
-      min-width: 1060px;
+      min-width: 1180px;
     }
 
     .table-pagination {

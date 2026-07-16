@@ -10,7 +10,7 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
 
-from internships.models.enums import WorkMode
+from internships.models.enums import EmploymentType, WorkMode
 from internships.models.raw import KnownJob, RawJob
 from internships.models.search import LinkedInSearchConfig
 from internships.scrapers.http import FetchError, TextResponse
@@ -44,13 +44,48 @@ _CONTEXTUAL_START_DATE_RE = re.compile(
     rf"\b(?P<before>{_START_DATE_VALUE})\s+(?:start|intake|internship|programme|program)\b)",
     re.IGNORECASE,
 )
+_EMPLOYMENT_TYPE_VALUES = {
+    "full time": EmploymentType.FULL_TIME,
+    "part time": EmploymentType.PART_TIME,
+    "contract": EmploymentType.CONTRACT,
+    "temporary": EmploymentType.TEMPORARY,
+    "internship": EmploymentType.INTERNSHIP,
+    "volunteer": EmploymentType.VOLUNTEER,
+    "other": EmploymentType.OTHER,
+}
 _WORK_MODE_VALUES = {
     "remote": WorkMode.REMOTE,
     "hybrid": WorkMode.HYBRID,
     "on site": WorkMode.ON_SITE,
     "onsite": WorkMode.ON_SITE,
 }
-_WORK_MODE_SELECTORS = (
+_DESCRIPTION_WORK_MODE_PATTERNS = (
+    (
+        WorkMode.HYBRID,
+        re.compile(
+            r"\b(?:hybrid\s+(?:work(?:ing)?|work\s+model|workplace|role|position|arrangement|"
+            r"schedule|setup)|work(?:ing)?\s+(?:in\s+)?(?:a\s+)?hybrid\s+(?:model|arrangement))\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        WorkMode.REMOTE,
+        re.compile(
+            r"\b(?:(?:fully|entirely|100%)\s+remote|remote\s+(?:work(?:ing)?|role|position|"
+            r"internship|arrangement|option)|work(?:ing)?\s+remotely)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        WorkMode.ON_SITE,
+        re.compile(
+            r"\b(?:on[ -]?site|onsite|office[ -]based|"
+            r"work(?:ing)?\s+(?:from|in)\s+(?:the\s+)?office)\b",
+            re.IGNORECASE,
+        ),
+    ),
+)
+_TOP_CARD_PILL_SELECTORS = (
     "[data-test-id*='workplace']",
     "[class*='workplace-type']",
     ".job-details-preferences-and-skills__pill",
@@ -193,13 +228,40 @@ def parse_job_detail(html: str, card: LinkedInSearchCard) -> RawJob:
         locations=[location] if location else [],
         application_url=card.application_url,
         description=description,
-        work_mode=_extract_work_mode(soup, location),
+        work_mode=_extract_work_mode(soup, location, description),
+        employment_type=_extract_employment_type(soup),
         start_date=_extract_start_date(title, description),
     )
 
 
-def _extract_work_mode(soup: BeautifulSoup, location: str) -> WorkMode | None:
-    """Extract LinkedIn's structured workplace type when publicly available."""
+def _extract_employment_type(soup: BeautifulSoup) -> EmploymentType | None:
+    """Extract LinkedIn's structured employment type criterion or top-card pill."""
+    for item in soup.select(".description__job-criteria-item"):
+        if not isinstance(item, Tag):
+            continue
+        heading = _optional_text(item, ".description__job-criteria-subheader")
+        if normalized_key(heading or "") != "employment type":
+            continue
+        value = normalized_key(_optional_text(item, ".description__job-criteria-text") or "")
+        employment_type = _EMPLOYMENT_TYPE_VALUES.get(value)
+        if employment_type is not None:
+            return employment_type
+
+    for selector in _TOP_CARD_PILL_SELECTORS:
+        for node in soup.select(selector):
+            if not isinstance(node, Tag):
+                continue
+            value = normalized_key(node.get_text(" ", strip=True))
+            employment_type = _EMPLOYMENT_TYPE_VALUES.get(value)
+            if employment_type is not None:
+                return employment_type
+    return None
+
+
+def _extract_work_mode(
+    soup: BeautifulSoup, location: str, description: str | None
+) -> WorkMode | None:
+    """Extract a structured mode or a narrowly worded description fallback."""
     for item in soup.select(".description__job-criteria-item"):
         if not isinstance(item, Tag):
             continue
@@ -214,7 +276,7 @@ def _extract_work_mode(soup: BeautifulSoup, location: str) -> WorkMode | None:
     # LinkedIn also renders workplace mode as a top-card pill instead of a job
     # criterion. Class names differ between guest and signed-in page variants, so
     # inspect only known top-card/pill containers and require a standalone mode word.
-    for selector in _WORK_MODE_SELECTORS:
+    for selector in _TOP_CARD_PILL_SELECTORS:
         for node in soup.select(selector):
             if not isinstance(node, Tag):
                 continue
@@ -224,6 +286,13 @@ def _extract_work_mode(soup: BeautifulSoup, location: str) -> WorkMode | None:
 
     if "remote" in normalized_key(location):
         return WorkMode.REMOTE
+
+    # The guest detail endpoint often omits the workplace pill shown in LinkedIn's
+    # signed-in UI. Accept only explicit work-arrangement phrases from descriptions;
+    # a bare "remote" is intentionally insufficient because it can describe tooling.
+    for work_mode, pattern in _DESCRIPTION_WORK_MODE_PATTERNS:
+        if pattern.search(description or ""):
+            return work_mode
     return None
 
 

@@ -6,7 +6,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from internships.models.enums import InternshipCategory, JobStatus, WorkMode
+from internships.models.enums import EmploymentType, InternshipCategory, JobStatus, WorkMode
 from internships.utils.text import clean_text
 from internships.utils.url import canonicalize_url
 
@@ -23,6 +23,7 @@ class DiscoveredJob(BaseModel):
     link: str
     category: InternshipCategory
     work_mode: WorkMode | None = None
+    employment_type: EmploymentType | None = None
     start_date: str | None = Field(default=None, max_length=100)
 
     @field_validator("company", "title", "location", mode="before")

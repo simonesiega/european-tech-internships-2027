@@ -214,6 +214,7 @@ class CollectionPipeline:
                     link=raw.application_url,
                     category=decision.category,
                     work_mode=raw.work_mode,
+                    employment_type=raw.employment_type,
                     start_date=raw.start_date,
                 )
             except (ValidationError, ValueError):

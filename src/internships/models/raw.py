@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from internships.models.enums import WorkMode
+from internships.models.enums import EmploymentType, WorkMode
 from internships.utils.text import clean_text
 from internships.utils.url import canonicalize_url
 
@@ -34,6 +34,7 @@ class RawJob(BaseModel):
     application_url: str
     description: str | None = None
     work_mode: WorkMode | None = None
+    employment_type: EmploymentType | None = None
     start_date: str | None = Field(default=None, max_length=100)
 
     @field_validator("source_job_id", "company", "title", mode="before")

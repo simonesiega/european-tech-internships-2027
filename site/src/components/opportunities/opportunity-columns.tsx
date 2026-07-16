@@ -9,6 +9,7 @@ import {
   formatCategory,
   formatPublishedDate,
   getCategoryHue,
+  getEmploymentTypeHue,
   getWorkModeHue,
 } from "@/lib/opportunity-presentation";
 import type {Internship} from "@/types/internship";
@@ -88,6 +89,27 @@ export const opportunityColumns: ColumnDef<Internship>[] = [
     ),
   },
   {
+    accessorKey: "employmentType",
+    header: "Employment type",
+    cell: ({row}) => (
+      <Badge
+        className={row.original.employmentType ? "colored-badge" : "unspecified-badge"}
+        variant="outline"
+        style={
+          row.original.employmentType
+            ? ({
+                "--badge-hue": getEmploymentTypeHue(row.original.employmentType),
+              } as CSSProperties)
+            : undefined
+        }
+      >
+        {row.original.employmentType
+          ? formatCategory(row.original.employmentType)
+          : "Not specified"}
+      </Badge>
+    ),
+  },
+  {
     accessorKey: "location",
     header: ({column}) => <SortableHeader column={column} label="Location" />,
     cell: ({row}) => <span className="muted-cell">{row.original.location}</span>,
@@ -96,7 +118,9 @@ export const opportunityColumns: ColumnDef<Internship>[] = [
     accessorKey: "startDate",
     header: "Start date",
     cell: ({row}) => (
-      <span className="muted-cell nowrap-cell">{row.original.startDate ?? "—"}</span>
+      <span className={`muted-cell nowrap-cell${row.original.startDate ? "" : "empty-date-cell"}`}>
+        {row.original.startDate ?? "—"}
+      </span>
     ),
   },
   {
