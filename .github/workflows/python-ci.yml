@@ -34,7 +34,7 @@ jobs:
       - name: Install frozen dependencies
         run: uv sync --frozen --dev
       - name: Check types
-        run: uv run mypy src tests
+        run: uv run mypy src tests scripts
       - name: Run offline tests
         run: uv run pytest -m "not live"
       - name: Check migration consistency

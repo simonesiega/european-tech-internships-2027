@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup, Tag
 from internships.models.enums import EmploymentType
 from internships.models.raw import KnownJob, RawJob
 from internships.models.search import LinkedInSearchConfig
-from internships.scrapers.http import FetchError, TextResponse
+from internships.scrapers.http import FetchError
 from internships.utils.text import clean_text, normalized_key
 
 LINKEDIN_SEARCH_ENDPOINT = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search"
@@ -71,8 +71,8 @@ class LinkedInPayloadError(ValueError):
 class TextFetcher(Protocol):
     """Define the text-fetching interface used by the LinkedIn scraper."""
 
-    async def get_text(self, url: str) -> TextResponse:
-        """Fetch one URL and return its text response."""
+    async def get_text(self, url: str) -> str:
+        """Fetch one URL and return validated text."""
         ...
 
 
@@ -101,8 +101,6 @@ class LinkedInScrapeResult:
 
     positions: list[RawJob]
     warnings: tuple[str, ...]
-    response_time_ms: int
-    response_bytes: int
     pages_fetched: int
     search_result_count: int
     confirmed_unavailable_ids: tuple[str, ...] = ()
@@ -196,12 +194,25 @@ def parse_job_detail(html: str, card: LinkedInSearchCard) -> RawJob:
 
 def _extract_criterion(soup: BeautifulSoup, expected_heading: str) -> str | None:
     """Extract one exact value from LinkedIn's structured job criteria."""
-    for item in soup.select(".description__job-criteria-item"):
-        if not isinstance(item, Tag):
+    for heading in soup.select(".description__job-criteria-subheader, dt, h3"):
+        if not isinstance(heading, Tag):
             continue
-        heading = _optional_text(item, ".description__job-criteria-subheader")
-        if normalized_key(heading or "") == expected_heading:
-            return _optional_text(item, ".description__job-criteria-text")
+        if normalized_key(heading.get_text(" ", strip=True)) != expected_heading:
+            continue
+
+        item = heading.parent
+        if isinstance(item, Tag):
+            value = _optional_text(
+                item, ".description__job-criteria-text, dd, [class*='criteria-text']"
+            )
+            if value:
+                return value
+
+        sibling = heading.find_next_sibling()
+        if isinstance(sibling, Tag):
+            value = clean_text(sibling.get_text(" ", strip=True))
+            if value:
+                return value
     return None
 
 
@@ -236,7 +247,7 @@ class LinkedInScraper:
             for term in internship_title_terms
         )
         # Searches overlap heavily, so share each in-flight detail request by job ID.
-        self._detail_tasks: dict[str, asyncio.Task[TextResponse]] = {}
+        self._detail_tasks: dict[str, asyncio.Task[str]] = {}
         self._detail_lock = asyncio.Lock()
 
     async def scrape(
@@ -251,18 +262,12 @@ class LinkedInScraper:
         seen_search_ids: set[str] = set()
         allowed_companies = frozenset(normalized_key(name) for name in search.company_names)
         warnings: list[str] = []
-        response_time_ms = 0
-        response_bytes = 0
         pages_fetched = 0
 
         for page in range(search.max_pages):
-            response = await fetcher.get_text(
-                build_search_url(search, start=page * LINKEDIN_PAGE_SIZE)
-            )
-            response_time_ms += response.elapsed_ms
-            response_bytes += response.content_bytes
+            html = await fetcher.get_text(build_search_url(search, start=page * LINKEDIN_PAGE_SIZE))
             pages_fetched += 1
-            parsed = parse_search_page(response.text)
+            parsed = parse_search_page(html)
             warnings.extend(parsed.warnings)
             new_search_ids = {
                 card.job_id for card in parsed.cards if card.job_id not in seen_search_ids
@@ -289,10 +294,8 @@ class LinkedInScraper:
         malformed_details = 0
         for card in selected_cards:
             try:
-                response = await self._detail(card.job_id, fetcher)
-                response_time_ms += response.elapsed_ms
-                response_bytes += response.content_bytes
-                positions.append(parse_job_detail(response.text, card))
+                html = await self._detail(card.job_id, fetcher)
+                positions.append(parse_job_detail(html, card))
             except FetchError as exc:
                 if exc.status_code not in {404, 410}:
                     raise
@@ -323,10 +326,8 @@ class LinkedInScraper:
                 application_url=known.application_url,
             )
             try:
-                response = await self._detail(known.source_job_id, fetcher)
-                response_time_ms += response.elapsed_ms
-                response_bytes += response.content_bytes
-                positions.append(parse_job_detail(response.text, fallback))
+                html = await self._detail(known.source_job_id, fetcher)
+                positions.append(parse_job_detail(html, fallback))
             except FetchError as exc:
                 if exc.status_code not in {404, 410}:
                     raise
@@ -338,14 +339,12 @@ class LinkedInScraper:
         return LinkedInScrapeResult(
             positions=positions,
             warnings=tuple(warnings),
-            response_time_ms=response_time_ms,
-            response_bytes=response_bytes,
             pages_fetched=pages_fetched,
             search_result_count=len(cards),
             confirmed_unavailable_ids=tuple(confirmed_unavailable),
         )
 
-    async def _detail(self, job_id: str, fetcher: TextFetcher) -> TextResponse:
+    async def _detail(self, job_id: str, fetcher: TextFetcher) -> str:
         """Fetch and parse one LinkedIn job detail page."""
         # Protect task creation rather than the network wait: concurrent searches share
         # one request for the same job without serializing requests for different jobs.

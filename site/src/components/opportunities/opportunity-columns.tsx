@@ -107,9 +107,7 @@ export const opportunityColumns: ColumnDef<Internship>[] = [
     accessorKey: "startDate",
     header: "Start date",
     cell: ({row}) => (
-      <span className={`muted-cell nowrap-cell${row.original.startDate ? "" : "empty-date-cell"}`}>
-        {row.original.startDate ?? "—"}
-      </span>
+      <span className="muted-cell nowrap-cell">{row.original.startDate ?? "—"}</span>
     ),
   },
   {

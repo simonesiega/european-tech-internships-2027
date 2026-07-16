@@ -61,15 +61,26 @@
 
   .ui-table-head:nth-child(1),
   .ui-table-cell:nth-child(1) {
-    width: 36px;
+    width: 28px;
     padding-right: 0;
     padding-left: 4px;
   }
 
-  .ui-table-head:nth-child(2),
+  .ui-table-head:nth-child(2) {
+    width: 8%;
+    padding-left: 6px;
+  }
+
   .ui-table-cell:nth-child(2) {
     width: 8%;
-    padding-left: 4px;
+    padding-left: 12px;
+  }
+
+  .ui-table-head:nth-child(2) .column-sort-button {
+    position: relative;
+    left: -6px;
+    margin-left: 0;
+    padding: 0;
   }
 
   .ui-table-head:nth-child(3),
@@ -84,7 +95,7 @@
 
   .ui-table-head:nth-child(5),
   .ui-table-cell:nth-child(5) {
-    width: 11%;
+    width: calc(11% + 8px);
   }
 
   .ui-table-head:nth-child(6),
@@ -168,10 +179,8 @@
     white-space: nowrap;
   }
 
-  .empty-date-cell {
-    display: block;
-    width: 100%;
-    text-align: center;
+  .open-role-button {
+    width: 28px;
   }
 
   .open-role-button svg {

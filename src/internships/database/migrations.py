@@ -24,7 +24,7 @@ def migration_head(*, repository_root: Path = Path(".")) -> str | None:
 
 
 def upgrade_database(database_url: str, *, repository_root: Path = Path(".")) -> None:
-    """Upgrade upgrade database."""
+    """Upgrade the database to the latest migration."""
     config = _config(repository_root)
     config.set_main_option("sqlalchemy.url", database_url.replace("%", "%%"))
     command.upgrade(config, "head")

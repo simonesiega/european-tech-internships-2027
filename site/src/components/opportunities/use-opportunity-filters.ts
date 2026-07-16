@@ -21,8 +21,17 @@ export function useOpportunityFilters(internships: Internship[]) {
     const normalizedQuery = query.trim().toLowerCase();
 
     return internships.filter((internship) => {
-      const searchableText =
-        `${internship.company} ${internship.title} ${internship.category} ${internship.location}`.toLowerCase();
+      const searchableText = [
+        internship.company,
+        internship.title,
+        internship.category,
+        internship.industries,
+        internship.employmentType,
+        internship.location,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
 
       return (
         (!normalizedQuery || searchableText.includes(normalizedQuery)) &&

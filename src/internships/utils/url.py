@@ -80,11 +80,3 @@ def canonicalize_url(url: str, *, extra_tracking_parameters: Iterable[str] = ())
     if path != "/":
         path = path.rstrip("/") or "/"
     return urlunsplit((parsed.scheme.lower(), netloc, path, urlencode(query_items), ""))
-
-
-def urls_equal(left: str, right: str) -> bool:
-    """Compare two URLs after canonicalization."""
-    try:
-        return canonicalize_url(left) == canonicalize_url(right)
-    except UnsafeUrlError:
-        return False

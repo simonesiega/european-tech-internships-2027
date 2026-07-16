@@ -31,12 +31,17 @@ permissions:
 
 jobs:
   collect:
-    if: vars.LINKEDIN_CRAWL_AUTHORIZED == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
-      INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED: "true"
+      INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED: ${{ vars.LINKEDIN_CRAWL_AUTHORIZED }}
     steps:
+      - name: Verify LinkedIn crawl authorization
+        if: vars.LINKEDIN_CRAWL_AUTHORIZED != 'true'
+        run: |
+          echo "Set the repository variable LINKEDIN_CRAWL_AUTHORIZED=true before collecting."
+          exit 1
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0

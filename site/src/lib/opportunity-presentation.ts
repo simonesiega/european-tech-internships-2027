@@ -29,7 +29,8 @@ export function getEmploymentTypeHue(employmentType: string): number {
 }
 
 export function formatPublishedDate(value: string): string {
-  const date = new Date(`${value.replace(" ", "T")}Z`);
+  const isoValue = value.replace(" ", "T");
+  const date = new Date(/(?:Z|[+-]\d{2}:\d{2})$/.test(isoValue) ? isoValue : `${isoValue}Z`);
 
   return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",

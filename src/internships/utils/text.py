@@ -31,12 +31,3 @@ def normalized_key(value: str) -> str:
     """Return a case-folded key for deterministic comparisons."""
     decomposed = unicodedata.normalize("NFKD", clean_text(value)).encode("ascii", "ignore").decode()
     return _NON_WORD_RE.sub(" ", decomposed.lower()).strip()
-
-
-def truncate(value: str, maximum: int) -> str:
-    """Truncate truncate."""
-    cleaned = clean_text(value)
-    if len(cleaned) <= maximum:
-        return cleaned
-    clipped = cleaned[: maximum - 1].rsplit(" ", 1)[0].rstrip(" ,.;:")
-    return f"{clipped or cleaned[: maximum - 1]}…"

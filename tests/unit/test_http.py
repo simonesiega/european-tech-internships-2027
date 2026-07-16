@@ -45,10 +45,9 @@ def test_http_fetcher_retries_transient_linkedin_response() -> None:
 
     async def run() -> str:
         async with client:
-            response = await HttpFetcher(settings, client=client).get_text(
+            return await HttpFetcher(settings, client=client).get_text(
                 "https://www.linkedin.com/jobs-guest/jobs/api/search"
             )
-            return response.text
 
     assert asyncio.run(run()) == "<li>ok</li>"
     assert attempts == 2

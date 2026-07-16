@@ -49,8 +49,6 @@ class FakeScraper:
         return LinkedInScrapeResult(
             positions=jobs,
             warnings=(),
-            response_time_ms=1,
-            response_bytes=100,
             pages_fetched=1,
             search_result_count=2,
         )

@@ -127,7 +127,7 @@ def load_settings(path: Path | None = None, *, dotenv_path: Path = Path(".env"))
 def apply_search_overrides(
     searches: list[LinkedInSearchConfig], settings: Settings
 ) -> list[LinkedInSearchConfig]:
-    """Apply apply search overrides."""
+    """Apply global limits to configured searches."""
     output: list[LinkedInSearchConfig] = []
     for search in searches:
         pages = settings.search_max_pages or search.max_pages

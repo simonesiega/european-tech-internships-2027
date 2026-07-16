@@ -56,7 +56,8 @@ class RawJob(BaseModel):
             value = [value]
         if not isinstance(value, (list, tuple)):
             raise ValueError("locations must be a list")
-        return list(dict.fromkeys(clean_text(str(item)) for item in value if clean_text(str(item))))
+        cleaned = (clean_text(str(item)) for item in value)
+        return list(dict.fromkeys(item for item in cleaned if item))
 
     @field_validator("industries", "start_date", mode="before")
     @classmethod

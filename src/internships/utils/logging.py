@@ -30,7 +30,7 @@ class JsonFormatter(logging.Formatter):
 
 
 def configure_logging(level: str = "INFO", *, json_output: bool = True) -> None:
-    """Configure configure logging."""
+    """Configure application logging."""
     handler = logging.StreamHandler()
     handler.setFormatter(
         JsonFormatter() if json_output else logging.Formatter("%(levelname)s %(message)s")

@@ -7,7 +7,7 @@ import pytest
 
 from internships.models.raw import KnownJob
 from internships.models.search import LinkedInSearchConfig
-from internships.scrapers.http import FetchError, TextResponse
+from internships.scrapers.http import FetchError
 from internships.scrapers.linkedin import (
     LINKEDIN_DETAIL_ENDPOINT,
     LinkedInPayloadError,
@@ -23,17 +23,12 @@ class FixtureFetcher:
         self.responses = dict(responses)
         self.calls: list[str] = []
 
-    async def get_text(self, url: str) -> TextResponse:
+    async def get_text(self, url: str) -> str:
         self.calls.append(url)
         configured = self.responses[url]
         if isinstance(configured, FetchError):
             raise configured
-        return TextResponse(
-            text=configured,
-            status_code=200,
-            elapsed_ms=5,
-            content_bytes=len(configured.encode()),
-        )
+        return configured
 
 
 def configured_search(**changes: object) -> LinkedInSearchConfig:
@@ -87,7 +82,26 @@ def test_linkedin_job_detail_extracts_structured_employment_type(
     assert job.industries is None
 
 
-def test_linkedin_job_detail_ignores_work_mode_in_description(
+def test_linkedin_job_detail_extracts_criteria_without_linkedin_classes(
+    fixture_html: Callable[[str], str],
+) -> None:
+    card = parse_search_page(fixture_html("linkedin_search_page_1.html")).cards[0]
+    html = """<!doctype html>
+    <h1 class="top-card-layout__title">Software Engineering Intern 2027</h1>
+    <a class="topcard__org-name-link">Test Technology</a>
+    <ul>
+      <li><h3>Employment type</h3><span>Volunteer</span></li>
+      <li><h3>Industries</h3><span>Software Development</span></li>
+    </ul>
+    """
+
+    job = parse_job_detail(html, card)
+
+    assert job.employment_type == "volunteer"
+    assert job.industries == "Software Development"
+
+
+def test_linkedin_job_detail_does_not_infer_industries_from_description(
     fixture_html: Callable[[str], str],
 ) -> None:
     card = parse_search_page(fixture_html("linkedin_search_page_1.html")).cards[0]
@@ -95,21 +109,6 @@ def test_linkedin_job_detail_ignores_work_mode_in_description(
     <h1 class="top-card-layout__title">Software Engineering Intern 2027</h1>
     <a class="topcard__org-name-link">Test Technology</a>
     <div class="show-more-less-html__markup">We follow a hybrid working model.</div>
-    """
-
-    job = parse_job_detail(html, card)
-
-    assert job.industries is None
-
-
-def test_linkedin_job_detail_ignores_ambiguous_remote_description(
-    fixture_html: Callable[[str], str],
-) -> None:
-    card = parse_search_page(fixture_html("linkedin_search_page_1.html")).cards[0]
-    html = """<!doctype html>
-    <h1 class="top-card-layout__title">Cybersecurity Intern 2027</h1>
-    <a class="topcard__org-name-link">Test Technology</a>
-    <div class="show-more-less-html__markup">Build secure remote access tooling.</div>
     """
 
     job = parse_job_detail(html, card)
@@ -163,8 +162,10 @@ def test_linkedin_scraper_paginates_and_deduplicates_job_ids(
     assert fetcher.calls.count(duplicate_detail_url) == 1
     assert all("2222222222" not in call for call in fetcher.calls)
     assert result.confirmed_unavailable_ids == ()
-    remote_job = next(job for job in result.positions if job.source_job_id == "3333333333")
-    assert remote_job.industries is None
+    job_without_industries = next(
+        job for job in result.positions if job.source_job_id == "3333333333"
+    )
+    assert job_without_industries.industries is None
 
 
 def test_title_prefilter_continues_to_later_search_pages(

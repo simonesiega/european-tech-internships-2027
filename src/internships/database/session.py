@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator
-from contextlib import contextmanager
 from pathlib import Path
 
 from sqlalchemy import Engine, create_engine, event, inspect, text
@@ -42,20 +40,6 @@ def create_database_engine(database_url: str, *, echo: bool = False) -> Engine:
 def create_session_factory(engine: Engine) -> sessionmaker[Session]:
     """Create the database session factory."""
     return sessionmaker(bind=engine, class_=Session, expire_on_commit=False, autoflush=False)
-
-
-@contextmanager
-def session_scope(factory: sessionmaker[Session]) -> Iterator[Session]:
-    """Provide a transactional database session."""
-    session = factory()
-    try:
-        yield session
-        session.commit()
-    except Exception:
-        session.rollback()
-        raise
-    finally:
-        session.close()
 
 
 def missing_tables(engine: Engine) -> set[str]:

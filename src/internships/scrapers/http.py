@@ -6,7 +6,6 @@ import asyncio
 import logging
 import time
 from collections.abc import Awaitable, Callable
-from dataclasses import dataclass
 from email.utils import parsedate_to_datetime
 from urllib.parse import urlsplit
 
@@ -35,16 +34,6 @@ class FetchError(RuntimeError):
         self.code = code
         self.status_code = status_code
         self.retryable = retryable
-
-
-@dataclass(frozen=True, slots=True)
-class TextResponse:
-    """Validated HTML response with non-sensitive request metrics."""
-
-    text: str
-    status_code: int
-    elapsed_ms: int
-    content_bytes: int
 
 
 class HttpFetcher:
@@ -90,7 +79,7 @@ class HttpFetcher:
         if self._owns_client:
             await self._client.aclose()
 
-    async def get_text(self, url: str) -> TextResponse:
+    async def get_text(self, url: str) -> str:
         """Fetch HTML/text, retrying timeout, transport, 429, and 5xx failures."""
         hostname = (urlsplit(url).hostname or "").casefold()
         # Enforce authorization before creating any network traffic, including retries.
@@ -101,12 +90,11 @@ class HttpFetcher:
                 "crawl_not_authorized",
                 "LinkedIn crawling is disabled until express permission is configured",
             )
-        last_error: FetchError | None = None
-        for attempt in range(self.settings.max_retries + 1):
+        attempt = 0
+        while True:
             try:
                 return await self._request_once(url)
             except FetchError as exc:
-                last_error = exc
                 if not exc.retryable or attempt >= self.settings.max_retries:
                     raise
                 delay = self.settings.retry_backoff_seconds * (2**attempt)
@@ -119,25 +107,20 @@ class HttpFetcher:
                     },
                 )
                 await self._sleep(delay)
-        if last_error is None:  # pragma: no cover - loop always executes
-            raise FetchError("internal", "request did not execute")
-        raise last_error
+                attempt += 1
 
-    async def _request_once(self, url: str) -> TextResponse:
+    async def _request_once(self, url: str) -> str:
         """Perform one HTTP request and classify its response."""
         host = urlsplit(url).hostname
         if not host:
             raise FetchError("invalid_url", "request URL has no hostname")
         await self._wait_for_host(host.casefold())
-        started = time.monotonic()
         try:
             response = await self._client.get(url)
         except httpx.TimeoutException as exc:
             raise FetchError("timeout", "LinkedIn request timed out", retryable=True) from exc
         except httpx.TransportError as exc:
             raise FetchError("transport", "LinkedIn request failed", retryable=True) from exc
-        elapsed_ms = round((time.monotonic() - started) * 1000)
-
         if response.status_code == 429 or response.status_code >= 500:
             retry_after = _retry_after_seconds(response.headers.get("Retry-After"))
             if retry_after is not None:
@@ -175,12 +158,7 @@ class HttpFetcher:
             text = body.decode(encoding)
         except (LookupError, UnicodeDecodeError) as exc:
             raise FetchError("invalid_text", "LinkedIn returned undecodable HTML") from exc
-        return TextResponse(
-            text=text,
-            status_code=response.status_code,
-            elapsed_ms=elapsed_ms,
-            content_bytes=len(body),
-        )
+        return text
 
     async def _wait_for_host(self, host: str) -> None:
         """Apply per-host pacing before an HTTP request."""
