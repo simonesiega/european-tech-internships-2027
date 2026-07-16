@@ -50,6 +50,14 @@ _WORK_MODE_VALUES = {
     "on site": WorkMode.ON_SITE,
     "onsite": WorkMode.ON_SITE,
 }
+_WORK_MODE_SELECTORS = (
+    "[data-test-id*='workplace']",
+    "[class*='workplace-type']",
+    ".job-details-preferences-and-skills__pill",
+    ".job-details-jobs-unified-top-card__job-insight",
+    ".top-card-layout button",
+    ".top-card-layout [role='button']",
+)
 _DEFAULT_INTERNSHIP_TITLE_TERMS = (
     "intern",
     "internship",
@@ -198,13 +206,36 @@ def _extract_work_mode(soup: BeautifulSoup, location: str) -> WorkMode | None:
         heading = _optional_text(item, ".description__job-criteria-subheader")
         if normalized_key(heading or "") != "workplace type":
             continue
-        value = normalized_key(_optional_text(item, ".description__job-criteria-text") or "")
-        work_mode = _WORK_MODE_VALUES.get(value)
+        value = _optional_text(item, ".description__job-criteria-text")
+        work_mode = _work_mode_from_text(value)
         if work_mode is not None:
             return work_mode
 
+    # LinkedIn also renders workplace mode as a top-card pill instead of a job
+    # criterion. Class names differ between guest and signed-in page variants, so
+    # inspect only known top-card/pill containers and require a standalone mode word.
+    for selector in _WORK_MODE_SELECTORS:
+        for node in soup.select(selector):
+            if not isinstance(node, Tag):
+                continue
+            work_mode = _work_mode_from_text(node.get_text(" ", strip=True))
+            if work_mode is not None:
+                return work_mode
+
     if "remote" in normalized_key(location):
         return WorkMode.REMOTE
+    return None
+
+
+def _work_mode_from_text(value: str) -> WorkMode | None:
+    """Normalize an exact mode label or a structured top-card insight."""
+    key = normalized_key(value)
+    direct = _WORK_MODE_VALUES.get(key)
+    if direct is not None:
+        return direct
+    for label, work_mode in _WORK_MODE_VALUES.items():
+        if re.search(rf"(?:^|\s){re.escape(label)}(?:$|\s)", key):
+            return work_mode
     return None
 
 

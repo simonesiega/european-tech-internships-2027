@@ -73,6 +73,7 @@ def test_linkedin_job_detail_parser_extracts_description(
     assert job.description is not None
     assert "Summer 2027" in job.description
     assert job.start_date == "Summer 2027"
+    assert job.work_mode == "hybrid"
 
 
 def test_linkedin_job_detail_does_not_treat_graduation_date_as_start_date(

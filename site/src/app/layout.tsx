@@ -9,9 +9,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "European Tech Internships 2027",
   description: "Open European technology internships for the 2027 cycle.",
-  icons: {
-    icon: "/favicon.svg",
-  },
 };
 
 const themeScript = `
