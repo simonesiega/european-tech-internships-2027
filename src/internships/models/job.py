@@ -6,7 +6,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from internships.models.enums import EmploymentType, InternshipCategory, JobStatus, WorkMode
+from internships.models.enums import EmploymentType, InternshipCategory, JobStatus
 from internships.utils.text import clean_text
 from internships.utils.url import canonicalize_url
 
@@ -22,7 +22,7 @@ class DiscoveredJob(BaseModel):
     location: str = Field(min_length=1, max_length=500)
     link: str
     category: InternshipCategory
-    work_mode: WorkMode | None = None
+    industries: str | None = Field(default=None, max_length=500)
     employment_type: EmploymentType | None = None
     start_date: str | None = Field(default=None, max_length=100)
 
@@ -35,7 +35,7 @@ class DiscoveredJob(BaseModel):
             raise ValueError("job text fields cannot be empty")
         return cleaned
 
-    @field_validator("start_date", mode="before")
+    @field_validator("industries", "start_date", mode="before")
     @classmethod
     def normalize_optional_text(cls, value: object) -> object:
         """Normalize optional display metadata."""

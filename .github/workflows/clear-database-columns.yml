@@ -3,8 +3,8 @@ name: Clear database columns
 on:
   workflow_dispatch:
     inputs:
-      clear_work_mode:
-        description: "Clear Work mode for every job"
+      clear_industries:
+        description: "Clear Industries for every job"
         required: false
         default: false
         type: boolean
@@ -43,7 +43,7 @@ jobs:
             echo "Database maintenance is permitted only from the main branch."
             exit 1
           fi
-          if [ "${{ inputs.clear_work_mode }}" != "true" ] \
+          if [ "${{ inputs.clear_industries }}" != "true" ] \
             && [ "${{ inputs.clear_employment_type }}" != "true" ] \
             && [ "${{ inputs.clear_start_date }}" != "true" ]; then
             echo "Select at least one column to clear."
@@ -91,7 +91,7 @@ jobs:
 
       - name: Clear selected columns
         env:
-          CLEAR_WORK_MODE: ${{ inputs.clear_work_mode }}
+          CLEAR_INDUSTRIES: ${{ inputs.clear_industries }}
           CLEAR_EMPLOYMENT_TYPE: ${{ inputs.clear_employment_type }}
           CLEAR_START_DATE: ${{ inputs.clear_start_date }}
         shell: bash
@@ -101,7 +101,7 @@ jobs:
           import sqlite3
 
           selected = {
-              "work_mode": os.environ["CLEAR_WORK_MODE"] == "true",
+              "industries": os.environ["CLEAR_INDUSTRIES"] == "true",
               "employment_type": os.environ["CLEAR_EMPLOYMENT_TYPE"] == "true",
               "start_date": os.environ["CLEAR_START_DATE"] == "true",
           }

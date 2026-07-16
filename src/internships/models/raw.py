@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from internships.models.enums import EmploymentType, WorkMode
+from internships.models.enums import EmploymentType
 from internships.utils.text import clean_text
 from internships.utils.url import canonicalize_url
 
@@ -33,7 +33,7 @@ class RawJob(BaseModel):
     locations: list[str] = Field(default_factory=list)
     application_url: str
     description: str | None = None
-    work_mode: WorkMode | None = None
+    industries: str | None = Field(default=None, max_length=500)
     employment_type: EmploymentType | None = None
     start_date: str | None = Field(default=None, max_length=100)
 
@@ -58,7 +58,7 @@ class RawJob(BaseModel):
             raise ValueError("locations must be a list")
         return list(dict.fromkeys(clean_text(str(item)) for item in value if clean_text(str(item))))
 
-    @field_validator("start_date", mode="before")
+    @field_validator("industries", "start_date", mode="before")
     @classmethod
     def normalize_optional_text(cls, value: object) -> object:
         """Normalize optional display metadata."""

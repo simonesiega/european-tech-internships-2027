@@ -10,7 +10,7 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
 
-from internships.models.enums import EmploymentType, WorkMode
+from internships.models.enums import EmploymentType
 from internships.models.raw import KnownJob, RawJob
 from internships.models.search import LinkedInSearchConfig
 from internships.scrapers.http import FetchError, TextResponse
@@ -46,24 +46,13 @@ _CONTEXTUAL_START_DATE_RE = re.compile(
 )
 _EMPLOYMENT_TYPE_VALUES = {
     "full time": EmploymentType.FULL_TIME,
+    "part time": EmploymentType.PART_TIME,
+    "contract": EmploymentType.CONTRACT,
+    "temporary": EmploymentType.TEMPORARY,
     "internship": EmploymentType.INTERNSHIP,
+    "volunteer": EmploymentType.VOLUNTEER,
+    "other": EmploymentType.OTHER,
 }
-_WORK_MODE_VALUES = {
-    "remote": WorkMode.REMOTE,
-    "hybrid": WorkMode.HYBRID,
-}
-_HEADER_TAG_SELECTORS = (
-    ".top-card-layout [data-test-id*='workplace']",
-    ".top-card-layout [class*='workplace-type']",
-    ".top-card-layout .job-details-preferences-and-skills__pill",
-    ".top-card-layout .job-details-jobs-unified-top-card__job-insight",
-    ".top-card-layout button",
-    ".top-card-layout [role='button']",
-    ".job-details-jobs-unified-top-card__container "
-    ".job-details-preferences-and-skills__pill",
-    ".job-details-jobs-unified-top-card__container "
-    ".job-details-jobs-unified-top-card__job-insight",
-)
 _DEFAULT_INTERNSHIP_TITLE_TERMS = (
     "intern",
     "internship",
@@ -199,40 +188,27 @@ def parse_job_detail(html: str, card: LinkedInSearchCard) -> RawJob:
         locations=[location] if location else [],
         application_url=card.application_url,
         description=description,
-        work_mode=_extract_work_mode(soup),
+        industries=_extract_criterion(soup, "industries"),
         employment_type=_extract_employment_type(soup),
         start_date=_extract_start_date(title, description),
     )
 
 
-def _header_tag_values(soup: BeautifulSoup) -> tuple[str, ...]:
-    """Return only exact tag labels rendered in LinkedIn's job header."""
-    values: list[str] = []
-    for selector in _HEADER_TAG_SELECTORS:
-        for node in soup.select(selector):
-            if isinstance(node, Tag):
-                value = normalized_key(node.get_text(" ", strip=True))
-                if value and value not in values:
-                    values.append(value)
-    return tuple(values)
+def _extract_criterion(soup: BeautifulSoup, expected_heading: str) -> str | None:
+    """Extract one exact value from LinkedIn's structured job criteria."""
+    for item in soup.select(".description__job-criteria-item"):
+        if not isinstance(item, Tag):
+            continue
+        heading = _optional_text(item, ".description__job-criteria-subheader")
+        if normalized_key(heading or "") == expected_heading:
+            return _optional_text(item, ".description__job-criteria-text")
+    return None
 
 
 def _extract_employment_type(soup: BeautifulSoup) -> EmploymentType | None:
-    """Extract Full time or Internship exclusively from header tags."""
-    for value in _header_tag_values(soup):
-        employment_type = _EMPLOYMENT_TYPE_VALUES.get(value)
-        if employment_type is not None:
-            return employment_type
-    return None
-
-
-def _extract_work_mode(soup: BeautifulSoup) -> WorkMode | None:
-    """Extract Remote or Hybrid exclusively from header tags."""
-    for value in _header_tag_values(soup):
-        work_mode = _WORK_MODE_VALUES.get(value)
-        if work_mode is not None:
-            return work_mode
-    return None
+    """Extract LinkedIn's structured Employment type criterion."""
+    value = normalized_key(_extract_criterion(soup, "employment type") or "")
+    return _EMPLOYMENT_TYPE_VALUES.get(value)
 
 
 def _extract_start_date(title: str, description: str | None) -> str | None:

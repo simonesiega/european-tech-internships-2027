@@ -2,9 +2,8 @@ import {DatabaseSync} from "node:sqlite";
 import type {Internship} from "@/types/internship";
 
 const LAST_UPDATED_QUERY = `
-  SELECT MAX(last_seen_at) AS lastUpdatedAt
-  FROM jobs
-  WHERE status = 'open'
+  SELECT MAX(finished_at) AS lastUpdatedAt
+  FROM search_runs
 `;
 
 const OPEN_INTERNSHIPS_QUERY = `
@@ -15,7 +14,7 @@ const OPEN_INTERNSHIPS_QUERY = `
     location,
     link,
     category,
-    work_mode AS workMode,
+    industries,
     employment_type AS employmentType,
     start_date AS startDate,
     first_seen_at AS firstSeenAt
@@ -57,7 +56,7 @@ export function getOpenInternships(): Internship[] {
         location,
         link,
         category,
-        workMode,
+        industries,
         employmentType,
         startDate,
         firstSeenAt,
@@ -68,7 +67,7 @@ export function getOpenInternships(): Internship[] {
         location,
         link,
         category,
-        workMode,
+        industries,
         employmentType,
         startDate,
         firstSeenAt,

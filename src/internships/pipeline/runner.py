@@ -213,7 +213,7 @@ class CollectionPipeline:
                     location=display_location,
                     link=raw.application_url,
                     category=decision.category,
-                    work_mode=raw.work_mode,
+                    industries=raw.industries,
                     employment_type=raw.employment_type,
                     start_date=raw.start_date,
                 )

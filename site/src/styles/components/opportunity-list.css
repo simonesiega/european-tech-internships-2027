@@ -84,12 +84,12 @@
 
   .ui-table-head:nth-child(5),
   .ui-table-cell:nth-child(5) {
-    width: 9%;
+    width: 11%;
   }
 
   .ui-table-head:nth-child(6),
   .ui-table-cell:nth-child(6) {
-    width: 11%;
+    width: 9%;
   }
 
   .ui-table-head:nth-child(7),
@@ -120,7 +120,8 @@
 
   .ui-table-cell:nth-child(4),
   .ui-table-cell:nth-child(5),
-  .ui-table-cell:nth-child(6) {
+  .ui-table-cell:nth-child(6),
+  .ui-table-cell:nth-child(8) {
     text-align: center;
   }
 
@@ -169,6 +170,7 @@
 
   .empty-date-cell {
     display: block;
+    width: 100%;
     text-align: center;
   }
 

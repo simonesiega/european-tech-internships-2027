@@ -10,7 +10,6 @@ import {
   formatPublishedDate,
   getCategoryHue,
   getEmploymentTypeHue,
-  getWorkModeHue,
 } from "@/lib/opportunity-presentation";
 import type {Internship} from "@/types/internship";
 
@@ -72,20 +71,10 @@ export const opportunityColumns: ColumnDef<Internship>[] = [
     ),
   },
   {
-    accessorKey: "workMode",
-    header: "Work mode",
+    accessorKey: "industries",
+    header: "Industries",
     cell: ({row}) => (
-      <Badge
-        className={row.original.workMode ? "colored-badge" : "unspecified-badge"}
-        variant="outline"
-        style={
-          row.original.workMode
-            ? ({"--badge-hue": getWorkModeHue(row.original.workMode)} as CSSProperties)
-            : undefined
-        }
-      >
-        {row.original.workMode ? formatCategory(row.original.workMode) : "Not specified"}
-      </Badge>
+      <span className="muted-cell">{row.original.industries ?? "Not specified"}</span>
     ),
   },
   {

@@ -28,15 +28,6 @@ export function getEmploymentTypeHue(employmentType: string): number {
   return hues[employmentType] ?? 210;
 }
 
-export function getWorkModeHue(workMode: string): number {
-  const hues: Record<string, number> = {
-    remote: 205,
-    hybrid: 275,
-    "on-site": 145,
-  };
-  return hues[workMode] ?? 210;
-}
-
 export function formatPublishedDate(value: string): string {
   const date = new Date(`${value.replace(" ", "T")}Z`);
 

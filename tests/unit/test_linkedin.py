@@ -73,18 +73,18 @@ def test_linkedin_job_detail_parser_extracts_description(
     assert job.description is not None
     assert "Summer 2027" in job.description
     assert job.start_date == "Summer 2027"
-    assert job.work_mode == "hybrid"
+    assert job.industries == "Software Development"
     assert job.employment_type == "internship"
 
 
-def test_linkedin_job_detail_ignores_employment_type_in_about_the_job(
+def test_linkedin_job_detail_extracts_structured_employment_type(
     fixture_html: Callable[[str], str],
 ) -> None:
     card = parse_search_page(fixture_html("linkedin_search_page_1.html")).cards[1]
     job = parse_job_detail(fixture_html("linkedin_job_detail_2222222222.html"), card)
 
-    assert job.employment_type is None
-    assert job.work_mode is None
+    assert job.employment_type == "full-time"
+    assert job.industries is None
 
 
 def test_linkedin_job_detail_ignores_work_mode_in_description(
@@ -99,7 +99,7 @@ def test_linkedin_job_detail_ignores_work_mode_in_description(
 
     job = parse_job_detail(html, card)
 
-    assert job.work_mode is None
+    assert job.industries is None
 
 
 def test_linkedin_job_detail_ignores_ambiguous_remote_description(
@@ -114,7 +114,7 @@ def test_linkedin_job_detail_ignores_ambiguous_remote_description(
 
     job = parse_job_detail(html, card)
 
-    assert job.work_mode is None
+    assert job.industries is None
 
 
 def test_linkedin_job_detail_does_not_treat_graduation_date_as_start_date(
@@ -164,7 +164,7 @@ def test_linkedin_scraper_paginates_and_deduplicates_job_ids(
     assert all("2222222222" not in call for call in fetcher.calls)
     assert result.confirmed_unavailable_ids == ()
     remote_job = next(job for job in result.positions if job.source_job_id == "3333333333")
-    assert remote_job.work_mode == "remote"
+    assert remote_job.industries is None
 
 
 def test_title_prefilter_continues_to_later_search_pages(

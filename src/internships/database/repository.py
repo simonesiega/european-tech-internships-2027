@@ -318,7 +318,7 @@ class Repository:
                 location=incoming.location,
                 link=incoming.link,
                 category=incoming.category.value,
-                work_mode=incoming.work_mode.value if incoming.work_mode else None,
+                industries=incoming.industries,
                 employment_type=(
                     incoming.employment_type.value if incoming.employment_type else None
                 ),
@@ -335,7 +335,7 @@ class Repository:
             effective_time = max(ensure_utc(row.last_seen_at), ensure_utc(observed_at))
             # Missing optional metadata is not evidence that a previously observed
             # value became invalid; public detail markup can omit fields temporarily.
-            next_work_mode = incoming.work_mode.value if incoming.work_mode else row.work_mode
+            next_industries = incoming.industries or row.industries
             next_employment_type = (
                 incoming.employment_type.value if incoming.employment_type else row.employment_type
             )
@@ -347,7 +347,7 @@ class Repository:
                     row.location != incoming.location,
                     row.link != incoming.link,
                     row.category != incoming.category.value,
-                    row.work_mode != next_work_mode,
+                    row.industries != next_industries,
                     row.employment_type != next_employment_type,
                     row.start_date != next_start_date,
                 )
@@ -358,7 +358,7 @@ class Repository:
             row.location = incoming.location
             row.link = incoming.link
             row.category = incoming.category.value
-            row.work_mode = next_work_mode
+            row.industries = next_industries
             row.employment_type = next_employment_type
             row.start_date = next_start_date
             row.last_seen_at = effective_time
@@ -453,7 +453,7 @@ def _stored_job(row: JobRow) -> StoredJob:
         location=row.location,
         link=row.link,
         category=row.category,
-        work_mode=row.work_mode,
+        industries=row.industries,
         employment_type=row.employment_type,
         start_date=row.start_date,
         first_seen_at=ensure_utc(row.first_seen_at),
