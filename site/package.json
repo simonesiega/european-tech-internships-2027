@@ -28,6 +28,6 @@
     "eslint-config-next": "16.2.10",
     "prettier": "^3.9.5",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   }
 }
