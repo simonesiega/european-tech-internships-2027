@@ -34,15 +34,22 @@ This independent project is not affiliated with or endorsed by LinkedIn or any l
 The table is generated atomically from open rows in `data/internships.db`. Do not edit its rows manually.
 
 <!-- BEGIN INTERNSHIPS -->
-**Open internships:** 33<br>
-**Last successful collection:** July 15, 2026 at 16:39 UTC
+**Open internships:** 46<br>
+**Last successful collection:** July 16, 2026 at 10:51 UTC
 
 | Company | Title | Location | Link |
 |---|---|---|---|
 | Airbus | #Discover II 2026-2027 / AI &amp; Cybersecurity - Insider Protection Internship | Getafe, Community of Madrid, Spain | [Link](<https://www.linkedin.com/jobs/view/4406408909>) |
+| Airbus Defence and Space | # Discover II 2026-2027 Data Engineering &amp; AI Implementation Intern | Getafe, Community of Madrid, Spain | [Link](<https://www.linkedin.com/jobs/view/4406716246>) |
+| Airbus Defence and Space | #Discover II 2026-2027 / Satellite Functional Validation Infrastructure Engineer Internship | Getafe, Community of Madrid, Spain | [Link](<https://www.linkedin.com/jobs/view/4406414832>) |
+| Amazon | 2027 Software Dev Engineer Intern | Dublin, County Dublin, Ireland | [Link](<https://www.linkedin.com/jobs/view/4434735213>) |
+| hackajob | Internship Programme 2027: Information Security Engineer \(Appsec\) | United Kingdom | [Link](<https://www.linkedin.com/jobs/view/4433610667>) |
 | IMC Trading | 2027 - Quant Research Intern - IIT Bombay | Amsterdam, North Holland, Netherlands | [Link](<https://www.linkedin.com/jobs/view/4436251089>) |
+| PwC Belgium | School Internship in Cloud &amp; Data \(2026-2027\) | Brussels, Brussels Region, Belgium | [Link](<https://www.linkedin.com/jobs/view/4374268675>) |
 | Qualcomm | FY27 Intern - Software Engineering Internship 2027 - 6 months, Cork | Cork, County Cork, Ireland | [Link](<https://www.linkedin.com/jobs/view/4417144574>) |
 | Revolut | Internship Programme 2027: Data Scientist and Analyst | Poland | [Link](<https://www.linkedin.com/jobs/view/4419054691>) |
+| Revolut | Internship Programme 2027: Data Scientist and Analyst | Porto, Porto, Portugal | [Link](<https://www.linkedin.com/jobs/view/4419049784>) |
+| Revolut | Internship Programme 2027: Data Scientist and Analyst | Portugal | [Link](<https://www.linkedin.com/jobs/view/4419066093>) |
 | Revolut | Internship Programme 2027: Data Scientist and Analyst | Spain | [Link](<https://www.linkedin.com/jobs/view/4419061384>) |
 | Revolut | Internship Programme 2027: Information Security Engineer \(Appsec\) | Poland | [Link](<https://www.linkedin.com/jobs/view/4433220754>) |
 | Revolut | Internship Programme 2027: Information Security Engineer \(Appsec\) | Porto, Porto, Portugal | [Link](<https://www.linkedin.com/jobs/view/4433220744>) |
@@ -55,9 +62,12 @@ The table is generated atomically from open rows in `data/internships.db`. Do no
 | Revolut | Internship Programme 2027: Software Engineer \(Android\) | Porto, Porto, Portugal | [Link](<https://www.linkedin.com/jobs/view/4418831649>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Android\) | Portugal | [Link](<https://www.linkedin.com/jobs/view/4418843165>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Android\) | Spain | [Link](<https://www.linkedin.com/jobs/view/4418844132>) |
+| Revolut | Internship Programme 2027: Software Engineer \(Android\) | United Kingdom | [Link](<https://www.linkedin.com/jobs/view/4419099439>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Frontend\) | Poland | [Link](<https://www.linkedin.com/jobs/view/4418845028>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Frontend\) | Porto, Porto, Portugal | [Link](<https://www.linkedin.com/jobs/view/4418834444>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Frontend\) | Portugal | [Link](<https://www.linkedin.com/jobs/view/4418822811>) |
+| Revolut | Internship Programme 2027: Software Engineer \(Frontend\) | Spain | [Link](<https://www.linkedin.com/jobs/view/4418840373>) |
+| Revolut | Internship Programme 2027: Software Engineer \(Frontend\) | United Kingdom | [Link](<https://www.linkedin.com/jobs/view/4419099411>) |
 | Revolut | Internship Programme 2027: Software Engineer \(iOS\) | Poland | [Link](<https://www.linkedin.com/jobs/view/4418825667>) |
 | Revolut | Internship Programme 2027: Software Engineer \(iOS\) | Porto, Porto, Portugal | [Link](<https://www.linkedin.com/jobs/view/4418827668>) |
 | Revolut | Internship Programme 2027: Software Engineer \(iOS\) | Portugal | [Link](<https://www.linkedin.com/jobs/view/4418831599>) |
@@ -66,10 +76,13 @@ The table is generated atomically from open rows in `data/internships.db`. Do no
 | Revolut | Internship Programme 2027: Software Engineer \(Java\) | Porto, Porto, Portugal | [Link](<https://www.linkedin.com/jobs/view/4418828662>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Java\) | Portugal | [Link](<https://www.linkedin.com/jobs/view/4418844135>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Java\) | Spain | [Link](<https://www.linkedin.com/jobs/view/4418828668>) |
+| Revolut | Internship Programme 2027: Software Engineer \(Java\) | United Kingdom | [Link](<https://www.linkedin.com/jobs/view/4419091723>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Python\) | Poland | [Link](<https://www.linkedin.com/jobs/view/4418822809>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Python\) | Porto, Porto, Portugal | [Link](<https://www.linkedin.com/jobs/view/4418843133>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Python\) | Portugal | [Link](<https://www.linkedin.com/jobs/view/4418832595>) |
 | Revolut | Internship Programme 2027: Software Engineer \(Python\) | Spain | [Link](<https://www.linkedin.com/jobs/view/4418830569>) |
+| Revolut | Internship Programme 2027: Software Engineer \(Python\) | United Kingdom | [Link](<https://www.linkedin.com/jobs/view/4419094634>) |
+| Susquehanna International Group | Quantitative Research Internship: Summer 2027 | Dublin, County Dublin, Ireland | [Link](<https://www.linkedin.com/jobs/view/4438405881>) |
 | Virtu Financial | 2027 Internship - Quantitative Strategist and Research Intern | Dublin, County Dublin, Ireland | [Link](<https://www.linkedin.com/jobs/view/4440582030>) |
 | Wincent | Quantitative Research Internship – Quant Research/Trading – Starting Summer 2027 | Bratislava, Bratislava, Slovakia | [Link](<https://www.linkedin.com/jobs/view/4425670131>) |
 <!-- END INTERNSHIPS -->
