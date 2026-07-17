@@ -1,0 +1,64 @@
+name: Feature request
+description: Propose a focused improvement that fits the project architecture.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Explain the user need before proposing an implementation. Significant architecture, source-access, schema, or security changes require discussion before a pull request.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Python pipeline or CLI
+        - Website
+        - Search or classification
+        - Database or migrations
+        - Docker or automation
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user problem or limitation would this solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe observable behavior rather than only implementation details.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What workarounds or smaller approaches did you consider?
+
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: Architecture and safety impact
+      description: Note effects on read-only website access, canonical state, source authorization, privacy, or deployment.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues and documentation.
+          required: true
+        - label: This proposal does not depend on unauthorized source access.
+          required: true

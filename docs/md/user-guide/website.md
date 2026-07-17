@@ -11,6 +11,8 @@ The [live website](https://internship2027.simonesiega.com/) is the project’s p
 - [Displayed fields](#displayed-fields)
 - [Data interpretation](#data-interpretation)
 - [Accessibility and responsive behavior](#accessibility-and-responsive-behavior)
+- [Shareable filter URLs](#shareable-filter-urls)
+- [Search and social metadata](#search-and-social-metadata)
 - [Read-only database contract](#read-only-database-contract)
 - [Local website development](#local-website-development)
 - [Production runtime](#production-runtime)
@@ -40,6 +42,7 @@ The directory provides:
 - pagination with selectable page size;
 - light and dark themes stored as browser preferences;
 - direct links to public source listings;
+- shareable filter URLs;
 - the current open-role count;
 - the latest completed collection time.
 
@@ -70,6 +73,8 @@ Sortable columns include:
 - first-seen date.
 
 Search, filtering, sorting, page size, and pagination affect only the displayed result set. They never mutate canonical state or influence collection.
+
+Search and filter state is encoded in the URL so a filtered view can be bookmarked or shared. Sorting, page size, and pagination remain local presentation state.
 
 A browser interaction or URL state is not lifecycle evidence, collection input, or a pipeline instruction.
 
@@ -127,6 +132,39 @@ Website changes should preserve:
 
 The empty directory is a valid state when the configured database contains no open listings.
 
+## Shareable filter URLs
+
+The directory recognizes these query parameters:
+
+| Parameter | Meaning |
+|---|---|
+| `q` | Free-text search |
+| `company` | Exact company option |
+| `country` | Exact country option |
+| `category` | Exact internal technology category |
+
+For example:
+
+```text
+https://internship2027.simonesiega.com/?q=security&country=Germany
+```
+
+Selecting a filter adds it to browser history, clearing a filter removes its parameter, and browser back/forward navigation restores earlier filter selections. Search typing replaces the current history entry to avoid creating one entry per keystroke. Reset removes only directory-owned parameters.
+
+A company, country, or category value that is not present in the current open dataset is ignored. Query parameters are untrusted presentation input and never reach a database write path.
+
+## Search and social metadata
+
+The website publishes:
+
+- a canonical URL that excludes transient filter parameters;
+- descriptive title, description, authorship, and crawler directives;
+- Open Graph and large-card social metadata;
+- a generated 1200 × 630 social preview image;
+- `/robots.txt`, `/sitemap.xml`, and `/manifest.webmanifest` metadata routes.
+
+`SITE_URL` must contain the canonical public origin so absolute metadata, sitemap, and crawler URLs are correct in production.
+
 ## Read-only database contract
 
 Website database access lives under:
@@ -162,14 +200,17 @@ For installation, database initialization, environment-file creation, and first 
 
 Website runtime variables are documented in [Configuration](../getting-started/configuration.md#website-settings).
 
-Before submitting a website change, run:
+Install the Playwright Chromium browser once, then run the complete website checks:
 
 ```bash
 cd site
+bunx playwright install chromium
 bun run ci
 ```
 
-The complete validation path and coding expectations are documented in [Development](../development/development.md#website).
+`bun run ci` checks formatting, lint, strict TypeScript, the production build, and offline Playwright behavior against a generated temporary SQLite fixture. It does not contact LinkedIn.
+
+The complete validation path and coding expectations are documented in [Development](../development/development.md#website-validation).
 
 ## Production runtime
 

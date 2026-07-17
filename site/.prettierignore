@@ -1,6 +1,9 @@
 .next
 build
 coverage
+playwright-report
+test-results
+tests/e2e/.tmp
 node_modules
 next-env.d.ts
 out

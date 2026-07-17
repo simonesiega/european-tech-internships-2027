@@ -89,7 +89,7 @@ Additional providers, authenticated or browser-based collection, private endpoin
 
 ## Issues and design changes
 
-Search [existing issues](https://github.com/simonesiega/european-tech-internships-2027/issues) before opening a duplicate.
+Search [existing issues](https://github.com/simonesiega/european-tech-internships-2027/issues) before opening a duplicate. Use the repository’s issue forms for internship suggestions, bug reports, and feature requests; security reports belong in a private GitHub security advisory.
 
 A useful bug report includes:
 
@@ -321,7 +321,7 @@ feat: add bounded compiler internship search
 docs: clarify closure confirmation behavior
 ```
 
-The pull request description should explain:
+Complete every applicable section and check in the repository pull-request template. The pull request description should explain:
 
 - what changed;
 - why the previous behavior was insufficient;

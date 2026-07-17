@@ -31,6 +31,7 @@ Install the locked dependencies:
 uv sync --frozen --dev
 cd site
 bun install --frozen-lockfile
+bunx playwright install chromium
 cd ..
 ```
 
@@ -46,7 +47,7 @@ Normal tests and builds require no LinkedIn access. First-time setup belongs in 
 ├── docs/                    # Markdown guides and visual assets
 ├── migrations/              # Alembic history
 ├── scripts/                 # migration and documentation checks
-├── site/                    # Next.js website
+├── site/                    # Next.js website and Playwright tests
 ├── src/internships/         # Python package
 ├── tests/                   # unit, integration, and fixtures
 ├── CONTRIBUTING.md
@@ -134,7 +135,16 @@ cd site
 bun run ci
 ```
 
-This verifies Prettier, ESLint, strict TypeScript, and the production Next.js build.
+This verifies Prettier, ESLint, strict TypeScript, the production Next.js build, and offline Playwright behavior in Chromium. Playwright creates a temporary synthetic SQLite fixture under `site/tests/e2e/.tmp/`; the fixture and test artifacts are ignored by Git.
+
+Run a focused browser test with:
+
+```bash
+cd site
+bun run test:e2e -- --grep "shareable URL"
+```
+
+The website CI workflow installs Chromium before running this path.
 
 ### Database migrations
 
@@ -228,7 +238,7 @@ Integration coverage includes:
 - README rendering and validation;
 - ORM and Alembic agreement.
 
-Website changes must preserve read-only access, empty state, search, filters, sorting, pagination, accessibility, responsive behavior, safe URLs, and the production build.
+Website changes must preserve read-only access, empty state, shareable URL filters, search, sorting, pagination, accessibility, responsive behavior, safe URLs, crawler metadata, and the production build. Playwright coverage should assert observable browser behavior against synthetic offline data.
 
 Focused example:
 

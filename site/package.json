@@ -16,7 +16,9 @@
     "format:check": "bun run prettier",
     "format": "prettier --write .",
     "check": "bun run format:check && bun run lint && bun run typecheck && bun run build",
-    "ci": "bun run check"
+    "test:e2e:setup": "bun run tests/e2e/create-fixture.mjs",
+    "test:e2e": "bun run test:e2e:setup && playwright test",
+    "ci": "bun run check && bun run test:e2e"
   },
   "dependencies": {
     "@tanstack/react-table": "^8.21.3",
@@ -26,6 +28,7 @@
     "react-dom": "19.2.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@types/node": "^26.1.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",

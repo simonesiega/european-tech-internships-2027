@@ -34,9 +34,9 @@ The loader scans `configs/searches/` recursively:
 
 ```text
 configs/searches/
-├── roles/       # technology disciplines
-├── companies/   # targeted employers
-└── countries/   # supported European country partitions
+├── roles/       # 23 technology paths
+├── companies/   # 12 targeted employers
+└── countries/   # 33 country partitions
 ```
 
 Generated documentation may display the current count for each group. `internships render` refreshes owned counts, and `internships validate` compares them with the effective registry.

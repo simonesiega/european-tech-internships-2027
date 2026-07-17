@@ -22,7 +22,9 @@ jobs:
           bun-version: 1.3.14
       - name: Install frozen dependencies
         run: bun install --frozen-lockfile
-      - name: Check formatting, lint, types, and build
+      - name: Install Playwright browser
+        run: bunx playwright install --with-deps chromium
+      - name: Check formatting, lint, types, build, and behavior
         env:
           SITE_URL: https://internship2027.simonesiega.com
         run: bun run ci

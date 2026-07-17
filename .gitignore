@@ -16,6 +16,9 @@ site/.next/
 site/node_modules/
 site/*.tsbuildinfo
 site/next-env.d.ts
+site/playwright-report/
+site/test-results/
+site/tests/e2e/.tmp/
 
 # Local configuration and secrets
 .env
