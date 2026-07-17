@@ -13,21 +13,33 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+
+      - name: Prepare CI database bind mount
+        run: |
+          sudo install -d -m 2770 -o 10001 -g 10001 /srv/european-tech-internships/data
+
       - name: Build production images
         run: docker compose build
+
       - name: Check CLI image
         run: docker compose run --rm internships --help
+
       - name: Check automatic migration and site database access
         run: |
           trap 'docker compose down --volumes' EXIT
-          docker compose up --detach site
+
+          if ! docker compose up --detach site; then
+            docker compose logs site internships
+            exit 1
+          fi
+
           for _ in $(seq 1 10); do
-            if docker compose exec --no-TTY site node -e \
-              "fetch('http://127.0.0.1:3000').then(response => process.exit(response.ok ? 0 : 1))"; then
+            if docker compose exec --no-TTY site node -e "fetch('http://127.0.0.1:3000').then(response => process.exit(response.ok ? 0 : 1))"; then
               exit 0
             fi
             sleep 1
           done
+
           docker compose logs site internships
           exit 1
