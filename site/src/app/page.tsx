@@ -9,9 +9,9 @@ export default function Home() {
   const {internships, lastUpdatedAt} = getDirectoryData();
 
   return (
-    <div className="site-shell">
+    <div className="mx-auto flex min-h-svh w-[min(calc(100%_-_40px),1376px)] flex-col pt-18 max-[760px]:w-[min(calc(100%_-_28px),1376px)] max-[639px]:pt-22">
       <SiteHeader />
-      <main>
+      <main className="flex-1">
         <OpportunityDirectory internships={internships} />
       </main>
       <SiteFooter lastUpdatedAt={lastUpdatedAt} />

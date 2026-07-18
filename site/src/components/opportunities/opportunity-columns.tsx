@@ -5,6 +5,7 @@ import type {Column, ColumnDef} from "@tanstack/react-table";
 import {ArrowUpDown, ArrowUpRight} from "lucide-react";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
+import {cn} from "@/lib/cn";
 import {
   formatCategory,
   formatPublishedDate,
@@ -18,7 +19,7 @@ function SortableHeader({column, label}: {column: Column<Internship>; label: str
     <Button
       variant="ghost"
       size="sm"
-      className="column-sort-button"
+      className="mx-auto h-[30px] px-2.5 text-[11px] text-inherit [&_svg]:size-[13px] [&_svg]:opacity-55"
       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
     >
       {label}
@@ -35,7 +36,7 @@ export const opportunityColumns: ColumnDef<Internship>[] = [
       <Button
         variant="ghost"
         size="icon"
-        className="open-role-button"
+        className="w-7 [&_svg]:size-4"
         onClick={() => window.open(row.original.link, "_blank", "noopener,noreferrer")}
         aria-label={`Open ${row.original.title} at ${row.original.company}`}
       >
@@ -46,13 +47,18 @@ export const opportunityColumns: ColumnDef<Internship>[] = [
   {
     accessorKey: "company",
     header: ({column}) => <SortableHeader column={column} label="Company" />,
-    cell: ({row}) => <span className="company-name">{row.original.company}</span>,
+    cell: ({row}) => <span className="font-semibold">{row.original.company}</span>,
   },
   {
     accessorKey: "title",
     header: ({column}) => <SortableHeader column={column} label="Role" />,
     cell: ({row}) => (
-      <a className="role-link" href={row.original.link} target="_blank" rel="noreferrer">
+      <a
+        className="line-clamp-2 leading-[1.35] font-medium hover:underline hover:underline-offset-3"
+        href={row.original.link}
+        target="_blank"
+        rel="noreferrer"
+      >
         {row.original.title}
       </a>
     ),
@@ -62,7 +68,7 @@ export const opportunityColumns: ColumnDef<Internship>[] = [
     header: "Category",
     cell: ({row}) => (
       <Badge
-        className="colored-badge"
+        className="border-[hsl(var(--badge-hue)_38%_82%)] bg-[hsl(var(--badge-hue)_55%_93%)] text-[hsl(var(--badge-hue)_38%_32%)] dark:border-[hsl(var(--badge-hue)_25%_28%)] dark:bg-[hsl(var(--badge-hue)_28%_18%)] dark:text-[hsl(var(--badge-hue)_45%_76%)]"
         variant="secondary"
         style={{"--badge-hue": getCategoryHue(row.original.category)} as CSSProperties}
       >
@@ -74,7 +80,9 @@ export const opportunityColumns: ColumnDef<Internship>[] = [
     accessorKey: "industries",
     header: "Industries",
     cell: ({row}) => (
-      <span className="muted-cell">{row.original.industries ?? "Not specified"}</span>
+      <span className="leading-[1.4] text-[var(--text-soft)]">
+        {row.original.industries ?? "Not specified"}
+      </span>
     ),
   },
   {
@@ -82,7 +90,11 @@ export const opportunityColumns: ColumnDef<Internship>[] = [
     header: "Employment type",
     cell: ({row}) => (
       <Badge
-        className={row.original.employmentType ? "colored-badge" : "unspecified-badge"}
+        className={cn(
+          row.original.employmentType
+            ? "border-[hsl(var(--badge-hue)_38%_82%)] bg-[hsl(var(--badge-hue)_55%_93%)] text-[hsl(var(--badge-hue)_38%_32%)] dark:border-[hsl(var(--badge-hue)_25%_28%)] dark:bg-[hsl(var(--badge-hue)_28%_18%)] dark:text-[hsl(var(--badge-hue)_45%_76%)]"
+            : "text-[var(--text-faint)]"
+        )}
         variant="outline"
         style={
           row.original.employmentType
@@ -101,20 +113,27 @@ export const opportunityColumns: ColumnDef<Internship>[] = [
   {
     accessorKey: "location",
     header: ({column}) => <SortableHeader column={column} label="Location" />,
-    cell: ({row}) => <span className="muted-cell">{row.original.location}</span>,
+    cell: ({row}) => (
+      <span className="leading-[1.4] text-[var(--text-soft)]">{row.original.location}</span>
+    ),
   },
   {
     accessorKey: "startDate",
     header: "Start date",
     cell: ({row}) => (
-      <span className="muted-cell nowrap-cell">{row.original.startDate ?? "—"}</span>
+      <span className="leading-[1.4] whitespace-nowrap text-[var(--text-soft)]">
+        {row.original.startDate ?? "—"}
+      </span>
     ),
   },
   {
     accessorKey: "firstSeenAt",
     header: ({column}) => <SortableHeader column={column} label="First seen" />,
     cell: ({row}) => (
-      <time className="muted-cell nowrap-cell" dateTime={row.original.firstSeenAt}>
+      <time
+        className="leading-[1.4] whitespace-nowrap text-[var(--text-soft)]"
+        dateTime={row.original.firstSeenAt}
+      >
         {formatPublishedDate(row.original.firstSeenAt)}
       </time>
     ),

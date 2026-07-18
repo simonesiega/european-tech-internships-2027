@@ -1,12 +1,56 @@
-@import "../styles/tokens.css";
-@import "../styles/base/reset.css";
-@import "../styles/base/document.css";
-@import "../styles/layout/shell.css";
-@import "../styles/components/header.css";
-@import "../styles/components/theme-toggle.css";
-@import "../styles/components/ui.css";
-@import "../styles/components/opportunity-directory.css";
-@import "../styles/components/opportunity-filters.css";
-@import "../styles/components/opportunity-list.css";
-@import "../styles/components/footer.css";
-@import "../styles/accessibility/reduced-motion.css";
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  color-scheme: light;
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-hover: #fafaf9;
+  --text: #151515;
+  --text-soft: #62625e;
+  --text-faint: #8b8b86;
+  --border: #dfdfda;
+  --border-strong: #c9c9c3;
+  --accent: #315ee7;
+  --header-overlay: rgb(247 247 245 / 100%);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #101110;
+  --surface: #171817;
+  --surface-hover: #1b1c1b;
+  --text: #f2f2ee;
+  --text-soft: #a3a39d;
+  --text-faint: #777772;
+  --border: #2c2d2b;
+  --border-strong: #41423f;
+  --accent: #86a5ff;
+  --header-overlay: rgb(16 17 16 / 100%);
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Geist, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--surface);
+  }
+}

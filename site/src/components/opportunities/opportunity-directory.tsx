@@ -29,15 +29,30 @@ export function OpportunityDirectory({internships}: OpportunityDirectoryProps) {
   }, []);
 
   return (
-    <section className="opportunities" aria-labelledby="opportunities-title">
-      <div className="directory-heading">
+    <section className="py-6 pt-11 max-[600px]:pt-8" aria-labelledby="opportunities-title">
+      <div className="flex items-start justify-between gap-6">
         <div>
-          <h1 id="opportunities-title">Internship directory</h1>
-          <p>Discover open 2027 technology internships across Europe.</p>
+          <h1
+            id="opportunities-title"
+            className="text-[26px] leading-[1.2] font-[650] tracking-[-0.035em] max-[600px]:text-[23px]"
+          >
+            Internship directory
+          </h1>
+          <p className="mt-[7px] text-sm text-[var(--text-soft)] max-[600px]:max-w-[260px] max-[600px]:text-[13px] max-[600px]:leading-normal">
+            Discover open 2027 technology internships across Europe.
+          </p>
         </div>
-        <Badge className="directory-count" variant="outline" aria-live="polite">
-          <strong>{filteredInternships.length}</strong>
-          <span>open {filteredInternships.length === 1 ? "role" : "roles"}</span>
+        <Badge
+          className="directory-count min-h-8 gap-1.5 rounded-md px-2.5 py-0"
+          variant="outline"
+          aria-live="polite"
+        >
+          <strong className="text-base font-bold tracking-[-0.03em] text-[var(--text)]">
+            {filteredInternships.length}
+          </strong>
+          <span className="text-[11px] text-[var(--text-soft)]">
+            open {filteredInternships.length === 1 ? "role" : "roles"}
+          </span>
         </Badge>
       </div>
 
