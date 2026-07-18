@@ -5,10 +5,10 @@ import os
 
 import pytest
 
-from internships.config.search_registry import load_search_registry
-from internships.config.settings import Settings
-from internships.scrapers.http import HttpFetcher
-from internships.scrapers.linkedin import LinkedInScraper
+from opportunities.config.search_registry import load_search_registry
+from opportunities.config.settings import Settings
+from opportunities.scrapers.http import HttpFetcher
+from opportunities.scrapers.linkedin import LinkedInScraper
 from tests.conftest import ROOT
 
 pytestmark = [

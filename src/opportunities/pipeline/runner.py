@@ -12,19 +12,19 @@ from typing import Protocol
 
 from pydantic import ValidationError
 
-from internships.config.rules import ClassificationRules
-from internships.config.settings import Settings
-from internships.database.repository import PersistSummary, Repository
-from internships.models.enums import RunStatus
-from internships.models.job import DiscoveredJob
-from internships.models.raw import KnownJob
-from internships.models.search import LinkedInSearchConfig
-from internships.normalization.location import normalize_locations
-from internships.normalization.title import normalize_title
-from internships.pipeline.classification import Classifier
-from internships.scrapers.http import FetchError, HttpFetcher
-from internships.scrapers.linkedin import LinkedInScraper, LinkedInScrapeResult, TextFetcher
-from internships.utils.time import utc_now
+from opportunities.config.rules import ClassificationRules
+from opportunities.config.settings import Settings
+from opportunities.database.repository import PersistSummary, Repository
+from opportunities.models.enums import RunStatus
+from opportunities.models.job import DiscoveredJob
+from opportunities.models.raw import KnownJob
+from opportunities.models.search import LinkedInSearchConfig
+from opportunities.normalization.location import normalize_locations
+from opportunities.normalization.title import normalize_title
+from opportunities.pipeline.classification import Classifier
+from opportunities.scrapers.http import FetchError, HttpFetcher
+from opportunities.scrapers.linkedin import LinkedInScraper, LinkedInScrapeResult, TextFetcher
+from opportunities.utils.time import utc_now
 
 Clock = Callable[[], datetime]
 

@@ -7,7 +7,7 @@ from pathlib import Path
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from internships.models.enums import InternshipCategory
+from opportunities.models.enums import InternshipCategory
 
 
 class ClassificationRules(BaseModel):

@@ -48,7 +48,7 @@ Normal tests and builds require no LinkedIn access. First-time setup belongs in 
 ├── migrations/              # Alembic history
 ├── scripts/                 # migration and documentation checks
 ├── site/                    # Next.js website and Playwright tests
-├── src/internships/         # Python package
+├── src/opportunities/       # Python package
 ├── tests/                   # unit, integration, and fixtures
 ├── CONTRIBUTING.md
 ├── SECURITY.md

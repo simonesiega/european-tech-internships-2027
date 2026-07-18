@@ -5,16 +5,16 @@ from datetime import UTC, datetime, timedelta
 
 from sqlalchemy.orm import Session, sessionmaker
 
-from internships.config.rules import ClassificationRules
-from internships.config.settings import Settings
-from internships.database.repository import Repository
-from internships.models.enums import EmploymentType, InternshipCategory
-from internships.models.job import DiscoveredJob
-from internships.models.raw import KnownJob, RawJob
-from internships.models.search import LinkedInSearchConfig
-from internships.pipeline.runner import CollectionPipeline
-from internships.scrapers.http import FetchError
-from internships.scrapers.linkedin import LinkedInScrapeResult, TextFetcher
+from opportunities.config.rules import ClassificationRules
+from opportunities.config.settings import Settings
+from opportunities.database.repository import Repository
+from opportunities.models.enums import EmploymentType, InternshipCategory
+from opportunities.models.job import DiscoveredJob
+from opportunities.models.raw import KnownJob, RawJob
+from opportunities.models.search import LinkedInSearchConfig
+from opportunities.pipeline.runner import CollectionPipeline
+from opportunities.scrapers.http import FetchError
+from opportunities.scrapers.linkedin import LinkedInScrapeResult, TextFetcher
 
 
 class FakeScraper:

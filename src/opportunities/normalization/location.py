@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from internships.utils.text import clean_text, normalized_key
+from opportunities.utils.text import clean_text, normalized_key
 
 EUROPEAN_COUNTRY_CODES = frozenset(
     {

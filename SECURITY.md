@@ -17,7 +17,7 @@
   />
   <a href="LICENSE">
     <img
-      src="https://img.shields.io/github/license/simonesiega/european-tech-opportunities-27?color=blue"
+      src="https://img.shields.io/github/license/simonesiega/european-tech-opportunities-2027?color=blue"
       alt="MIT license"
     />
   </a>
@@ -53,7 +53,7 @@ Report privately through either channel:
 
 | Channel | Contact |
 |---|---|
-| GitHub private vulnerability reporting | [Open a private security advisory](https://github.com/simonesiega/european-tech-opportunities-27/security/advisories/new) |
+| GitHub private vulnerability reporting | [Open a private security advisory](https://github.com/simonesiega/european-tech-opportunities-2027/security/advisories/new) |
 | Email | [simonesiega1@gmail.com](mailto:simonesiega1@gmail.com) |
 
 Suggested email subject:

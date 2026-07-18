@@ -6,8 +6,8 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from internships.utils.text import clean_text
-from internships.utils.url import canonicalize_url
+from opportunities.utils.text import clean_text
+from opportunities.utils.url import canonicalize_url
 
 
 @dataclass(frozen=True, slots=True)

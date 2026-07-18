@@ -5,11 +5,11 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from internships.config.search_registry import SearchRegistryError, load_search_registry
-from internships.config.settings import apply_search_overrides, load_settings
-from internships.models.enums import InternshipCategory
-from internships.models.search import LinkedInSearchConfig
-from internships.utils.paths import find_project_root
+from opportunities.config.search_registry import SearchRegistryError, load_search_registry
+from opportunities.config.settings import apply_search_overrides, load_settings
+from opportunities.models.enums import InternshipCategory
+from opportunities.models.search import LinkedInSearchConfig
+from opportunities.utils.paths import find_project_root
 
 ROOT = find_project_root(Path(__file__))
 

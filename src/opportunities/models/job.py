@@ -6,9 +6,9 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from internships.models.enums import EmploymentType, InternshipCategory, JobStatus
-from internships.utils.text import clean_text
-from internships.utils.url import canonicalize_url
+from opportunities.models.enums import EmploymentType, InternshipCategory, JobStatus
+from opportunities.utils.text import clean_text
+from opportunities.utils.url import canonicalize_url
 
 
 class DiscoveredJob(BaseModel):

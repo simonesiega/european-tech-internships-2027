@@ -10,11 +10,11 @@ from alembic.autogenerate import compare_metadata
 from alembic.migration import MigrationContext
 from sqlalchemy import create_engine, text
 
-# Importing internships.database.models registers every table on Base.metadata for comparison.
-from internships.database import models as database_models  # noqa: F401
-from internships.database.base import Base
-from internships.database.migrations import migration_head, upgrade_database
-from internships.utils.paths import find_project_root
+# Importing opportunities.database.models registers every table on Base.metadata for comparison.
+from opportunities.database import models as database_models  # noqa: F401
+from opportunities.database.base import Base
+from opportunities.database.migrations import migration_head, upgrade_database
+from opportunities.utils.paths import find_project_root
 
 
 def main() -> None:

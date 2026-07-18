@@ -9,17 +9,17 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/simonesiega/european-tech-opportunities-27/actions/workflows/python-ci.yml">
-    <img src="https://github.com/simonesiega/european-tech-opportunities-27/actions/workflows/python-ci.yml/badge.svg" alt="Python CI status" />
+  <a href="https://github.com/simonesiega/european-tech-opportunities-2027/actions/workflows/python-ci.yml">
+    <img src="https://github.com/simonesiega/european-tech-opportunities-2027/actions/workflows/python-ci.yml/badge.svg" alt="Python CI status" />
   </a>
-  <a href="https://github.com/simonesiega/european-tech-opportunities-27/actions/workflows/site-ci.yml">
-    <img src="https://github.com/simonesiega/european-tech-opportunities-27/actions/workflows/site-ci.yml/badge.svg" alt="Website CI status" />
+  <a href="https://github.com/simonesiega/european-tech-opportunities-2027/actions/workflows/site-ci.yml">
+    <img src="https://github.com/simonesiega/european-tech-opportunities-2027/actions/workflows/site-ci.yml/badge.svg" alt="Website CI status" />
   </a>
-  <a href="https://github.com/simonesiega/european-tech-opportunities-27/actions/workflows/docker-ci.yml">
-    <img src="https://github.com/simonesiega/european-tech-opportunities-27/actions/workflows/docker-ci.yml/badge.svg" alt="Docker CI status" />
+  <a href="https://github.com/simonesiega/european-tech-opportunities-2027/actions/workflows/docker-ci.yml">
+    <img src="https://github.com/simonesiega/european-tech-opportunities-2027/actions/workflows/docker-ci.yml/badge.svg" alt="Docker CI status" />
   </a>
   <a href="LICENSE">
-    <img src="https://img.shields.io/github/license/simonesiega/european-tech-opportunities-27" alt="MIT license" />
+    <img src="https://img.shields.io/github/license/simonesiega/european-tech-opportunities-2027" alt="MIT license" />
   </a>
 </p>
 
@@ -116,7 +116,7 @@ Showing the 10 most recently discovered of 54 open internships:
 
 Listings can change or expire. Verify the role, eligibility requirements, location, deadline, compensation, and visa or work-authorization requirements on the original listing before applying.
 
-Missing a relevant position? [Suggest a listing](https://github.com/simonesiega/european-tech-opportunities-27/issues/new?template=add-position.yml).
+Missing a relevant position? [Suggest a listing](https://github.com/simonesiega/european-tech-opportunities-2027/issues/new?template=add-position.yml).
 
 ## Publication rules
 
@@ -160,8 +160,8 @@ See the [architecture guide](docs/md/development/architecture.md) for the comple
 Requirements: Python 3.12+, [`uv`](https://docs.astral.sh/uv/), and Git.
 
 ```bash
-git clone https://github.com/simonesiega/european-tech-opportunities-27.git
-cd european-tech-opportunities-27
+git clone https://github.com/simonesiega/european-tech-opportunities-2027.git
+cd european-tech-opportunities-2027
 uv sync --frozen --dev
 cp .env.example .env
 uv run internships db-upgrade
@@ -205,7 +205,7 @@ Licensed under the [MIT License](LICENSE).
 ## Contributors
 
 <p align="center">
-  <a href="https://github.com/simonesiega/european-tech-opportunities-27/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=simonesiega/european-tech-opportunities-27&max=24&columns=12" alt="Contributors" />
+  <a href="https://github.com/simonesiega/european-tech-opportunities-2027/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=simonesiega/european-tech-opportunities-2027&max=24&columns=12" alt="Contributors" />
   </a>
 </p>

@@ -5,8 +5,8 @@ import asyncio
 import httpx
 import pytest
 
-from internships.config.settings import Settings
-from internships.scrapers.http import FetchError, HttpFetcher
+from opportunities.config.settings import Settings
+from opportunities.scrapers.http import FetchError, HttpFetcher
 
 
 def test_linkedin_http_is_blocked_without_explicit_authorization() -> None:

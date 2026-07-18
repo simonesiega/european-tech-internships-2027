@@ -7,7 +7,7 @@ from datetime import datetime
 from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from internships.database.base import Base
+from opportunities.database.base import Base
 
 
 class SearchRow(Base):

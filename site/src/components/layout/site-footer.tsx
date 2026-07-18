@@ -1,6 +1,6 @@
 import {formatPublishedDate} from "@/lib/opportunity-presentation";
 
-const repositoryUrl = "https://github.com/simonesiega/european-tech-opportunities-27";
+const repositoryUrl = "https://github.com/simonesiega/european-tech-opportunities-2027";
 
 type SiteFooterProps = {
   lastUpdatedAt: string | null;

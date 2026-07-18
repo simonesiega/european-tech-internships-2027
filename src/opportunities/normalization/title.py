@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from internships.utils.text import clean_text
+from opportunities.utils.text import clean_text
 
 
 def normalize_title(value: str) -> str:

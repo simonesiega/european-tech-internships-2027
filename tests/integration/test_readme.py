@@ -3,9 +3,9 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from internships.models.enums import EmploymentType, InternshipCategory, JobStatus
-from internships.models.job import StoredJob
-from internships.readme import (
+from opportunities.models.enums import EmploymentType, InternshipCategory, JobStatus
+from opportunities.models.job import StoredJob
+from opportunities.readme import (
     ReadmeMetadata,
     markdown_block,
     markdown_table,

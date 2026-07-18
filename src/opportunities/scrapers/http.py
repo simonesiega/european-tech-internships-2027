@@ -11,8 +11,8 @@ from urllib.parse import urlsplit
 
 import httpx
 
-from internships.config.settings import Settings
-from internships.utils.time import utc_now
+from opportunities.config.settings import Settings
+from opportunities.utils.time import utc_now
 
 logger = logging.getLogger(__name__)
 Sleep = Callable[[float], Awaitable[None]]

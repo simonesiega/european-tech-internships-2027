@@ -30,8 +30,8 @@ Docker is not required for ordinary local Python or website development.
 ## Clone the repository
 
 ```bash
-git clone https://github.com/simonesiega/european-tech-opportunities-27.git
-cd european-tech-opportunities-27
+git clone https://github.com/simonesiega/european-tech-opportunities-2027.git
+cd european-tech-opportunities-2027
 ```
 
 Run the remaining Python commands from the repository root unless a section explicitly changes directory.

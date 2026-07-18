@@ -16,5 +16,5 @@ max_concurrency: 3
 max_response_bytes: 15000000
 closure_confirmation_runs: 2
 linkedin_crawl_authorized: false
-user_agent: european-tech-opportunities-27/0.1 (+https://github.com/simonesiega/european-tech-opportunities-27)
+user_agent: european-tech-opportunities-27/0.1 (+https://github.com/simonesiega/european-tech-opportunities-2027)
 log_level: INFO

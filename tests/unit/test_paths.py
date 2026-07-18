@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from internships.utils.paths import find_project_root
+from opportunities.utils.paths import find_project_root
 
 
 def test_find_project_root_is_independent_of_directory_depth(tmp_path: Path) -> None:

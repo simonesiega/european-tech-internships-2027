@@ -5,10 +5,10 @@ from collections.abc import Callable, Mapping
 
 import pytest
 
-from internships.models.raw import KnownJob
-from internships.models.search import LinkedInSearchConfig
-from internships.scrapers.http import FetchError
-from internships.scrapers.linkedin import (
+from opportunities.models.raw import KnownJob
+from opportunities.models.search import LinkedInSearchConfig
+from opportunities.scrapers.http import FetchError
+from opportunities.scrapers.linkedin import (
     LINKEDIN_DETAIL_ENDPOINT,
     LinkedInPayloadError,
     LinkedInScraper,

@@ -7,7 +7,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from internships.utils.text import clean_text, normalized_key
+from opportunities.utils.text import clean_text, normalized_key
 
 DatePosted = Literal["any", "day", "week", "month"]
 WorkplaceFilter = Literal["any", "on-site", "remote", "hybrid"]

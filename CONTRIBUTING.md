@@ -9,8 +9,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white" alt="Python 3.12 or newer" />
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="Pull requests welcome" />
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/simonesiega/european-tech-opportunities-27" alt="MIT license" /></a>
-  <a href="https://github.com/simonesiega/european-tech-opportunities-27/issues"><img src="https://img.shields.io/github/issues/simonesiega/european-tech-opportunities-27" alt="Open issues" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/simonesiega/european-tech-opportunities-2027" alt="MIT license" /></a>
+  <a href="https://github.com/simonesiega/european-tech-opportunities-2027/issues"><img src="https://img.shields.io/github/issues/simonesiega/european-tech-opportunities-2027" alt="Open issues" /></a>
 </p>
 
 Thank you for improving the project. Read [`README.md`](README.md) before contributing, then use the [documentation hub](docs/md/README.md) to find the canonical technical guide for your change.
@@ -89,7 +89,7 @@ Additional providers, authenticated or browser-based collection, private endpoin
 
 ## Issues and design changes
 
-Search [existing issues](https://github.com/simonesiega/european-tech-opportunities-27/issues) before opening a duplicate. Use the repository’s issue forms for internship suggestions, bug reports, and feature requests; security reports belong in a private GitHub security advisory.
+Search [existing issues](https://github.com/simonesiega/european-tech-opportunities-2027/issues) before opening a duplicate. Use the repository’s issue forms for internship suggestions, bug reports, and feature requests; security reports belong in a private GitHub security advisory.
 
 A useful bug report includes:
 
@@ -189,7 +189,7 @@ Do not require reviewers or CI to contact LinkedIn.
 
 ## Changing classification
 
-Classification configuration lives in `configs/categories.yml`; deterministic logic lives in `src/internships/pipeline/classification.py`.
+Classification configuration lives in `configs/categories.yml`; deterministic logic lives in `src/opportunities/pipeline/classification.py`.
 
 A classification change must:
 

@@ -7,12 +7,12 @@ import pytest
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from internships.config.rules import ClassificationRules, load_classification_rules
-from internships.config.settings import Settings
-from internships.database.migrations import upgrade_database
-from internships.database.session import create_database_engine, create_session_factory
-from internships.models.search import LinkedInSearchConfig
-from internships.utils.paths import find_project_root
+from opportunities.config.rules import ClassificationRules, load_classification_rules
+from opportunities.config.settings import Settings
+from opportunities.database.migrations import upgrade_database
+from opportunities.database.session import create_database_engine, create_session_factory
+from opportunities.models.search import LinkedInSearchConfig
+from opportunities.utils.paths import find_project_root
 
 ROOT = find_project_root(Path(__file__))
 

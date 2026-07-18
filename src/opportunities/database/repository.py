@@ -10,13 +10,13 @@ from datetime import datetime
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
-from internships.config.settings import Settings
-from internships.database.models import JobRow, JobSearchRow, SearchRow, SearchRunRow
-from internships.models.enums import JobStatus
-from internships.models.job import DiscoveredJob, StoredJob
-from internships.models.raw import KnownJob
-from internships.models.search import LinkedInSearchConfig
-from internships.utils.time import ensure_utc
+from opportunities.config.settings import Settings
+from opportunities.database.models import JobRow, JobSearchRow, SearchRow, SearchRunRow
+from opportunities.models.enums import JobStatus
+from opportunities.models.job import DiscoveredJob, StoredJob
+from opportunities.models.raw import KnownJob
+from opportunities.models.search import LinkedInSearchConfig
+from opportunities.utils.time import ensure_utc
 
 
 @dataclass(frozen=True, slots=True)

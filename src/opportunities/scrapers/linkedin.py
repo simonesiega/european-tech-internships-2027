@@ -10,10 +10,10 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
 
-from internships.models.raw import KnownJob, RawJob
-from internships.models.search import LinkedInSearchConfig
-from internships.scrapers.http import FetchError
-from internships.utils.text import clean_text, normalized_key
+from opportunities.models.raw import KnownJob, RawJob
+from opportunities.models.search import LinkedInSearchConfig
+from opportunities.scrapers.http import FetchError
+from opportunities.utils.text import clean_text, normalized_key
 
 LINKEDIN_SEARCH_ENDPOINT = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search"
 LINKEDIN_DETAIL_ENDPOINT = "https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/{job_id}"

@@ -8,7 +8,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from internships.models.search import LinkedInSearchConfig
+from opportunities.models.search import LinkedInSearchConfig
 
 
 class SearchRegistryError(ValueError):

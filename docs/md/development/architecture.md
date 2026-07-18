@@ -75,18 +75,18 @@ These are design contracts, not implementation suggestions. Changes that violate
 
 | Area | Path | Responsibility |
 |---|---|---|
-| CLI | `src/internships/cli/app.py` | Preconditions, orchestration, output, and exit codes |
-| Settings | `src/internships/config/settings.py` | Layered and validated runtime configuration |
-| Search registry | `src/internships/config/search_registry.py` | Recursive YAML loading, duplicate rejection, and search selection |
-| Classification rules | `src/internships/config/rules.py` and `configs/categories.yml` | Employment type, seniority, category, cycle, and geography signals |
-| HTTP transport | `src/internships/scrapers/http.py` | Authorization gate, pacing, timeouts, retries, bounds, and sanitized errors |
-| LinkedIn adapter | `src/internships/scrapers/linkedin.py` | Guest URLs, cards, details, structured criteria, and explicit unavailability |
-| Pipeline runner | `src/internships/pipeline/runner.py` | Bounded fetching, isolated outcomes, classification, and serialized persistence |
-| Classifier | `src/internships/pipeline/classification.py` | Deterministic acceptance and exclusion decisions |
-| Normalization | `src/internships/normalization/` | Stable title, text, and location signals |
-| Repository | `src/internships/database/repository.py` | Transactions, provenance, lifecycle transitions, and statistics |
-| ORM and migrations | `src/internships/database/` and `migrations/` | Current schema intent and upgrade history |
-| README renderer | `src/internships/readme.py` | Deterministic bounded projection and atomic replacement |
+| CLI | `src/opportunities/cli/app.py` | Preconditions, orchestration, output, and exit codes |
+| Settings | `src/opportunities/config/settings.py` | Layered and validated runtime configuration |
+| Search registry | `src/opportunities/config/search_registry.py` | Recursive YAML loading, duplicate rejection, and search selection |
+| Classification rules | `src/opportunities/config/rules.py` and `configs/categories.yml` | Employment type, seniority, category, cycle, and geography signals |
+| HTTP transport | `src/opportunities/scrapers/http.py` | Authorization gate, pacing, timeouts, retries, bounds, and sanitized errors |
+| LinkedIn adapter | `src/opportunities/scrapers/linkedin.py` | Guest URLs, cards, details, structured criteria, and explicit unavailability |
+| Pipeline runner | `src/opportunities/pipeline/runner.py` | Bounded fetching, isolated outcomes, classification, and serialized persistence |
+| Classifier | `src/opportunities/pipeline/classification.py` | Deterministic acceptance and exclusion decisions |
+| Normalization | `src/opportunities/normalization/` | Stable title, text, and location signals |
+| Repository | `src/opportunities/database/repository.py` | Transactions, provenance, lifecycle transitions, and statistics |
+| ORM and migrations | `src/opportunities/database/` and `migrations/` | Current schema intent and upgrade history |
+| README renderer | `src/opportunities/readme.py` | Deterministic bounded projection and atomic replacement |
 | Website | `site/src/` | Read-only server queries and client-side directory interaction |
 | Tests | `tests/` | Offline unit, integration, migration, rendering, and lifecycle coverage |
 

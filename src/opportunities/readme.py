@@ -8,8 +8,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-from internships.models.enums import EmploymentType
-from internships.models.job import StoredJob
+from opportunities.models.enums import EmploymentType
+from opportunities.models.job import StoredJob
 
 BEGIN_MARKER = "<!-- BEGIN INTERNSHIPS -->"
 END_MARKER = "<!-- END INTERNSHIPS -->"

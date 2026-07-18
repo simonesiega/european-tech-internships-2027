@@ -12,33 +12,33 @@ from rich.console import Console
 from rich.table import Table
 from sqlalchemy import Engine
 
-# Importing internship modules registers every table on Base.metadata for
+# Importing opportunity modules registers every table on Base.metadata for
 # comparison and Alembic autogeneration.
-from internships.config.rules import load_classification_rules
-from internships.config.search_registry import (
+from opportunities.config.rules import load_classification_rules
+from opportunities.config.search_registry import (
     SearchRegistryError,
     load_search_registry,
     select_searches,
 )
-from internships.config.settings import Settings, apply_search_overrides, load_settings
-from internships.database.migrations import migration_head, upgrade_database
-from internships.database.repository import Repository, SearchHealth
-from internships.database.session import (
+from opportunities.config.settings import Settings, apply_search_overrides, load_settings
+from opportunities.database.migrations import migration_head, upgrade_database
+from opportunities.database.repository import Repository, SearchHealth
+from opportunities.database.session import (
     create_database_engine,
     create_session_factory,
     database_revision,
     missing_tables,
 )
-from internships.models.job import DiscoveredJob
-from internships.models.search import LinkedInSearchConfig
-from internships.pipeline.runner import CollectionPipeline, PipelineResult
-from internships.readme import ReadmeMetadata, render_readme, validate_readme
-from internships.search_registry_docs import (
+from opportunities.models.job import DiscoveredJob
+from opportunities.models.search import LinkedInSearchConfig
+from opportunities.pipeline.runner import CollectionPipeline, PipelineResult
+from opportunities.readme import ReadmeMetadata, render_readme, validate_readme
+from opportunities.search_registry_docs import (
     render_search_registry_docs,
     validate_search_registry_docs,
 )
-from internships.utils.logging import configure_logging
-from internships.utils.paths import find_project_root
+from opportunities.utils.logging import configure_logging
+from opportunities.utils.paths import find_project_root
 
 # App context and console for output. The ROOT path is used to locate the migrations directory.
 ROOT = find_project_root(Path(__file__))

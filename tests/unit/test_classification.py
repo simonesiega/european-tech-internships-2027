@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from internships.config.rules import ClassificationRules
-from internships.models.enums import EmploymentType, InternshipCategory
-from internships.normalization.location import normalize_locations
-from internships.pipeline.classification import ClassificationDecision, Classifier
+from opportunities.config.rules import ClassificationRules
+from opportunities.models.enums import EmploymentType, InternshipCategory
+from opportunities.normalization.location import normalize_locations
+from opportunities.pipeline.classification import ClassificationDecision, Classifier
 
 
 def classify(

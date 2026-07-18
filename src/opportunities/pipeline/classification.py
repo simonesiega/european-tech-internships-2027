@@ -5,10 +5,10 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from internships.config.rules import ClassificationRules
-from internships.models.enums import EmploymentType, InternshipCategory
-from internships.normalization.location import EUROPEAN_COUNTRY_CODES, LocationResult
-from internships.utils.text import html_to_text, normalized_key
+from opportunities.config.rules import ClassificationRules
+from opportunities.models.enums import EmploymentType, InternshipCategory
+from opportunities.normalization.location import EUROPEAN_COUNTRY_CODES, LocationResult
+from opportunities.utils.text import html_to_text, normalized_key
 
 _YEAR_RE = re.compile(r"\b20[2-4]\d\b")
 _CONTEXTUAL_YEAR_RE = re.compile(

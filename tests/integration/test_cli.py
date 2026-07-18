@@ -4,8 +4,8 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from internships.cli.app import app
-from internships.utils.paths import find_project_root
+from opportunities.cli.app import app
+from opportunities.utils.paths import find_project_root
 
 runner = CliRunner()
 ROOT = find_project_root(Path(__file__))

@@ -12,12 +12,12 @@ from dotenv import dotenv_values
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 if TYPE_CHECKING:
-    from internships.models.search import LinkedInSearchConfig
+    from opportunities.models.search import LinkedInSearchConfig
 
 
 DEFAULT_USER_AGENT = (
     "european-tech-opportunities-27/0.1 "
-    "(+https://github.com/simonesiega/european-tech-opportunities-27)"
+    "(+https://github.com/simonesiega/european-tech-opportunities-2027)"
 )
 
 

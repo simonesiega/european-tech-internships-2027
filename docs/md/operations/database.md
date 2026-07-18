@@ -224,7 +224,7 @@ uv run python scripts/check_migrations.py
 
 For a schema change:
 
-1. update `src/internships/database/models.py`;
+1. update `src/opportunities/database/models.py`;
 2. create a new revision under `migrations/versions/`;
 3. point `down_revision` to the current head;
 4. preserve existing data in `upgrade()`;
