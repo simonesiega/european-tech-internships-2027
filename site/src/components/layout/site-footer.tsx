@@ -8,15 +8,16 @@ type SiteFooterProps = {
 
 export function SiteFooter({lastUpdatedAt}: SiteFooterProps) {
   return (
-    <footer className="site-footer">
-      <div className="footer-summary">
-        <strong>Internships ’27</strong>
+    <footer className="flex min-h-16 items-center justify-between gap-8 border-t border-[var(--border)] py-3 text-[13px] leading-[1.45] text-[var(--text-faint)] max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-3 max-[680px]:py-[18px]">
+      <div className="flex flex-col gap-0.5">
+        <strong className="font-semibold text-[var(--text)]">Internships ’27</strong>
         <span>Discover open 2027 tech internships across Europe.</span>
       </div>
 
-      <div className="footer-meta">
-        <nav className="footer-links" aria-label="Project links">
+      <div className="flex flex-col items-end gap-0.5 text-right max-[680px]:items-start max-[680px]:text-left">
+        <nav className="flex items-center gap-1.5 max-[680px]:flex-wrap" aria-label="Project links">
           <a
+            className="text-[var(--text-soft)] transition-colors duration-180 hover:text-[var(--text)]"
             href={`${repositoryUrl}/issues/new?template=add-internship.yml`}
             target="_blank"
             rel="noreferrer"
@@ -24,11 +25,21 @@ export function SiteFooter({lastUpdatedAt}: SiteFooterProps) {
             Contribute
           </a>
           <span aria-hidden="true">·</span>
-          <a href={repositoryUrl} target="_blank" rel="noreferrer">
+          <a
+            className="text-[var(--text-soft)] transition-colors duration-180 hover:text-[var(--text)]"
+            href={repositoryUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
             GitHub
           </a>
           <span aria-hidden="true">·</span>
-          <a href={`${repositoryUrl}/issues/new`} target="_blank" rel="noreferrer">
+          <a
+            className="text-[var(--text-soft)] transition-colors duration-180 hover:text-[var(--text)]"
+            href={`${repositoryUrl}/issues/new`}
+            target="_blank"
+            rel="noreferrer"
+          >
             Report an issue
           </a>
         </nav>
