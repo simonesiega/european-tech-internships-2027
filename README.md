@@ -75,7 +75,7 @@ The repository shows only the latest ten positions of each employment type so th
 
 <!-- BEGIN INTERNSHIPS -->
 **Open positions:** 144 (Internships: 67 · New Grad: 77)<br>
-**Last successful collection:** July 19, 2026 at 08:19 UTC
+**Last successful collection:** July 19, 2026 at 13:20 UTC
 
 Browse and filter the complete directory at **[https://internship2027.simonesiega.com/](https://internship2027.simonesiega.com/)**.
 
