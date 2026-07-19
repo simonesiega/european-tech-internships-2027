@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import sys
 from pathlib import Path
 from typing import Annotated
 
@@ -91,34 +92,35 @@ def scrape(
     settings = _settings(ctx)
     _require_linkedin_permission(settings)
     repository, engine = _repository(settings)
-    _require_migrations(engine)
     try:
-        configured = _configured_searches(settings)
-        selected = _selected_searches(configured, search)
-        rules = load_classification_rules(settings.category_config_path)
-        result = asyncio.run(
-            CollectionPipeline(
-                settings=settings,
-                repository=repository,
-                rules=rules,
-            ).run(selected, configured_searches=configured)
-        )
-        _print_result(result)
-        if not no_render and result.successful_searches:
-            render_readme(
-                settings.readme_path,
-                repository.list_open_jobs(),
-                _readme_metadata(repository),
+        _require_migrations(engine)
+        try:
+            configured = _configured_searches(settings)
+            selected = _selected_searches(configured, search)
+            rules = load_classification_rules(settings.category_config_path)
+            result = asyncio.run(
+                CollectionPipeline(
+                    settings=settings,
+                    repository=repository,
+                    rules=rules,
+                ).run(selected, configured_searches=configured)
             )
-            render_search_registry_docs(
-                _search_registry_docs_path(settings), settings.search_config_dir
-            )
-            console.print(f"README updated: {settings.readme_path}")
-    except (SearchRegistryError, OSError, ValueError, ValidationError) as exc:
-        error_console.print(f"[red]Scrape failed:[/red] {exc}")
-        raise typer.Exit(2) from exc
+            _print_result(result)
+            if not no_render and result.successful_searches:
+                render_readme(
+                    settings.readme_path,
+                    repository.list_open_jobs(),
+                    _readme_metadata(repository),
+                )
+                render_search_registry_docs(
+                    _search_registry_docs_path(settings), settings.search_config_dir
+                )
+                console.print(f"README updated: {settings.readme_path}")
+        except (SearchRegistryError, OSError, ValueError, ValidationError) as exc:
+            error_console.print(f"[red]Scrape failed:[/red] {exc}")
+            raise typer.Exit(2) from exc
     finally:
-        engine.dispose()
+        _dispose_engine(engine)
     raise typer.Exit(result.exit_code)
 
 
@@ -133,8 +135,8 @@ def check_availability(
     settings = _settings(ctx)
     _require_linkedin_permission(settings)
     repository, engine = _repository(settings)
-    _require_migrations(engine)
     try:
+        _require_migrations(engine)
         result = asyncio.run(audit_job_availability(settings=settings, repository=repository))
         if not no_render:
             render_readme(
@@ -151,7 +153,7 @@ def check_availability(
             f"{len(result.inconclusive_ids)} inconclusive."
         )
     finally:
-        engine.dispose()
+        _dispose_engine(engine)
     raise typer.Exit(result.exit_code)
 
 
@@ -182,7 +184,7 @@ def search_test(ctx: typer.Context, search_slug: str) -> None:
         error_console.print(f"[red]Search test failed:[/red] {exc}")
         raise typer.Exit(2) from exc
     finally:
-        engine.dispose()
+        _dispose_engine(engine)
 
 
 @app.command()
@@ -190,8 +192,8 @@ def render(ctx: typer.Context) -> None:
     """Refresh generated README and registry documentation."""
     settings = _settings(ctx)
     repository, engine = _repository(settings)
-    _require_migrations(engine)
     try:
+        _require_migrations(engine)
         _configured_searches(settings)
         open_jobs = repository.list_open_jobs()
         render_readme(
@@ -204,7 +206,7 @@ def render(ctx: typer.Context) -> None:
         )
         console.print(f"README updated with {len(open_jobs)} open position(s).")
     finally:
-        engine.dispose()
+        _dispose_engine(engine)
 
 
 @app.command()
@@ -214,26 +216,28 @@ def searches(ctx: typer.Context) -> None:
     configured = apply_search_overrides(load_search_registry(settings.search_config_dir), settings)
     health: dict[str, SearchHealth] = {}
     repository, engine = _repository(settings)
-    if not missing_tables(engine) and database_revision(engine) == migration_head(
-        repository_root=ROOT
-    ):
-        health = repository.search_health()
-    table = Table(title="LinkedIn searches")
-    table.add_column("Slug", no_wrap=True)
-    for heading in ("Scope", "Limits P/R/C", "Last", "F/A"):
-        table.add_column(heading)
-    for item in configured:
-        state = health.get(item.slug)
-        status = state.status if state else "never-run"
-        table.add_row(
-            item.slug,
-            item.location,
-            f"{item.max_pages}/{item.max_results}/{item.max_rechecks}",
-            status,
-            f"{state.found_count}/{state.accepted_count}" if state else "-/-",
-        )
-    console.print(table)
-    engine.dispose()
+    try:
+        if not missing_tables(engine) and database_revision(engine) == migration_head(
+            repository_root=ROOT
+        ):
+            health = repository.search_health()
+        table = Table(title="LinkedIn searches")
+        table.add_column("Slug", no_wrap=True)
+        for heading in ("Scope", "Limits P/R/C", "Last", "F/A"):
+            table.add_column(heading)
+        for item in configured:
+            state = health.get(item.slug)
+            status = state.status if state else "never-run"
+            table.add_row(
+                item.slug,
+                item.location,
+                f"{item.max_pages}/{item.max_results}/{item.max_rechecks}",
+                status,
+                f"{state.found_count}/{state.accepted_count}" if state else "-/-",
+            )
+        console.print(table)
+    finally:
+        _dispose_engine(engine)
 
 
 @app.command()
@@ -241,8 +245,8 @@ def stats(ctx: typer.Context) -> None:
     """Display aggregate pipeline and database statistics."""
     settings = _settings(ctx)
     repository, engine = _repository(settings)
-    _require_migrations(engine)
     try:
+        _require_migrations(engine)
         snapshot = repository.stats()
         table = Table(title="Pipeline statistics")
         table.add_column("Metric")
@@ -259,7 +263,7 @@ def stats(ctx: typer.Context) -> None:
         )
         console.print(table)
     finally:
-        engine.dispose()
+        _dispose_engine(engine)
 
 
 @app.command()
@@ -267,26 +271,26 @@ def validate(ctx: typer.Context) -> None:
     """Validate database invariants and generated documentation."""
     settings = _settings(ctx)
     repository, engine = _repository(settings)
-    _require_migrations(engine)
-    _configured_searches(settings)
-    open_jobs = repository.list_open_jobs()
-    errors = validate_readme(
-        settings.readme_path,
-        open_jobs,
-        _readme_metadata(repository),
-    )
-    errors.extend(
-        validate_search_registry_docs(
-            _search_registry_docs_path(settings), settings.search_config_dir
-        )
-    )
     try:
+        _require_migrations(engine)
+        _configured_searches(settings)
+        open_jobs = repository.list_open_jobs()
+        errors = validate_readme(
+            settings.readme_path,
+            open_jobs,
+            _readme_metadata(repository),
+        )
+        errors.extend(
+            validate_search_registry_docs(
+                _search_registry_docs_path(settings), settings.search_config_dir
+            )
+        )
         jobs = repository.list_all_jobs()
         for job in jobs:
             if job.last_seen_at < job.first_seen_at:
                 errors.append(f"job {job.linkedin_job_id}: last_seen_at precedes first_seen_at")
     finally:
-        engine.dispose()
+        _dispose_engine(engine)
     if errors:
         for error in errors:
             error_console.print(f"[red]- {error}[/red]")
@@ -312,7 +316,21 @@ def _selected_searches(
 def _repository(settings: Settings) -> tuple[Repository, Engine]:
     """Create a repository and its database engine."""
     engine = create_database_engine(settings.database_url)
-    return Repository(create_session_factory(engine), settings), engine
+    try:
+        return Repository(create_session_factory(engine), settings), engine
+    except BaseException:
+        _dispose_engine(engine)
+        raise
+
+
+def _dispose_engine(engine: Engine) -> None:
+    """Dispose one CLI-owned engine without replacing an active command failure."""
+    pending_exception = sys.exception()
+    try:
+        engine.dispose()
+    except Exception:
+        if pending_exception is None:
+            raise
 
 
 def _search_registry_docs_path(settings: Settings) -> Path:

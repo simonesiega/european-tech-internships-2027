@@ -114,8 +114,8 @@ class Repository:
     def known_jobs(self, search_slug: str) -> tuple[KnownJob, ...]:
         """Return active jobs associated with a search."""
         with self.factory() as session:
-            rows = session.execute(
-                select(JobRow, JobSearchRow)
+            rows = session.scalars(
+                select(JobRow)
                 .join(JobSearchRow, JobSearchRow.linkedin_job_id == JobRow.linkedin_job_id)
                 .where(
                     JobSearchRow.search_slug == search_slug,
@@ -131,7 +131,7 @@ class Repository:
                     locations=(job.location,),
                     application_url=job.link,
                 )
-                for job, _alias in rows
+                for job in rows
             )
 
     def persist_success(

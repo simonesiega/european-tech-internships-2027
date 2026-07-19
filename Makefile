@@ -1,7 +1,10 @@
-.PHONY: install migrate scrape render validate searches stats lint format typecheck test migrations docs check
+.PHONY: install lock migrate scrape render validate searches stats lint format typecheck test test-live migrations docs check
 
 install:
 	uv sync --dev
+
+lock:
+	uv lock --check
 
 migrate:
 	uv run internships db-upgrade
@@ -33,7 +36,10 @@ typecheck:
 	uv run mypy src tests scripts
 
 test:
-	uv run pytest
+	uv run pytest -m "not live"
+
+test-live:
+	uv run pytest -m "live"
 
 migrations:
 	uv run python scripts/check_migrations.py
@@ -41,4 +47,4 @@ migrations:
 docs:
 	uv run python scripts/check_docs.py
 
-check: lint typecheck test migrations docs
+check: lock lint typecheck test migrations docs

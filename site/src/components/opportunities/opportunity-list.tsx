@@ -18,10 +18,11 @@ import type {Opportunity} from "@/types/opportunity";
 
 type OpportunityListProps = {
   opportunities: Opportunity[];
+  hasActiveFilters: boolean;
   onReset: () => void;
 };
 
-export function OpportunityList({opportunities, onReset}: OpportunityListProps) {
+export function OpportunityList({opportunities, hasActiveFilters, onReset}: OpportunityListProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   // TanStack Table intentionally returns non-memoizable functions as part of its API.
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -43,26 +44,36 @@ export function OpportunityList({opportunities, onReset}: OpportunityListProps) 
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header, index) => (
-                  <TableHead
-                    key={header.id}
-                    className={cn(
-                      index === 0 && "w-7 pr-0 pl-1",
-                      index === 1 &&
-                        "w-[8%] pl-1.5 [&_button]:relative [&_button]:-left-1.5 [&_button]:p-0",
-                      index === 2 && "w-[26%]",
-                      index === 3 && "w-[11%]",
-                      index === 4 && "w-[calc(11%+8px)]",
-                      index === 5 && "w-[9%]",
-                      index === 6 && "w-[13%]",
-                      (index === 7 || index === 8) && "w-[8%]"
-                    )}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
+                {headerGroup.headers.map((header, index) => {
+                  const sortDirection = header.column.getIsSorted();
+                  return (
+                    <TableHead
+                      key={header.id}
+                      aria-sort={
+                        sortDirection === "asc"
+                          ? "ascending"
+                          : sortDirection === "desc"
+                            ? "descending"
+                            : undefined
+                      }
+                      className={cn(
+                        index === 0 && "w-7 pr-0 pl-1",
+                        index === 1 &&
+                          "w-[8%] pl-1.5 [&_button]:relative [&_button]:-left-1.5 [&_button]:p-0",
+                        index === 2 && "w-[26%]",
+                        index === 3 && "w-[11%]",
+                        index === 4 && "w-[calc(11%+8px)]",
+                        index === 5 && "w-[9%]",
+                        index === 6 && "w-[13%]",
+                        (index === 7 || index === 8) && "w-[8%]"
+                      )}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
             ))}
           </TableHeader>
@@ -94,13 +105,24 @@ export function OpportunityList({opportunities, onReset}: OpportunityListProps) 
               <TableRow>
                 <TableCell className="h-[260px] text-center" colSpan={opportunityColumns.length}>
                   <div className="flex flex-col items-center gap-[7px]">
-                    <strong className="text-sm">No opportunities found</strong>
-                    <span className="mb-2 text-[13px] text-[var(--text-soft)]">
-                      Try changing or clearing your filters.
+                    <strong className="text-sm">
+                      {hasActiveFilters ? "No opportunities found" : "No open opportunities"}
+                    </strong>
+                    <span
+                      className={cn(
+                        "text-[13px] text-[var(--text-soft)]",
+                        hasActiveFilters && "mb-2"
+                      )}
+                    >
+                      {hasActiveFilters
+                        ? "Try changing or clearing your filters."
+                        : "The directory currently has no open roles."}
                     </span>
-                    <Button variant="outline" size="sm" onClick={onReset}>
-                      Reset filters
-                    </Button>
+                    {hasActiveFilters ? (
+                      <Button variant="outline" size="sm" onClick={onReset}>
+                        Reset filters
+                      </Button>
+                    ) : null}
                   </div>
                 </TableCell>
               </TableRow>

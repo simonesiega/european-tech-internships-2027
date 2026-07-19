@@ -1,6 +1,6 @@
 import {useMemo} from "react";
 import {usePathname, useSearchParams} from "next/navigation";
-import {ALL_FILTER_VALUE, getCountry} from "@/lib/opportunity-presentation";
+import {ALL_FILTER_VALUE, getCountries} from "@/lib/opportunity-presentation";
 import type {EmploymentType, Opportunity} from "@/types/opportunity";
 
 const EMPLOYMENT_TYPE_OPTIONS: EmploymentType[] = ["internship", "new-grad"];
@@ -23,7 +23,7 @@ export function useOpportunityFilters(opportunities: Opportunity[]) {
   const options = useMemo(
     () => ({
       companies: [...new Set(opportunities.map((item) => item.company))].sort(),
-      locations: [...new Set(opportunities.map((item) => getCountry(item.location)))].sort(),
+      locations: [...new Set(opportunities.flatMap((item) => getCountries(item.location)))].sort(),
       categories: [...new Set(opportunities.map((item) => item.category))].sort(),
       employmentTypes: EMPLOYMENT_TYPE_OPTIONS,
     }),
@@ -59,7 +59,7 @@ export function useOpportunityFilters(opportunities: Opportunity[]) {
       return (
         (!normalizedQuery || searchableText.includes(normalizedQuery)) &&
         (company === ALL_FILTER_VALUE || opportunity.company === company) &&
-        (location === ALL_FILTER_VALUE || getCountry(opportunity.location) === location) &&
+        (location === ALL_FILTER_VALUE || getCountries(opportunity.location).includes(location)) &&
         (category === ALL_FILTER_VALUE || opportunity.category === category) &&
         (employmentType === ALL_FILTER_VALUE || opportunity.employmentType === employmentType)
       );

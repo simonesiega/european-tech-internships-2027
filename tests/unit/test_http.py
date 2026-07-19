@@ -1,12 +1,30 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import AsyncIterator
 
 import httpx
 import pytest
 
 from opportunities.config.settings import Settings
 from opportunities.scrapers.http import FetchError, HttpFetcher
+
+
+class ChunkedStream(httpx.AsyncByteStream):
+    """Expose read progress so response-bound behavior can be asserted."""
+
+    def __init__(self, chunks: tuple[bytes, ...]) -> None:
+        self.chunks = chunks
+        self.read_count = 0
+        self.closed = False
+
+    async def __aiter__(self) -> AsyncIterator[bytes]:
+        for chunk in self.chunks:
+            self.read_count += 1
+            yield chunk
+
+    async def aclose(self) -> None:
+        self.closed = True
 
 
 def test_linkedin_http_is_blocked_without_explicit_authorization() -> None:
@@ -56,6 +74,7 @@ def test_http_fetcher_retries_transient_linkedin_response() -> None:
 def test_http_fetcher_honors_429_retry_after() -> None:
     attempts = 0
     delays: list[float] = []
+    retry_stream = ChunkedStream((b"rate limited", b"ignored"))
 
     def handler(request: httpx.Request) -> httpx.Response:
         nonlocal attempts
@@ -63,7 +82,7 @@ def test_http_fetcher_honors_429_retry_after() -> None:
         if attempts == 1:
             return httpx.Response(
                 429,
-                text="rate limited",
+                stream=retry_stream,
                 request=request,
                 headers={"retry-after": "2"},
             )
@@ -76,6 +95,8 @@ def test_http_fetcher_honors_429_retry_after() -> None:
 
     async def sleep(delay: float) -> None:
         delays.append(delay)
+        if delay == 2.0:
+            assert retry_stream.closed is True
 
     client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
     settings = Settings(
@@ -94,6 +115,8 @@ def test_http_fetcher_honors_429_retry_after() -> None:
     asyncio.run(run())
     assert attempts == 2
     assert 2.0 in delays
+    assert retry_stream.read_count == 0
+    assert retry_stream.closed is True
 
 
 def test_http_fetcher_rejects_non_html_response() -> None:
@@ -145,3 +168,34 @@ def test_http_fetcher_enforces_response_size_limit() -> None:
                 )
 
     asyncio.run(run())
+
+
+def test_http_fetcher_stops_streaming_at_response_size_limit() -> None:
+    stream = ChunkedStream((b"x" * 6_000, b"y" * 6_000, b"z" * 6_000))
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            stream=stream,
+            request=request,
+            headers={"content-type": "text/html"},
+        )
+
+    client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    settings = Settings(
+        rate_limit_seconds=0,
+        max_retries=0,
+        max_response_bytes=10_000,
+        linkedin_crawl_authorized=True,
+    )
+
+    async def run() -> None:
+        async with client:
+            with pytest.raises(FetchError, match="size limit"):
+                await HttpFetcher(settings, client=client).get_text(
+                    "https://www.linkedin.com/jobs-guest/jobs/api/search"
+                )
+
+    asyncio.run(run())
+    assert stream.read_count == 2
+    assert stream.closed is True

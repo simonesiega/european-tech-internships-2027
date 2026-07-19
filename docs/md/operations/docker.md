@@ -80,8 +80,8 @@ The complete image and Compose checks are listed in the [development guide](../d
 
 ```text
 internships service ── read/write ─┐
-                                   ├─ internships-data volume
-site service ───────── read-only ──┘
+                                   ├─ /srv/european-tech-opportunities-27/data
+site service ───────── read-only ──┘   host bind mount
 ```
 
 The pipeline service uses:
@@ -90,9 +90,9 @@ The pipeline service uses:
 |---|---|---|---|
 | `./configs` | `/app/configs` | Read-only | Search and classification YAML |
 | Repository root | `/workspace` | Read/write | Atomic README projection replacement |
-| `internships-data` | `/app/data` | Read/write | Canonical SQLite state |
+| `/srv/european-tech-opportunities-27/data` | `/app/data` | Read/write | Canonical SQLite state |
 
-The website service mounts only the database volume and opens SQLite in read-only mode.
+The website service mounts only the same host state directory, in read-only mode, and opens SQLite read-only.
 
 The Compose startup path applies the idempotent database upgrade before the website is started.
 
@@ -129,13 +129,13 @@ For direct browser access during local development:
 
 Do not commit a production fixed-port mapping when Dokploy or another reverse proxy owns routing.
 
-Stop the Compose project without deleting the named volume:
+Stop the Compose project:
 
 ```bash
 docker compose down
 ```
 
-Do not add `--volumes` unless deleting local canonical state is intentional.
+Compose teardown leaves the bind-mounted host state directory in place. Deleting that directory is a separate, destructive action.
 
 ## Run pipeline commands
 
@@ -156,7 +156,7 @@ docker compose run --rm internships validate
 
 These commands do not contact LinkedIn.
 
-A new named volume contains no listings. Do not render and commit the README projection from empty state.
+An empty host state directory contains no listings. Do not render and commit the README projection from empty state.
 
 CLI command behavior is documented in the [CLI reference](../user-guide/cli.md).
 
@@ -202,7 +202,7 @@ Configure Dokploy to:
 3. assign the public domain to the `site` service;
 4. route traffic to container port `3000`;
 5. avoid publishing a conflicting fixed host port;
-6. preserve the `internships-data` named volume;
+6. preserve `/srv/european-tech-opportunities-27/data` as persistent host state;
 7. set the canonical website origin.
 
 Required website environment:
@@ -212,9 +212,9 @@ SITE_URL=https://internship2027.simonesiega.com
 INTERNSHIPS_DATABASE_PATH=/app/data/opportunities.db
 ```
 
-The site service must receive the database volume as read-only.
+The site service must receive the host state directory as a read-only bind mount.
 
-The manual deployment mode in `scrape.yml` replaces the SQLite file inside the named volume through verified SSH, checksum comparison, locking, correct ownership, and atomic rename.
+The manual deployment mode in `scrape.yml` replaces the SQLite file in that host directory through verified SSH, checksum comparison, locking, restricted permissions, and atomic rename.
 
 The website opens a new short-lived read-only connection for each server request, so deployed state becomes visible without:
 
@@ -249,12 +249,14 @@ sudo setfacl -m u:10001:rwx .
 sudo setfacl -m u:10001:rw README.md
 ```
 
-For a production database deployed by automation, the expected ownership and mode are:
+For a production database deployed by automation, the workflow assigns:
 
 ```text
-10001:10001
-0640
+group: internships-site
+mode:  0660
 ```
+
+The host must map that restricted group so the containers' GID `10001` can access the bind-mounted file.
 
 Do not use `chmod 777`, run the full application as root, or make the Docker socket broadly accessible to avoid correcting ownership.
 
@@ -331,7 +333,7 @@ Preserve:
 
 - one canonical writer;
 - the read-only website mount;
-- the named SQLite volume;
+- the bind-mounted SQLite state directory;
 - UID/GID `10001:10001`;
 - frozen dependency installation;
 - no secrets in build arguments or image layers;
@@ -341,6 +343,6 @@ Run every affected check from the [development validation matrix](../development
 
 ## Troubleshooting
 
-For empty or unmigrated volumes, SQLite read permissions, README atomic replacement, Compose expansion, image startup, or Dokploy routing problems, use the [Docker failures section of the troubleshooting guide](troubleshooting.md#docker-failures).
+For empty or unmigrated state directories, SQLite read permissions, README atomic replacement, Compose expansion, image startup, or Dokploy routing problems, use the [Docker failures section of the troubleshooting guide](troubleshooting.md#docker-failures).
 
 Workflow-side deployment failures belong to [GitHub Actions and deployment troubleshooting](troubleshooting.md#github-actions-and-deployment).

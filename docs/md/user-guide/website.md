@@ -17,7 +17,7 @@ The [live website](https://internship2027.simonesiega.com/) is the project’s p
 - [Local website development](#local-website-development)
 - [Production runtime](#production-runtime)
 - [Data refresh](#data-refresh)
-- [Privacy and future integrations](#privacy-and-future-integrations)
+- [Privacy and browser integrations](#privacy-and-browser-integrations)
 
 ## Interface
 
@@ -90,7 +90,7 @@ A browser interaction or URL state is not lifecycle evidence, collection input, 
 | Employment type | Deterministic title classification; always `Internship` or `New Grad` |
 | Location | Normalized explicit detail or search-card location |
 | Start date | Explicit month or season plus year from title or narrow start-date context |
-| First seen | First accepted observation in canonical SQLite state |
+| First seen | Inferred publication time from LinkedIn's relative posting age when available on first acceptance; otherwise the first accepted observation; immutable afterward |
 
 The website renders normalized publication fields rather than raw source HTML.
 
@@ -114,7 +114,7 @@ The website does not claim:
 
 Verify role requirements, location, deadline, compensation, work authorization, and current availability on the original listing before applying.
 
-`First seen` is the first time the pipeline accepted a listing. It is not necessarily the employer’s publication date.
+For a new row, `First seen` uses LinkedIn's relative posting age when it is available at the first accepted observation and otherwise uses that observation time. An inferred value is an approximate publication timestamp rather than an exact employer-supplied date, and later observations do not rewrite either value.
 
 A listing may disappear from search results without being marked closed. Closure follows the explicit lifecycle rules in [Database lifecycle](../operations/database.md#closure-lifecycle).
 
@@ -210,7 +210,7 @@ bunx playwright install chromium
 bun run ci
 ```
 
-`bun run ci` checks formatting, lint, strict TypeScript, the production build, and offline Playwright behavior against a generated temporary SQLite fixture. It does not contact LinkedIn.
+`bun run ci` checks formatting, lint, strict TypeScript, the production build, Bun unit tests, and Playwright browser behavior against a generated temporary SQLite fixture. It does not contact LinkedIn.
 
 The complete validation path and coding expectations are documented in [Development](../development/development.md#website-validation).
 
@@ -222,7 +222,7 @@ The root Dockerfile’s `site` target:
 2. builds Next.js standalone output under Node 26;
 3. copies only required standalone and static output into the final image;
 4. runs as UID/GID `10001:10001`;
-5. reads `/app/data/opportunities.db` from a read-only volume;
+5. reads `/app/data/opportunities.db` from a read-only bind mount;
 6. listens on container port `3000`.
 
 Production variables:
@@ -246,7 +246,7 @@ The authorized automation path:
 
 1. collects and validates canonical state;
 2. checkpoints and preserves SQLite;
-3. optionally deploys the validated database atomically to the shared volume.
+3. optionally deploys the validated database atomically to the shared host state directory.
 
 The website opens a new read-only connection on the next request, so newly deployed state becomes visible without an application rebuild, write endpoint, or in-process migration.
 
@@ -254,9 +254,11 @@ Do not run a second local or VPS collector while GitHub Actions owns canonical s
 
 Workflow orchestration belongs to [Automation](../operations/automation.md), and canonical state recovery to [Database lifecycle](../operations/database.md).
 
-## Privacy and future integrations
+## Privacy and browser integrations
 
-The implemented website requires no:
+The canonical production layout loads the hosted Umami analytics script from `https://cloud.umami.is/script.js` and restricts collection to `internship2027.simonesiega.com`. The script is not rendered in development, tests, or noncanonical deployments. This third-party browser integration must remain within privacy and security review.
+
+The directory itself requires no:
 
 - account;
 - login;
@@ -267,7 +269,7 @@ The implemented website requires no:
 
 No internship application is submitted through this project.
 
-Before adding analytics, advertising, authentication, forms, error tracking, or another browser integration:
+Before changing analytics or adding advertising, authentication, forms, error tracking, or another browser integration:
 
 1. document the complete data flow;
 2. identify data collected from visitors;

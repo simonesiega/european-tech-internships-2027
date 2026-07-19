@@ -14,9 +14,11 @@ MARKDOWN_FILES = (
     ROOT / "SECURITY.md",
     *sorted((ROOT / "docs").rglob("*.md")),
 )
+AUTOMATION_GUIDE = ROOT / "docs" / "md" / "operations" / "automation.md"
 _LINK_RE = re.compile(r"(?<!!)\[[^\]]*\]\(([^) >]+)")
 _IMAGE_RE = re.compile(r'<img[^>]+src="([^"]+)"')
 _HEADING_RE = re.compile(r"^#{1,6}\s+(.+)$", re.MULTILINE)
+_WORKFLOW_TABLE_ROW_RE = re.compile(r"^\|\s*`([^`/\\]+\.ya?ml)`\s*\|", re.MULTILINE)
 _EXTERNAL_PREFIXES = ("http://", "https://", "mailto:")
 
 
@@ -35,6 +37,15 @@ def _local_target(source: Path, target: str) -> tuple[Path, str | None] | None:
     path_text, separator, anchor = cleaned.partition("#")
     path = source if not path_text else (source.parent / urllib.parse.unquote(path_text)).resolve()
     return path, anchor if separator else None
+
+
+def _workflow_references(text: str) -> set[str]:
+    """Return local workflow filenames from the automation overview table."""
+    _before, marker, remainder = text.partition("## Workflow overview")
+    if not marker:
+        return set()
+    section, _next_heading, _after = remainder.partition("\n## ")
+    return set(_WORKFLOW_TABLE_ROW_RE.findall(section))
 
 
 def main() -> int:
@@ -60,6 +71,12 @@ def main() -> int:
                 continue
             if anchor and path in anchors and anchor not in anchors[path]:
                 errors.append(f"{source.relative_to(ROOT)}: missing heading #{anchor} in {target}")
+
+    automation_text = AUTOMATION_GUIDE.read_text(encoding="utf-8")
+    for name in sorted(_workflow_references(automation_text)):
+        workflow = ROOT / ".github" / "workflows" / name
+        if not workflow.is_file():
+            errors.append(f"{AUTOMATION_GUIDE.relative_to(ROOT)}: missing workflow {name}")
 
     if errors:
         sys.stderr.write("\n".join(errors) + "\n")

@@ -2,9 +2,9 @@
 
 [← Documentation](../README.md) · [Database lifecycle](database.md) · [Docker and deployment](docker.md)
 
-This guide documents the GitHub Actions workflows that validate the project, collect internship and New Grad data, preserve canonical SQLite state, update the README preview, perform bounded maintenance, and optionally deploy validated state to the VPS.
+This guide documents the GitHub Actions workflows that validate the project, collect internship and New Grad data, preserve canonical SQLite state, update the README preview, and optionally deploy validated state to the VPS.
 
-Validation and collection remain separate: normal CI is offline and never contacts LinkedIn.
+Validation and collection remain separate: normal CI never contacts LinkedIn.
 
 ## Contents
 
@@ -18,7 +18,6 @@ Validation and collection remain separate: normal CI is offline and never contac
 - [State continuity and artifacts](#state-continuity-and-artifacts)
 - [README update pull requests](#readme-update-pull-requests)
 - [VPS deployment](#vps-deployment)
-- [Database maintenance](#database-maintenance)
 - [Recovery and state rebuilds](#recovery-and-state-rebuilds)
 - [Disabling collection](#disabling-collection)
 - [Operational checklist](#operational-checklist)
@@ -28,12 +27,11 @@ Validation and collection remain separate: normal CI is offline and never contac
 | Workflow | Trigger | Responsibility |
 |---|---|---|
 | `python-ci.yml` | Push to `main`, pull request, manual | Python formatting, linting, typing, offline tests, migrations, and generated-document checks |
-| `site-ci.yml` | Push to `main`, pull request, manual | Prettier, ESLint, strict TypeScript, and the Next.js production build |
+| `site-ci.yml` | Push to `main`, pull request, manual | Prettier, ESLint, strict TypeScript, the Next.js production build, unit tests, and browser checks against synthetic SQLite state |
 | `docker-ci.yml` | Push to `main`, pull request, manual | Pipeline and website image builds plus migrated read-only SQLite smoke tests |
 | `nightly.yml` | 03:00 UTC daily | Availability audit followed by scrape, with one combined review pull request |
 | `scrape.yml` | Manual | Scrape-only update with its own review pull request; reviewed deployment |
 | `check-availability.yml` | Manual | Full-state availability-only audit with its own review pull request |
-| `clear-database-columns.yml` | Manual | Bounded cleanup of selected optional fields, validation, preservation, and optional deployment |
 
 Workflow files under `.github/workflows/` are the executable source of truth. Update this guide when triggers, inputs, outputs, retention, or deployment behavior changes.
 
@@ -42,7 +40,7 @@ Workflow files under `.github/workflows/` are the executable source of truth. Up
 The three validation workflows require no LinkedIn access:
 
 - **Python CI** validates the pipeline, CLI, migrations, lifecycle behavior, README projection, and documentation contracts.
-- **Site CI** validates formatting, linting, strict TypeScript, and the production Next.js build.
+- **Site CI** validates formatting, linting, strict TypeScript, the production Next.js build, unit tests, and Playwright behavior against synthetic SQLite state.
 - **Docker CI** validates supported container builds and read-only website access to migrated SQLite state.
 
 Third-party actions should remain pinned to immutable revisions where practical. Runtime and package-manager versions should be explicit rather than resolved through latest-release APIs.
@@ -79,7 +77,7 @@ concurrency:
 
 The nominal scheduled time is 03:00 UTC. It completes the availability audit before starting the scrape. GitHub Actions may start scheduled jobs later than the configured time.
 
-Collection and database-maintenance workflows share `internship-collection`. This prevents overlapping canonical writers while allowing the read-only website to continue serving requests.
+The nightly, scrape-only, and availability-only workflows share `internship-collection`. This prevents overlapping canonical writers while allowing the read-only website to continue serving requests.
 
 ## Manual collection inputs
 
@@ -219,51 +217,25 @@ Review and merge the pull request manually. Scheduled runs do not deploy to the 
 
 | Variable | Required | Default or example |
 |---|---:|---|
-| `VPS_DOCKER_VOLUME` | Yes | `project_internships-data` |
 | `VPS_SSH_PORT` | No | `22` |
 
 ### Deployment sequence
 
 After a review pull request is merged, a deployment-mode run restores its cached database, skips all new collection, and validates it against `main`. It then:
 
-1. uploads the validated database to a run-specific remote temporary path;
-2. compares local and remote SHA-256 checksums;
+1. uploads the validated database to a run-specific temporary path in the host state directory;
+2. compares local and remote SHA-256 checksums and removes the upload if they differ;
 3. acquires a VPS `flock`;
 4. preserves the current canonical file as `opportunities.db.previous`;
-5. copies the upload to a temporary file inside the Docker volume;
-6. applies UID/GID `10001:10001` and mode `0640`;
-7. removes stale SQLite sidecars while no database connection is writing;
-8. atomically renames the temporary database into place;
-9. verifies the final checksum;
-10. removes the remote upload.
+5. assigns the restricted `internships-site` group and mode `0660` to the upload;
+6. removes stale SQLite sidecars while no database connection is writing;
+7. atomically renames the temporary database into place;
+8. verifies the final checksum;
+9. cleans up any upload remaining when the remote replacement step exits.
 
 The website opens a new read-only SQLite connection on the next request and observes the deployed database without an application restart or mutation endpoint.
 
 Compose topology, volume permissions, Dokploy routing, and container diagnostics belong to the [Docker and deployment guide](docker.md).
-
-## Database maintenance
-
-### Optional-field cleanup
-
-The manual `clear-database-columns.yml` workflow can clear selected optional fields:
-
-- `Industries`;
-- `Employment type`;
-- `Start date`.
-
-The workflow:
-
-1. runs only from `main`;
-2. requires at least one selected field;
-3. retrieves canonical VPS state;
-4. preserves before-and-after artifacts;
-5. checks SQLite integrity;
-6. saves the validated result to workflow cache;
-7. optionally deploys the cleaned database.
-
-A later collection repopulates a cleared field only when acceptable source evidence is available.
-
-Use this workflow for bounded data repair, not schema evolution. Schema changes require Alembic migrations and follow [Database lifecycle](database.md#migrations).
 
 ## Recovery and state rebuilds
 
@@ -302,9 +274,9 @@ Do not bypass the gate by hardcoding an enabled value in workflow or application
 
 Before changing or manually running automation, confirm:
 
-- [ ] Offline validation CI remains separate from collection.
+- [ ] Validation CI remains separate from LinkedIn collection.
 - [ ] LinkedIn authorization is current and recorded outside the repository.
-- [ ] Collection and maintenance retain the shared one-writer concurrency group.
+- [ ] Nightly, scrape-only, and availability-only runs retain the shared one-writer concurrency group.
 - [ ] Third-party actions remain pinned where practical.
 - [ ] Logs contain no secrets, GitHub contexts, HTML bodies, `.env` values, or database rows.
 - [ ] SQLite is checkpointed and validated before cache, artifact, or deployment publication.

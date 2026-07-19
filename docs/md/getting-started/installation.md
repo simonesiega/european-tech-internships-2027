@@ -159,7 +159,7 @@ bun run ci
 cd ..
 ```
 
-`bun run ci` checks formatting, linting, strict TypeScript, and the production Next.js build.
+`bun run ci` checks formatting, linting, strict TypeScript, the production Next.js build, Bun unit tests, and Playwright browser behavior against a generated SQLite fixture.
 
 The complete engineering validation matrix is documented in the [development guide](../development/development.md#validation-paths).
 

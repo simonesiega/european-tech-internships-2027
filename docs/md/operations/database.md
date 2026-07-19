@@ -219,7 +219,7 @@ Supported concurrent access:
 - one controlled application writer;
 - multiple read-only website requests.
 
-GitHub collection and database-maintenance workflows share a concurrency group to preserve this model.
+GitHub collection workflows share a concurrency group to preserve this model.
 
 Do not run an independent local or VPS collector against the same canonical file.
 

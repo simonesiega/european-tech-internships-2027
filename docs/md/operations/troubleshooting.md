@@ -395,10 +395,8 @@ Verify:
 - `VPS_USER`;
 - `VPS_SSH_PRIVATE_KEY`;
 - `VPS_SSH_KNOWN_HOSTS`;
-- `VPS_DOCKER_VOLUME`;
 - optional `VPS_SSH_PORT`;
-- non-interactive Docker access for the SSH user;
-- existence of the Docker volume;
+- access to `/srv/european-tech-opportunities-27/data` for the restricted SSH user;
 - whether another workflow holds the deployment lock.
 
 Do not disable host-key verification.
@@ -408,8 +406,8 @@ Do not disable host-key verification.
 Check:
 
 - local and remote checksums;
-- the target Docker volume;
-- UID/GID and file mode;
+- the target host state directory;
+- restricted group and file mode;
 - whether atomic rename completed;
 - whether stale sidecars remain;
 - whether the website reads `/app/data/opportunities.db`.
@@ -447,7 +445,7 @@ sqlite:////app/data/opportunities.db
 
 ### Database appears empty
 
-Confirm every command and service uses the same named volume.
+Confirm every command and service uses the same `/srv/european-tech-opportunities-27/data` bind mount.
 
 Then run:
 
@@ -456,14 +454,14 @@ docker compose run --rm internships db-upgrade
 docker compose run --rm internships stats
 ```
 
-A newly created volume is expected to contain no listings.
+A newly created host state directory is expected to contain no listings.
 
 ### Website cannot read SQLite
 
 Check:
 
-- the named volume is mounted;
-- the website mount is read-only;
+- the host state directory is mounted;
+- the website bind mount is read-only;
 - the database exists;
 - UID `10001` has read permission;
 - the configured path is `/app/data/opportunities.db`;
@@ -491,7 +489,7 @@ Verify:
 - environment expansion;
 - bind-mount source paths;
 - the read-only `/app/configs` mount;
-- the named database volume;
+- the `/srv/european-tech-opportunities-27/data` database bind mount;
 - image targets and service names;
 - `SITE_URL`;
 - absence of an unintended fixed production port.

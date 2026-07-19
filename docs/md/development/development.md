@@ -87,6 +87,7 @@ Keep pull requests focused. Avoid combining unrelated parser, schema, search, we
 | Command | Purpose |
 |---|---|
 | `make install` | Install Python development dependencies |
+| `make lock` | Verify that `uv.lock` matches project metadata |
 | `make migrate` | Upgrade the configured local database |
 | `make render` | Regenerate the README preview from representative state |
 | `make validate` | Validate SQLite state and generated projections |
@@ -96,6 +97,7 @@ Keep pull requests focused. Avoid combining unrelated parser, schema, search, we
 | `make lint` | Run Ruff formatting and lint checks |
 | `make typecheck` | Run strict mypy |
 | `make test` | Run offline pytest |
+| `make test-live` | Explicitly select authorization-gated live tests |
 | `make migrations` | Check Alembic and ORM consistency |
 | `make docs` | Validate documentation links, images, and anchors |
 | `make check` | Run the main Python and documentation pipeline |
@@ -135,7 +137,7 @@ cd site
 bun run ci
 ```
 
-This verifies Prettier, ESLint, strict TypeScript, the production Next.js build, and offline Playwright behavior in Chromium. Playwright creates a temporary synthetic SQLite fixture under `site/tests/e2e/.tmp/`; the fixture and test artifacts are ignored by Git.
+This verifies Prettier, ESLint, strict TypeScript, the production Next.js build, Bun unit tests, and Playwright browser behavior in Chromium against a temporary synthetic SQLite fixture under `site/tests/e2e/.tmp/`. The fixture and test artifacts are ignored by Git.
 
 Run a focused browser test with:
 
@@ -266,6 +268,12 @@ Live tests are skipped unless both variables are explicitly enabled:
 ```text
 INTERNSHIPS_LIVE_TESTS=1
 INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED=true
+```
+
+Select the live marker deliberately with:
+
+```bash
+make test-live
 ```
 
 These variables do not grant permission. CI does not run live tests, and an access block or challenge is a stop condition.

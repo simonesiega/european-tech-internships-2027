@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useSyncExternalStore} from "react";
 import {OpportunityFilters} from "@/components/opportunities/opportunity-filters";
 import {OpportunityList} from "@/components/opportunities/opportunity-list";
 import {useOpportunityFilters} from "@/components/opportunities/use-opportunity-filters";
@@ -11,8 +11,17 @@ type OpportunityDirectoryProps = {
   opportunities: Opportunity[];
 };
 
+const subscribeToHydration = () => () => undefined;
+const getClientHydrationState = () => true;
+const getServerHydrationState = () => false;
+
 export function OpportunityDirectory({opportunities}: OpportunityDirectoryProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const isInteractive = useSyncExternalStore(
+    subscribeToHydration,
+    getClientHydrationState,
+    getServerHydrationState
+  );
   const {filters, setters, options, filteredOpportunities, hasActiveFilters, clearFilters} =
     useOpportunityFilters(opportunities);
 
@@ -29,7 +38,11 @@ export function OpportunityDirectory({opportunities}: OpportunityDirectoryProps)
   }, []);
 
   return (
-    <section className="py-6 pt-11 max-[600px]:pt-8" aria-labelledby="opportunities-title">
+    <section
+      className="py-6 pt-11 max-[600px]:pt-8"
+      aria-busy={!isInteractive}
+      aria-labelledby="opportunities-title"
+    >
       <div className="flex items-start justify-between gap-6">
         <div>
           <h1
@@ -68,7 +81,11 @@ export function OpportunityDirectory({opportunities}: OpportunityDirectoryProps)
         onEmploymentTypeChange={setters.setEmploymentType}
         onClear={clearFilters}
       />
-      <OpportunityList opportunities={filteredOpportunities} onReset={clearFilters} />
+      <OpportunityList
+        opportunities={filteredOpportunities}
+        hasActiveFilters={hasActiveFilters}
+        onReset={clearFilters}
+      />
     </section>
   );
 }

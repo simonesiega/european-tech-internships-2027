@@ -7,8 +7,16 @@ async function expectRoleCount(page: Page, count: number) {
   );
 }
 
+async function openDirectory(page: Page, url = "/") {
+  await page.goto(url);
+  await expect(page.getByRole("region", {name: "Opportunity directory"})).toHaveAttribute(
+    "aria-busy",
+    "false"
+  );
+}
+
 test("filters opportunities and writes shareable URL parameters", async ({page}) => {
-  await page.goto("/");
+  await openDirectory(page);
 
   await expectRoleCount(page, 12);
   await page.getByLabel("Company").selectOption("Acme Labs");
@@ -23,8 +31,17 @@ test("filters opportunities and writes shareable URL parameters", async ({page})
   await expect(page.getByRole("link", {name: "Cybersecurity Intern 2027"})).toBeVisible();
 });
 
+test("filters every country in a multi-location opportunity", async ({page}) => {
+  await openDirectory(page);
+
+  await page.getByLabel("Location").selectOption("Portugal");
+  await expect(page).toHaveURL(/country=Portugal/);
+  await expectRoleCount(page, 1);
+  await expect(page.getByRole("link", {name: "Platform Engineering Intern 1"})).toBeVisible();
+});
+
 test("filters one employment type at a time", async ({page}) => {
-  await page.goto("/");
+  await openDirectory(page);
 
   await page.getByLabel("Employment type").selectOption("new-grad");
   await expect(page).toHaveURL(/type=new-grad/);
@@ -38,7 +55,7 @@ test("filters one employment type at a time", async ({page}) => {
 });
 
 test("restores filters from a shared URL and browser history", async ({page}) => {
-  await page.goto("/?q=analyst&country=France&type=new-grad");
+  await openDirectory(page, "/?q=analyst&country=France&type=new-grad");
 
   await expect(page.getByLabel("Search")).toHaveValue("analyst");
   await expect(page.getByLabel("Location")).toHaveValue("France");
@@ -54,7 +71,7 @@ test("restores filters from a shared URL and browser history", async ({page}) =>
 });
 
 test("search, reset, keyboard focus, and sorting remain interactive", async ({page}) => {
-  await page.goto("/?source=e2e");
+  await openDirectory(page, "/?source=e2e");
 
   await page.keyboard.press("Control+k");
   await expect(page.getByLabel("Search")).toBeFocused();
@@ -66,14 +83,17 @@ test("search, reset, keyboard focus, and sorting remain interactive", async ({pa
   await expect(page).toHaveURL("/?source=e2e");
   await expectRoleCount(page, 12);
 
-  await page.getByRole("button", {name: "Company"}).click();
-  await page.getByRole("button", {name: "Company"}).click();
+  const companyHeader = page.getByRole("columnheader", {name: "Company"});
+  await companyHeader.getByRole("button").click();
+  await expect(companyHeader).toHaveAttribute("aria-sort", "ascending");
+  await companyHeader.getByRole("button").click();
+  await expect(companyHeader).toHaveAttribute("aria-sort", "descending");
   const firstCompanyCell = page.locator("tbody tr").first().locator("td").nth(1);
   await expect(firstCompanyCell).toHaveText("Northstar Data");
 });
 
 test("paginates results and persists the selected theme", async ({page}) => {
-  await page.goto("/");
+  await openDirectory(page);
 
   await expect(page.getByText("Page 1 of 2")).toBeVisible();
   await expect(page.getByRole("link", {name: "Graduate Data Analyst 2027"})).toHaveCount(0);
@@ -91,7 +111,7 @@ test("paginates results and persists the selected theme", async ({page}) => {
 });
 
 test("publishes canonical SEO and crawler metadata", async ({page, request}) => {
-  await page.goto("/?company=Acme+Labs");
+  await openDirectory(page, "/?company=Acme+Labs");
 
   await expect(page).toHaveTitle("European Tech Opportunities 2027");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
@@ -107,6 +127,7 @@ test("publishes canonical SEO and crawler metadata", async ({page, request}) => 
     "summary_large_image"
   );
   await expect(page.locator('meta[name="author"]')).toHaveAttribute("content", "Simone Siega");
+  await expect(page.locator('script[src="https://cloud.umami.is/script.js"]')).toHaveCount(0);
 
   const manifestResponse = await request.get("/manifest.webmanifest");
   expect(manifestResponse.ok()).toBeTruthy();

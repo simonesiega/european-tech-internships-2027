@@ -87,7 +87,7 @@ for (let index = 1; index <= 9; index += 1) {
     String(1000000003 + index),
     `Example ${String(index).padStart(2, "0")}`,
     `Platform Engineering Intern ${index}`,
-    "Madrid, Spain",
+    index === 1 ? "Madrid, Spain; Lisbon, Portugal" : "Madrid, Spain",
     `https://www.linkedin.com/jobs/view/${1000000003 + index}`,
     "software-engineering",
     "Software Development",

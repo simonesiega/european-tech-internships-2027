@@ -4,6 +4,9 @@ import type {ReactNode} from "react";
 import "./globals.css";
 
 const siteUrl = process.env.SITE_URL ?? "http://localhost:3000";
+const analyticsDomain = "internship2027.simonesiega.com";
+const analyticsEnabled =
+  process.env.NODE_ENV === "production" && new URL(siteUrl).hostname === analyticsDomain;
 const title = "European Tech Opportunities 2027";
 const description =
   "Search and filter 2027 technology internships and New Grad positions across Europe.";
@@ -39,11 +42,14 @@ export default function RootLayout({children}: Readonly<{children: ReactNode}>) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
-          defer
-          src="https://cloud.umami.is/script.js"
-          data-website-id="e3733fba-21a0-4663-9e54-9e6adab3e0d5"
-        />
+        {analyticsEnabled ? (
+          <script
+            defer
+            src="https://cloud.umami.is/script.js"
+            data-domains={analyticsDomain}
+            data-website-id="e3733fba-21a0-4663-9e54-9e6adab3e0d5"
+          />
+        ) : null}
       </head>
       <body>
         <ThemeProvider

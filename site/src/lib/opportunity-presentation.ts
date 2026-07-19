@@ -1,7 +1,14 @@
 export const ALL_FILTER_VALUE = "all";
 
-export function getCountry(location: string): string {
-  return location.split(",").at(-1)?.trim() || location;
+export function getCountries(location: string): string[] {
+  return [
+    ...new Set(
+      location
+        .split(";")
+        .map((item) => item.split(",").at(-1)?.trim() || item.trim())
+        .filter(Boolean)
+    ),
+  ];
 }
 
 export function formatCategory(category: string): string {

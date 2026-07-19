@@ -1,10 +1,16 @@
 from __future__ import annotations
 
 from pathlib import Path
+from unittest.mock import Mock
 
+import pytest
+import typer
+from sqlalchemy import Engine
 from typer.testing import CliRunner
 
+import opportunities.cli.app as cli_app_module
 from opportunities.cli.app import app
+from opportunities.database.repository import Repository
 from opportunities.utils.paths import find_project_root
 
 runner = CliRunner()
@@ -62,6 +68,105 @@ def test_searches_works_without_database(tmp_path: Path) -> None:
     assert result.exit_code == 0, result.output
     assert "LinkedIn searches" in result.output
     assert "robotics" in result.output
+
+
+@pytest.mark.parametrize(
+    "command",
+    [("scrape",), ("check-availability",), ("render",), ("stats",), ("validate",)],
+)
+def test_database_engine_is_disposed_when_migration_check_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    command: tuple[str, ...],
+) -> None:
+    engine = Mock(spec=Engine)
+    engine.dispose.side_effect = RuntimeError("cleanup failed")
+    monkeypatch.setattr(cli_app_module, "create_database_engine", lambda _url: engine)
+
+    def reject_unmigrated_database(_engine: Engine) -> None:
+        raise typer.Exit(3)
+
+    monkeypatch.setattr(cli_app_module, "_require_migrations", reject_unmigrated_database)
+
+    result = runner.invoke(app, list(command), env=cli_env(tmp_path))
+
+    assert result.exit_code == 3
+    engine.dispose.assert_called_once_with()
+
+
+def test_scrape_preserves_unexpected_migration_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    engine = Mock(spec=Engine)
+    migration_error = ValueError("migration check failed")
+    monkeypatch.setattr(cli_app_module, "create_database_engine", lambda _url: engine)
+
+    def fail_migration(_engine: Engine) -> None:
+        raise migration_error
+
+    monkeypatch.setattr(cli_app_module, "_require_migrations", fail_migration)
+
+    result = runner.invoke(app, ["scrape"], env=cli_env(tmp_path))
+
+    assert result.exception is migration_error
+    engine.dispose.assert_called_once_with()
+
+
+def test_searches_disposes_engine_when_database_inspection_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    engine = Mock(spec=Engine)
+    engine.dispose.side_effect = RuntimeError("cleanup failed")
+    monkeypatch.setattr(cli_app_module, "create_database_engine", lambda _url: engine)
+
+    def fail_database_inspection(_engine: Engine) -> set[str]:
+        raise typer.Exit(3)
+
+    monkeypatch.setattr(cli_app_module, "missing_tables", fail_database_inspection)
+
+    result = runner.invoke(app, ["searches"], env=cli_env(tmp_path))
+
+    assert result.exit_code == 3
+    engine.dispose.assert_called_once_with()
+
+
+def test_repository_construction_failure_disposes_engine(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    engine = Mock(spec=Engine)
+    construction_error = RuntimeError("repository construction failed")
+    engine.dispose.side_effect = RuntimeError("cleanup failed")
+    monkeypatch.setattr(cli_app_module, "create_database_engine", lambda _url: engine)
+
+    def fail_session_factory(_engine: Engine) -> None:
+        raise construction_error
+
+    monkeypatch.setattr(cli_app_module, "create_session_factory", fail_session_factory)
+
+    result = runner.invoke(app, ["stats"], env=cli_env(tmp_path))
+
+    assert result.exception is construction_error
+    engine.dispose.assert_called_once_with()
+
+
+def test_disposal_failure_does_not_replace_command_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    engine = Mock(spec=Engine)
+    command_error = RuntimeError("command failed")
+    engine.dispose.side_effect = RuntimeError("cleanup failed")
+    monkeypatch.setattr(cli_app_module, "create_database_engine", lambda _url: engine)
+    monkeypatch.setattr(cli_app_module, "_require_migrations", lambda _engine: None)
+
+    def fail_command(_repository: object) -> None:
+        raise command_error
+
+    monkeypatch.setattr(Repository, "stats", fail_command)
+
+    result = runner.invoke(app, ["stats"], env=cli_env(tmp_path))
+
+    assert result.exception is command_error
+    engine.dispose.assert_called_once_with()
 
 
 def test_scrape_requires_permission_even_when_dotenv_enables_it(tmp_path: Path) -> None:
