@@ -7,7 +7,7 @@ from pydantic import ValidationError
 
 from opportunities.config.search_registry import SearchRegistryError, load_search_registry
 from opportunities.config.settings import apply_search_overrides, load_settings
-from opportunities.models.enums import InternshipCategory
+from opportunities.models.enums import OpportunityCategory
 from opportunities.models.search import LinkedInSearchConfig
 from opportunities.utils.paths import find_project_root
 
@@ -24,7 +24,7 @@ def test_production_search_registry_is_bounded_and_scope_specific() -> None:
         "countries",
     }
     role_names = {path.stem for path in (search_root / "roles").glob("*.yml")}
-    category_names = {category.value for category in InternshipCategory}
+    category_names = {category.value for category in OpportunityCategory}
     assert role_names <= category_names
     assert all(search.enabled for search in searches)
     for search in searches:
@@ -51,18 +51,18 @@ def test_dotenv_loads_automatically_and_process_environment_wins(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     (tmp_path / ".env").write_text(
-        "INTERNSHIPS_RATE_LIMIT_SECONDS=4\nINTERNSHIPS_SEARCH_MAX_PAGES=2\n",
+        "OPPORTUNITIES_RATE_LIMIT_SECONDS=4\nOPPORTUNITIES_SEARCH_MAX_PAGES=2\n",
         encoding="utf-8",
     )
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setenv("INTERNSHIPS_RATE_LIMIT_SECONDS", "1")
+    monkeypatch.setenv("OPPORTUNITIES_RATE_LIMIT_SECONDS", "1")
     settings = load_settings()
     assert settings.rate_limit_seconds == 1
     assert settings.search_max_pages == 2
 
 
 def test_trailing_environment_whitespace_is_ignored(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED", "true ")
+    monkeypatch.setenv("OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED", "true ")
     assert load_settings(dotenv_path=Path("missing.env")).linkedin_crawl_authorized is True
 
 

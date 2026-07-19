@@ -11,11 +11,11 @@ from pathlib import Path
 from opportunities.models.enums import EmploymentType
 from opportunities.models.job import StoredJob
 
-BEGIN_MARKER = "<!-- BEGIN INTERNSHIPS -->"
-END_MARKER = "<!-- END INTERNSHIPS -->"
+BEGIN_MARKER = "<!-- BEGIN OPPORTUNITIES -->"
+END_MARKER = "<!-- END OPPORTUNITIES -->"
 TABLE_HEADER = "| Company | Title | Location | Listing |\n|---|---|---|---|\n"
 README_PREVIEW_LIMIT = 10
-DIRECTORY_URL = "https://internship2027.simonesiega.com/"
+DIRECTORY_URL = "https://opportunities2027.simonesiega.com/"
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,7 +32,7 @@ def render_readme(path: Path, jobs: list[StoredJob], metadata: ReadmeMetadata) -
         raise ValueError(f"README does not exist: {path}")
     content = path.read_text(encoding="utf-8")
     if content.count(BEGIN_MARKER) != 1 or content.count(END_MARKER) != 1:
-        raise ValueError("README must contain exactly one internship marker pair")
+        raise ValueError("README must contain exactly one opportunity marker pair")
     # Replace only the generated marker range; all hand-written documentation remains intact.
     before, remainder = content.split(BEGIN_MARKER, 1)
     _old, after = remainder.split(END_MARKER, 1)
@@ -87,7 +87,7 @@ def _latest(jobs: list[StoredJob], employment_type: EmploymentType) -> list[Stor
 
 
 def markdown_table(jobs: list[StoredJob]) -> str:
-    """Build a four-column internship table from the supplied preview rows."""
+    """Build a four-column opportunity table from the supplied preview rows."""
     lines = [TABLE_HEADER.rstrip("\n")]
     for job in jobs:
         lines.append(
@@ -116,7 +116,7 @@ def validate_readme(
     content = path.read_text(encoding="utf-8")
     errors: list[str] = []
     if content.count(BEGIN_MARKER) != 1 or content.count(END_MARKER) != 1:
-        errors.append("README must contain exactly one internship marker pair")
+        errors.append("README must contain exactly one opportunity marker pair")
         return errors
     block = content.split(BEGIN_MARKER, 1)[1].split(END_MARKER, 1)[0].strip()
     if TABLE_HEADER.strip() not in block:
@@ -126,7 +126,7 @@ def validate_readme(
         and metadata is not None
         and block != markdown_block(jobs, metadata).strip()
     ):
-        errors.append("README internship block does not match open jobs and metadata in SQLite")
+        errors.append("README opportunity block does not match open jobs and metadata in SQLite")
     return errors
 
 

@@ -392,7 +392,7 @@ def _require_linkedin_permission(settings: Settings) -> None:
         return
     error_console.print(
         "[red]LinkedIn collection is disabled.[/red] Set "
-        "INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED=true only after express permission."
+        "OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED=true only after express permission."
     )
     raise typer.Exit(2)
 
@@ -404,7 +404,7 @@ def _require_migrations(engine: Engine) -> None:
     actual = database_revision(engine)
     if missing or actual != expected:
         error_console.print(
-            "[red]Database is not migrated.[/red] Run `uv run internships db-upgrade`."
+            "[red]Database is not migrated.[/red] Run `uv run opportunities db-upgrade`."
         )
         raise typer.Exit(3)
 

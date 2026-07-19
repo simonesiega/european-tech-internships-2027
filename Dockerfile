@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS internships
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS opportunities
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -19,19 +19,19 @@ COPY configs ./configs
 COPY src ./src
 
 RUN uv sync --frozen --no-dev \
-    && groupadd --gid 10001 internships \
+    && groupadd --gid 10001 opportunities \
     && useradd \
         --uid 10001 \
-        --gid internships \
+        --gid opportunities \
         --home-dir /app \
         --no-create-home \
         --shell /usr/sbin/nologin \
-        internships \
+        opportunities \
     && mkdir -p /app/data /workspace \
-    && chown -R internships:internships /app /workspace
+    && chown -R opportunities:opportunities /app /workspace
 
-USER internships
-ENTRYPOINT ["uv", "run", "--no-sync", "internships"]
+USER opportunities
+ENTRYPOINT ["uv", "run", "--no-sync", "opportunities"]
 CMD ["--help"]
 
 
@@ -44,7 +44,7 @@ RUN bun install --frozen-lockfile
 FROM node:26-alpine@sha256:725aeba2364a9b16beae49e180d83bd597dbd0b15c47f1f28875c290bfd255b9 AS site-builder
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
-ARG SITE_URL=https://internship2027.simonesiega.com
+ARG SITE_URL=https://opportunities2027.simonesiega.com
 ENV SITE_URL=$SITE_URL
 COPY --from=site-deps /usr/local/bin/bun /usr/local/bin/bun
 COPY --from=site-deps /app/node_modules ./node_modules
@@ -58,8 +58,8 @@ WORKDIR /app
 ENV NODE_ENV=production \
     HOSTNAME=0.0.0.0 \
     PORT=3000 \
-    SITE_URL=https://internship2027.simonesiega.com \
-    INTERNSHIPS_DATABASE_PATH=/app/data/opportunities.db
+    SITE_URL=https://opportunities2027.simonesiega.com \
+    OPPORTUNITIES_DATABASE_PATH=/app/data/opportunities.db
 
 RUN addgroup --system --gid 10001 nodejs \
     && adduser --system --uid 10001 --ingroup nodejs nextjs \

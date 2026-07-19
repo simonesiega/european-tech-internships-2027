@@ -6,7 +6,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from opportunities.models.enums import EmploymentType, InternshipCategory, JobStatus
+from opportunities.models.enums import EmploymentType, JobStatus, OpportunityCategory
 from opportunities.utils.text import clean_text
 from opportunities.utils.url import canonicalize_url
 
@@ -21,7 +21,7 @@ class DiscoveredJob(BaseModel):
     title: str = Field(min_length=1, max_length=500)
     location: str = Field(min_length=1, max_length=500)
     link: str
-    category: InternshipCategory
+    category: OpportunityCategory
     industries: str | None = Field(default=None, max_length=500)
     employment_type: EmploymentType
     start_date: str | None = Field(default=None, max_length=100)

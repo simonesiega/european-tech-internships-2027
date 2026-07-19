@@ -7,22 +7,22 @@ lock:
 	uv lock --check
 
 migrate:
-	uv run internships db-upgrade
+	uv run opportunities db-upgrade
 
 scrape:
-	uv run internships scrape
+	uv run opportunities scrape
 
 render:
-	uv run internships render
+	uv run opportunities render
 
 validate:
-	uv run internships validate
+	uv run opportunities validate
 
 searches:
-	uv run internships searches
+	uv run opportunities searches
 
 stats:
-	uv run internships stats
+	uv run opportunities stats
 
 lint:
 	uv run ruff format --check .

@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from opportunities.config.rules import ClassificationRules
 from opportunities.config.settings import Settings
 from opportunities.database.repository import Repository
-from opportunities.models.enums import EmploymentType, InternshipCategory
+from opportunities.models.enums import EmploymentType, OpportunityCategory
 from opportunities.models.job import DiscoveredJob
 from opportunities.models.raw import KnownJob, RawJob
 from opportunities.models.search import LinkedInSearchConfig
@@ -125,7 +125,7 @@ def test_overlapping_search_timestamps_remain_monotonic(
         title="Software Engineering Intern 2027",
         location="London, UK",
         link="https://www.linkedin.com/jobs/view/1111111111",
-        category=InternshipCategory.SOFTWARE_ENGINEERING,
+        category=OpportunityCategory.SOFTWARE_ENGINEERING,
         industries="Software Development",
         employment_type=EmploymentType.INTERNSHIP,
         start_date="Summer 2027",
@@ -182,7 +182,7 @@ def test_distinct_linkedin_ids_are_not_fuzzy_merged_and_explicit_404s_close(
             title="Software Engineering Intern 2027",
             location=location,
             link=f"https://www.linkedin.com/jobs/view/{job_id}",
-            category=InternshipCategory.SOFTWARE_ENGINEERING,
+            category=OpportunityCategory.SOFTWARE_ENGINEERING,
             employment_type=EmploymentType.INTERNSHIP,
         )
         for job_id, location in (

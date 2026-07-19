@@ -33,7 +33,7 @@ def rules() -> ClassificationRules:
 @pytest.fixture
 def search() -> LinkedInSearchConfig:
     return LinkedInSearchConfig(
-        name="Test European internships",
+        name="Test European opportunities",
         slug="test-search",
         keywords="software engineer intern 2027",
         location="Europe",

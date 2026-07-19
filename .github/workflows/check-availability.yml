@@ -10,7 +10,7 @@ on:
         type: boolean
 
 concurrency:
-  group: internship-collection
+  group: opportunity-collection
   cancel-in-progress: false
 
 permissions:
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
-      INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED: ${{ vars.LINKEDIN_CRAWL_AUTHORIZED }}
+      OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED: ${{ vars.LINKEDIN_CRAWL_AUTHORIZED }}
     steps:
       - name: Verify LinkedIn crawl authorization
         if: vars.LINKEDIN_CRAWL_AUTHORIZED != 'true'
@@ -86,7 +86,7 @@ jobs:
           mkdir -p data
           ssh -i "$HOME/.ssh/id_ed25519" -p "$VPS_PORT" -o BatchMode=yes \
             "${VPS_USER}@${VPS_HOST}" \
-            "cat /srv/european-tech-opportunities-27/data/opportunities.db" \
+            "cat /srv/european-tech-opportunities-2027/data/opportunities.db" \
             > data/opportunities.db
           uv run python -c "import sqlite3; db=sqlite3.connect('file:data/opportunities.db?mode=ro', uri=True); result=db.execute('PRAGMA integrity_check').fetchone(); db.close(); assert result == ('ok',), result"
 
@@ -98,12 +98,12 @@ jobs:
       - name: Migrate database
         shell: bash
         run: |
-          if uv run internships db-upgrade; then
+          if uv run opportunities db-upgrade; then
             exit 0
           fi
           if [ "${{ inputs.allow_state_rebuild }}" = "true" ]; then
             rm -f data/opportunities.db data/opportunities.db-*
-            uv run internships db-upgrade
+            uv run opportunities db-upgrade
           else
             echo "Migration failed; use allow_state_rebuild only after backing up state."
             exit 1
@@ -113,7 +113,7 @@ jobs:
         shell: bash
         run: |
           set +e
-          uv run internships check-availability
+          uv run opportunities check-availability
           code=$?
           set -e
           if [ "$code" -eq 2 ]; then
@@ -123,7 +123,7 @@ jobs:
           fi
 
       - name: Validate database and README
-        run: uv run internships validate
+        run: uv run opportunities validate
       - name: Checkpoint SQLite
         run: uv run python -c "import sqlite3; db=sqlite3.connect('data/opportunities.db'); db.execute('PRAGMA wal_checkpoint(TRUNCATE)'); db.close()"
 

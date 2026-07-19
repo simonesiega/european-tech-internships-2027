@@ -26,7 +26,7 @@ The root `Dockerfile` produces two final targets:
 
 | Target | Runtime | Responsibility |
 |---|---|---|
-| `internships` | Python 3.12 through the configured `uv` base image | CLI commands, migrations, collection, validation, and README rendering |
+| `opportunities` | Python 3.12 through the configured `uv` base image | CLI commands, migrations, collection, validation, and README rendering |
 | `site` | Node 26 Alpine with Next.js standalone output | Read-only website server on port `3000` |
 
 Both final images run as an unprivileged user:
@@ -44,8 +44,8 @@ Build the pipeline image:
 
 ```bash
 docker build \
-  --target internships \
-  --tag european-tech-opportunities-27-cli:local \
+  --target opportunities \
+  --tag european-tech-opportunities-2027-cli:local \
   .
 ```
 
@@ -53,7 +53,7 @@ Verify its entry point:
 
 ```bash
 docker run --rm \
-  european-tech-opportunities-27-cli:local \
+  european-tech-opportunities-2027-cli:local \
   --help
 ```
 
@@ -62,7 +62,7 @@ Build the website image:
 ```bash
 docker build \
   --target site \
-  --tag european-tech-opportunities-27-site:local \
+  --tag european-tech-opportunities-2027-site:local \
   .
 ```
 
@@ -70,7 +70,7 @@ Build and inspect the supported Compose project:
 
 ```bash
 docker compose build
-docker compose run --rm internships --help
+docker compose run --rm opportunities --help
 docker compose config
 ```
 
@@ -79,8 +79,8 @@ The complete image and Compose checks are listed in the [development guide](../d
 ## Compose topology
 
 ```text
-internships service ── read/write ─┐
-                                   ├─ /srv/european-tech-opportunities-27/data
+opportunities service ── read/write ─┐
+                                   ├─ /srv/european-tech-opportunities-2027/data
 site service ───────── read-only ──┘   host bind mount
 ```
 
@@ -90,7 +90,7 @@ The pipeline service uses:
 |---|---|---|---|
 | `./configs` | `/app/configs` | Read-only | Search and classification YAML |
 | Repository root | `/workspace` | Read/write | Atomic README projection replacement |
-| `/srv/european-tech-opportunities-27/data` | `/app/data` | Read/write | Canonical SQLite state |
+| `/srv/european-tech-opportunities-2027/data` | `/app/data` | Read/write | Canonical SQLite state |
 
 The website service mounts only the same host state directory, in read-only mode, and opens SQLite read-only.
 
@@ -142,16 +142,16 @@ Compose teardown leaves the bind-mounted host state directory in place. Deleting
 Run offline commands through the pipeline service:
 
 ```bash
-docker compose run --rm internships db-upgrade
-docker compose run --rm internships searches
-docker compose run --rm internships stats
+docker compose run --rm opportunities db-upgrade
+docker compose run --rm opportunities searches
+docker compose run --rm opportunities stats
 ```
 
 When representative canonical state is available:
 
 ```bash
-docker compose run --rm internships render
-docker compose run --rm internships validate
+docker compose run --rm opportunities render
+docker compose run --rm opportunities validate
 ```
 
 These commands do not contact LinkedIn.
@@ -167,16 +167,16 @@ Collection requires both express authorization and the application interlock.
 Test one search without persistence:
 
 ```bash
-INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED=true \
-  docker compose run --rm internships \
+OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED=true \
+  docker compose run --rm opportunities \
   search-test company-amazon
 ```
 
 Persist one bounded search:
 
 ```bash
-INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED=true \
-  docker compose run --rm internships \
+OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED=true \
+  docker compose run --rm opportunities \
   scrape --search company-amazon
 ```
 
@@ -193,7 +193,13 @@ Exact interlock behavior belongs to [Configuration](../getting-started/configura
 
 Production directory:
 
-**https://internship2027.simonesiega.com/**
+**https://opportunities2027.simonesiega.com/**
+
+> [!IMPORTANT]
+> Before deploying the renamed stack, stop every writer, move existing canonical state into
+> `/srv/european-tech-opportunities-2027/data`, and provision the restricted
+> `opportunities-site` host group. Restart collection and the website only after both services
+> resolve the same database file.
 
 Configure Dokploy to:
 
@@ -202,14 +208,14 @@ Configure Dokploy to:
 3. assign the public domain to the `site` service;
 4. route traffic to container port `3000`;
 5. avoid publishing a conflicting fixed host port;
-6. preserve `/srv/european-tech-opportunities-27/data` as persistent host state;
+6. preserve `/srv/european-tech-opportunities-2027/data` as persistent host state;
 7. set the canonical website origin.
 
 Required website environment:
 
 ```dotenv
-SITE_URL=https://internship2027.simonesiega.com
-INTERNSHIPS_DATABASE_PATH=/app/data/opportunities.db
+SITE_URL=https://opportunities2027.simonesiega.com
+OPPORTUNITIES_DATABASE_PATH=/app/data/opportunities.db
 ```
 
 The site service must receive the host state directory as a read-only bind mount.
@@ -252,7 +258,7 @@ sudo setfacl -m u:10001:rw README.md
 For a production database deployed by automation, the workflow assigns:
 
 ```text
-group: internships-site
+group: opportunities-site
 mode:  0660
 ```
 
@@ -265,18 +271,18 @@ Do not use `chmod 777`, run the full application as root, or make the Docker soc
 Create the persistent named volume:
 
 ```bash
-docker volume create internships-data
+docker volume create opportunities-data
 ```
 
 Run the migration with explicit mounts:
 
 ```bash
 docker run --rm \
-  -e INTERNSHIPS_README_PATH=/workspace/README.md \
-  -v internships-data:/app/data \
+  -e OPPORTUNITIES_README_PATH=/workspace/README.md \
+  -v opportunities-data:/app/data \
   -v "$(pwd)/configs:/app/configs:ro" \
   -v "$(pwd):/workspace" \
-  european-tech-opportunities-27-cli:local \
+  european-tech-opportunities-2027-cli:local \
   db-upgrade
 ```
 
@@ -284,11 +290,11 @@ Inspect the initialized database:
 
 ```bash
 docker run --rm \
-  -e INTERNSHIPS_README_PATH=/workspace/README.md \
-  -v internships-data:/app/data \
+  -e OPPORTUNITIES_README_PATH=/workspace/README.md \
+  -v opportunities-data:/app/data \
   -v "$(pwd)/configs:/app/configs:ro" \
   -v "$(pwd):/workspace" \
-  european-tech-opportunities-27-cli:local \
+  european-tech-opportunities-2027-cli:local \
   stats
 ```
 
@@ -325,7 +331,7 @@ bun run ci
 cd ..
 
 docker compose build
-docker compose run --rm internships --help
+docker compose run --rm opportunities --help
 docker compose config
 ```
 

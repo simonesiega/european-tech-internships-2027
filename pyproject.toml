@@ -1,5 +1,5 @@
 [project]
-name = "european-tech-opportunities-27"
+name = "european-tech-opportunities-2027"
 version = "0.1.0"
 description = "Pipeline for 2027 European technology internships and new-grad roles"
 readme = "README.md"
@@ -30,7 +30,7 @@ Repository = "https://github.com/simonesiega/european-tech-opportunities-2027"
 Issues = "https://github.com/simonesiega/european-tech-opportunities-2027/issues"
 
 [project.scripts]
-internships = "opportunities.cli.app:app"
+opportunities = "opportunities.cli.app:app"
 
 [dependency-groups]
 dev = [

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 from opportunities.config.rules import ClassificationRules
-from opportunities.models.enums import EmploymentType, InternshipCategory
+from opportunities.models.enums import EmploymentType, OpportunityCategory
 from opportunities.normalization.location import normalize_locations
 from opportunities.pipeline.classification import ClassificationDecision, Classifier
 
@@ -27,7 +27,7 @@ def classify(
 def test_explicit_2027_software_internship_is_accepted(rules: ClassificationRules) -> None:
     result = classify(rules, title="Backend Software Engineering Intern 2027")
     assert result.include
-    assert result.category == InternshipCategory.SOFTWARE_ENGINEERING
+    assert result.category == OpportunityCategory.SOFTWARE_ENGINEERING
     assert result.employment_type == EmploymentType.INTERNSHIP
 
 
@@ -53,7 +53,7 @@ def test_missing_cycle_is_accepted_for_recent_posting(rules: ClassificationRules
 
     assert result.include
     assert result.employment_type == EmploymentType.NEW_GRAD
-    assert result.category == InternshipCategory.SOFTWARE_ENGINEERING
+    assert result.category == OpportunityCategory.SOFTWARE_ENGINEERING
 
 
 def test_wrong_cycle_is_excluded(rules: ClassificationRules) -> None:
@@ -122,7 +122,7 @@ def test_explicit_2027_new_grad_role_is_accepted(rules: ClassificationRules) -> 
     result = classify(rules, title="Software Engineer, University Graduate 2027")
 
     assert result.include
-    assert result.category == InternshipCategory.SOFTWARE_ENGINEERING
+    assert result.category == OpportunityCategory.SOFTWARE_ENGINEERING
     assert result.employment_type == EmploymentType.NEW_GRAD
 
 
@@ -171,4 +171,4 @@ def test_description_can_classify_generic_technical_internship(
         description="A machine learning engineering internship for summer 2027.",
     )
     assert result.include
-    assert result.category == InternshipCategory.MACHINE_LEARNING
+    assert result.category == OpportunityCategory.MACHINE_LEARNING

@@ -151,7 +151,7 @@ The website CI workflow installs Chromium before running this path.
 ### Database migrations
 
 ```bash
-uv run internships db-upgrade
+uv run opportunities db-upgrade
 uv run python scripts/check_migrations.py
 ```
 
@@ -164,8 +164,8 @@ Do not render from an empty database and commit the result.
 With representative canonical state:
 
 ```bash
-uv run internships render
-uv run internships validate
+uv run opportunities render
+uv run opportunities validate
 uv run pytest tests/integration/test_readme.py -q
 ```
 
@@ -176,7 +176,7 @@ Generated files must be updated through their owning commands.
 ```bash
 docker compose config
 docker compose build
-docker compose run --rm internships --help
+docker compose run --rm opportunities --help
 ```
 
 Run affected smoke tests when changing image stages, runtime users, mounts, volumes, SQLite paths, permissions, or standalone website output. Operational container procedures belong to [Docker](../operations/docker.md).
@@ -266,8 +266,8 @@ Never commit authenticated pages, cookies, headers, account data, or browser cap
 Live tests are skipped unless both variables are explicitly enabled:
 
 ```text
-INTERNSHIPS_LIVE_TESTS=1
-INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED=true
+OPPORTUNITIES_LIVE_TESTS=1
+OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED=true
 ```
 
 Select the live marker deliberately with:
@@ -302,7 +302,7 @@ When changing packaging or containers:
 ```bash
 uv build
 docker compose build
-docker compose run --rm internships --help
+docker compose run --rm opportunities --help
 docker compose config
 ```
 

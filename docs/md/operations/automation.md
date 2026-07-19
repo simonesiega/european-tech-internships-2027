@@ -71,13 +71,13 @@ schedule:
   - cron: "0 3 * * *"
 
 concurrency:
-  group: internship-collection
+  group: opportunity-collection
   cancel-in-progress: false
 ```
 
 The nominal scheduled time is 03:00 UTC. It completes the availability audit before starting the scrape. GitHub Actions may start scheduled jobs later than the configured time.
 
-The nightly, scrape-only, and availability-only workflows share `internship-collection`. This prevents overlapping canonical writers while allowing the read-only website to continue serving requests.
+The nightly, scrape-only, and availability-only workflows share `opportunity-collection`. This prevents overlapping canonical writers while allowing the read-only website to continue serving requests.
 
 ## Manual collection inputs
 
@@ -227,7 +227,7 @@ After a review pull request is merged, a deployment-mode run restores its cached
 2. compares local and remote SHA-256 checksums and removes the upload if they differ;
 3. acquires a VPS `flock`;
 4. preserves the current canonical file as `opportunities.db.previous`;
-5. assigns the restricted `internships-site` group and mode `0660` to the upload;
+5. assigns the restricted `opportunities-site` group and mode `0660` to the upload;
 6. removes stale SQLite sidecars while no database connection is writing;
 7. atomically renames the temporary database into place;
 8. verifies the final checksum;
@@ -242,7 +242,7 @@ Compose topology, volume permissions, Dokploy routing, and container diagnostics
 Normal workflow migrations use:
 
 ```bash
-uv run internships db-upgrade
+uv run opportunities db-upgrade
 ```
 
 A migration failure stops the workflow.

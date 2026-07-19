@@ -39,7 +39,7 @@ configs/searches/
 └── countries/   # 33 country partitions
 ```
 
-Generated documentation may display the current count for each group. `internships render` refreshes owned counts, and `internships validate` compares them with the effective registry.
+Generated documentation may display the current count for each group. `opportunities render` refreshes owned counts, and `opportunities validate` compares them with the effective registry.
 
 Do not edit generated counts manually.
 
@@ -113,7 +113,7 @@ Before network access, the registry loader requires:
 Conventions:
 
 - filenames and slugs remain stable lowercase kebab-case;
-- role filenames map to `InternshipCategory`;
+- role filenames map to `OpportunityCategory`;
 - every query requests both internship and New Grad terminology without requiring a year;
 - every production search uses the dynamic `cycle` posting filter, covering May 1, 2026 through collection time;
 - employer searches use exact normalized `company_names`;
@@ -124,7 +124,7 @@ Conventions:
 Validate locally:
 
 ```bash
-uv run internships searches
+uv run opportunities searches
 uv run pytest tests/unit/test_config.py
 ```
 
@@ -177,7 +177,7 @@ These checks reduce unnecessary detail requests. Final acceptance still occurs o
 
 ## Limit tiers
 
-`internships searches` displays limits as:
+`opportunities searches` displays limits as:
 
 ```text
 P/R/C
@@ -210,7 +210,7 @@ Global diagnostic overrides belong to [Configuration](../getting-started/configu
 4. Use the verified Europe geography configuration for Europe-wide discovery.
 5. Start with the smallest defensible tier.
 6. Explain role scope and tuning in `notes`.
-7. Add the filename value to `InternshipCategory` when introducing a category.
+7. Add the filename value to `OpportunityCategory` when introducing a category.
 8. Add or update registry and classifier tests.
 
 Example path:
@@ -305,7 +305,7 @@ Country candidates remain subject to the same European-location and technology-r
 Run:
 
 ```bash
-uv run internships searches
+uv run opportunities searches
 uv run pytest tests/unit/test_config.py
 git diff -- configs/searches/
 ```
@@ -313,7 +313,7 @@ git diff -- configs/searches/
 Only with express authorization, preview one search without persistence:
 
 ```bash
-uv run internships search-test <slug>
+uv run opportunities search-test <slug>
 ```
 
 Confirm that the slug and query identity are unique, geography and employer values are justified, limits use the smallest defensible tier, the review date is accurate, and relevant tests pass.

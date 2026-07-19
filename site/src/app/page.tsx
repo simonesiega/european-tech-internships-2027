@@ -1,7 +1,7 @@
 import {SiteFooter} from "@/components/layout/site-footer";
 import {SiteHeader} from "@/components/layout/site-header";
 import {OpportunityDirectory} from "@/components/opportunities/opportunity-directory";
-import {getDirectoryData} from "@/lib/internships";
+import {getDirectoryData} from "@/lib/opportunities";
 
 export const dynamic = "force-dynamic";
 

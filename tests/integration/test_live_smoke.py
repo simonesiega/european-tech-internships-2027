@@ -14,10 +14,10 @@ from tests.conftest import ROOT
 pytestmark = [
     pytest.mark.live,
     pytest.mark.skipif(
-        os.getenv("INTERNSHIPS_LIVE_TESTS") != "1"
-        or os.getenv("INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED") != "true",
+        os.getenv("OPPORTUNITIES_LIVE_TESTS") != "1"
+        or os.getenv("OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED") != "true",
         reason=(
-            "live test requires INTERNSHIPS_LIVE_TESTS=1 and documented LinkedIn crawl permission"
+            "live test requires OPPORTUNITIES_LIVE_TESTS=1 and documented LinkedIn crawl permission"
         ),
     ),
 ]

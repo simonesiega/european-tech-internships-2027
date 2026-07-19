@@ -27,9 +27,9 @@ From the repository root, record:
 ```bash
 uv --version
 uv run python --version
-uv run internships --help
-uv run internships searches
-uv run internships stats
+uv run opportunities --help
+uv run opportunities searches
+uv run opportunities stats
 ```
 
 Also verify:
@@ -37,7 +37,7 @@ Also verify:
 - the current Git branch and commit;
 - the working directory;
 - whether `.env` or a settings YAML is being loaded;
-- `INTERNSHIPS_DATABASE_URL`;
+- `OPPORTUNITIES_DATABASE_URL`;
 - process-environment overrides;
 - whether execution is local, Docker, or GitHub Actions;
 - the exact command and exit code.
@@ -73,14 +73,14 @@ Common causes:
 Run:
 
 ```bash
-uv run internships searches
+uv run opportunities searches
 uv run pytest tests/unit/test_config.py
 ```
 
 For a specific settings file:
 
 ```bash
-uv run internships --settings configs/settings.local.yml stats
+uv run opportunities --settings configs/settings.local.yml stats
 ```
 
 Correct the first validation error before investigating later messages.
@@ -94,7 +94,7 @@ This is the safe default.
 Local or Docker collection requires:
 
 ```text
-INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED=true
+OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED=true
 ```
 
 GitHub Actions collection and availability auditing require:
@@ -126,11 +126,11 @@ Update the branch from current `main` and rerun. Do not add insecure compatibili
 Run:
 
 ```bash
-uv run internships db-upgrade
-uv run internships stats
+uv run opportunities db-upgrade
+uv run opportunities stats
 ```
 
-When the error remains, confirm both commands use the same `INTERNSHIPS_DATABASE_URL`, then run:
+When the error remains, confirm both commands use the same `OPPORTUNITIES_DATABASE_URL`, then run:
 
 ```bash
 uv run python scripts/check_migrations.py
@@ -176,8 +176,8 @@ The root README must contain exactly one opening and one closing internship mark
 Only when the database contains representative canonical state, run:
 
 ```bash
-uv run internships render
-uv run internships validate
+uv run opportunities render
+uv run opportunities validate
 ```
 
 The generated block contains:
@@ -191,8 +191,8 @@ Do not edit generated rows manually.
 
 When mismatch remains, verify:
 
-- `INTERNSHIPS_README_PATH`;
-- `INTERNSHIPS_DATABASE_URL`;
+- `OPPORTUNITIES_README_PATH`;
+- `OPPORTUNITIES_DATABASE_URL`;
 - parent-directory write permission;
 - absence of concurrent renderers or formatters;
 - that the committed projection was not generated from empty state.
@@ -223,7 +223,7 @@ Possible causes:
 Compare found and accepted counts:
 
 ```bash
-uv run internships searches
+uv run opportunities searches
 ```
 
 Identify the rejection stage before changing query limits or classification rules.
@@ -264,8 +264,8 @@ Retries are finite.
 A temporary timeout increase may be appropriate:
 
 ```dotenv
-INTERNSHIPS_REQUEST_TIMEOUT_SECONDS=40
-INTERNSHIPS_CONNECT_TIMEOUT_SECONDS=20
+OPPORTUNITIES_REQUEST_TIMEOUT_SECONDS=40
+OPPORTUNITIES_CONNECT_TIMEOUT_SECONDS=20
 ```
 
 Do not increase concurrency to evade throttling.
@@ -304,7 +304,7 @@ Description or source employment metadata alone cannot convert a title without I
 When authorized, inspect one search without persistence:
 
 ```bash
-uv run internships search-test <slug>
+uv run opportunities search-test <slug>
 ```
 
 Prefer a focused regression test over weakening a global rule.
@@ -396,7 +396,7 @@ Verify:
 - `VPS_SSH_PRIVATE_KEY`;
 - `VPS_SSH_KNOWN_HOSTS`;
 - optional `VPS_SSH_PORT`;
-- access to `/srv/european-tech-opportunities-27/data` for the restricted SSH user;
+- access to `/srv/european-tech-opportunities-2027/data` for the restricted SSH user;
 - whether another workflow holds the deployment lock.
 
 Do not disable host-key verification.
@@ -434,7 +434,7 @@ Start with:
 ```bash
 docker compose config
 docker compose ps
-docker compose run --rm internships stats
+docker compose run --rm opportunities stats
 ```
 
 Expected pipeline database URL:
@@ -445,13 +445,13 @@ sqlite:////app/data/opportunities.db
 
 ### Database appears empty
 
-Confirm every command and service uses the same `/srv/european-tech-opportunities-27/data` bind mount.
+Confirm every command and service uses the same `/srv/european-tech-opportunities-2027/data` bind mount.
 
 Then run:
 
 ```bash
-docker compose run --rm internships db-upgrade
-docker compose run --rm internships stats
+docker compose run --rm opportunities db-upgrade
+docker compose run --rm opportunities stats
 ```
 
 A newly created host state directory is expected to contain no listings.
@@ -489,7 +489,7 @@ Verify:
 - environment expansion;
 - bind-mount source paths;
 - the read-only `/app/configs` mount;
-- the `/srv/european-tech-opportunities-27/data` database bind mount;
+- the `/srv/european-tech-opportunities-2027/data` database bind mount;
 - image targets and service names;
 - `SITE_URL`;
 - absence of an unintended fixed production port.

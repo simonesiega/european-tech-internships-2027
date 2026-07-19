@@ -5,7 +5,7 @@ on:
     - cron: "0 3 * * *"
 
 concurrency:
-  group: internship-collection
+  group: opportunity-collection
   cancel-in-progress: false
 
 permissions:
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
-      INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED: ${{ vars.LINKEDIN_CRAWL_AUTHORIZED }}
+      OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED: ${{ vars.LINKEDIN_CRAWL_AUTHORIZED }}
     steps:
       - name: Verify LinkedIn crawl authorization
         if: vars.LINKEDIN_CRAWL_AUTHORIZED != 'true'
@@ -81,7 +81,7 @@ jobs:
           mkdir -p data
           ssh -i "$HOME/.ssh/id_ed25519" -p "$VPS_PORT" -o BatchMode=yes \
             "${VPS_USER}@${VPS_HOST}" \
-            "cat /srv/european-tech-opportunities-27/data/opportunities.db" \
+            "cat /srv/european-tech-opportunities-2027/data/opportunities.db" \
             > data/opportunities.db
           uv run python -c "import sqlite3; db=sqlite3.connect('file:data/opportunities.db?mode=ro', uri=True); result=db.execute('PRAGMA integrity_check').fetchone(); db.close(); assert result == ('ok',), result"
 
@@ -91,13 +91,13 @@ jobs:
         run: rm -f "$HOME/.ssh/id_ed25519" "$HOME/.ssh/known_hosts"
 
       - name: Migrate database
-        run: uv run internships db-upgrade
+        run: uv run opportunities db-upgrade
 
       - name: Check every stored job detail page
         shell: bash
         run: |
           set +e
-          uv run internships check-availability
+          uv run opportunities check-availability
           code=$?
           set -e
           if [ "$code" -eq 2 ]; then
@@ -110,7 +110,7 @@ jobs:
         shell: bash
         run: |
           set +e
-          uv run internships scrape
+          uv run opportunities scrape
           code=$?
           set -e
           if [ "$code" -eq 1 ] || [ "$code" -eq 3 ]; then
@@ -121,7 +121,7 @@ jobs:
           fi
 
       - name: Validate combined database and README
-        run: uv run internships validate
+        run: uv run opportunities validate
       - name: Checkpoint SQLite
         run: uv run python -c "import sqlite3; db=sqlite3.connect('data/opportunities.db'); db.execute('PRAGMA wal_checkpoint(TRUNCATE)'); db.close()"
 

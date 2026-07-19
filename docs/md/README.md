@@ -1,12 +1,12 @@
 # European Tech Opportunities 2027 Documentation
 
-[← Project README](../../README.md) · [Open the opportunity directory](https://internship2027.simonesiega.com/)
+[← Project README](../../README.md) · [Open the opportunity directory](https://opportunities2027.simonesiega.com/)
 
 This documentation is organized by task. The website is the primary public interface; the remaining guides explain how to run, operate, and extend the data pipeline safely.
 
 ## Start here
 
-- **Looking for an internship or New Grad role?** Open the [live directory](https://internship2027.simonesiega.com/) or read the [website guide](user-guide/website.md).
+- **Looking for an internship or New Grad role?** Open the [live directory](https://opportunities2027.simonesiega.com/) or read the [website guide](user-guide/website.md).
 - **Running the project locally?** Start with [installation](getting-started/installation.md) and [configuration](getting-started/configuration.md).
 - **Operating a deployment?** Read [automation](operations/automation.md), [database](operations/database.md), and [Docker and deployment](operations/docker.md).
 - **Contributing code?** Begin with [architecture](development/architecture.md) and [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
@@ -61,6 +61,6 @@ Use repository-relative paths, descriptive alt text, and WebP for new raster ima
 
 - Commands are shown from the repository root unless a guide says otherwise.
 - Keep internal repository links relative.
-- Use `https://internship2027.simonesiega.com/` for links to the public directory.
+- Use `https://opportunities2027.simonesiega.com/` for links to the public directory.
 - Never edit generated README internship rows manually.
 - Examples must preserve the authorization and one-writer safety model.

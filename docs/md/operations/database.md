@@ -172,11 +172,11 @@ no active association      → job closes
 
 Deleting or disabling search YAML does not close jobs.
 
-The confirmation threshold is configured through `INTERNSHIPS_CLOSURE_CONFIRMATION_RUNS`; see [Configuration](../getting-started/configuration.md#environment-reference).
+The confirmation threshold is configured through `OPPORTUNITIES_CLOSURE_CONFIRMATION_RUNS`; see [Configuration](../getting-started/configuration.md#environment-reference).
 
 ## Daily full-state availability audit
 
-The scheduled workflow runs `internships check-availability` once per day before collection. Unlike bounded per-search rechecks, this pass requests the LinkedIn detail page for every row, including closed rows.
+The scheduled workflow runs `opportunities check-availability` once per day before collection. Unlike bounded per-search rechecks, this pass requests the LinkedIn detail page for every row, including closed rows.
 
 Results are deliberately narrow:
 
@@ -230,7 +230,7 @@ The website must open SQLite in read-only mode and must never run migrations or 
 Upgrade the configured database:
 
 ```bash
-uv run internships db-upgrade
+uv run opportunities db-upgrade
 ```
 
 Verify Alembic and SQLAlchemy agreement:
@@ -292,15 +292,15 @@ Workflow cache, artifacts, and deployment sequencing are documented in [Automati
 6. Run:
 
 ```bash
-uv run internships db-upgrade
-uv run internships stats
+uv run opportunities db-upgrade
+uv run opportunities stats
 ```
 
 When the restored database contains the representative state expected by the committed README preview, also run:
 
 ```bash
-uv run internships render
-uv run internships validate
+uv run opportunities render
+uv run opportunities validate
 ```
 
 A fresh rebuild loses lifecycle history. Do not delete canonical state as the first response to migration, locking, or integrity problems.

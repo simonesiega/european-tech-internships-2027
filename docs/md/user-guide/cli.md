@@ -2,24 +2,24 @@
 
 [← Documentation](../README.md) · [Installation](../getting-started/installation.md) · [Configuration](../getting-started/configuration.md)
 
-The `internships` CLI manages database migrations, search inspection, authorized collection, canonical SQLite state, validation, and generated documentation projections.
+The `opportunities` CLI manages database migrations, search inspection, authorized collection, canonical SQLite state, validation, and generated documentation projections.
 
 Show the command overview:
 
 ```bash
-uv run internships --help
+uv run opportunities --help
 ```
 
 General form:
 
 ```text
-uv run internships [GLOBAL OPTIONS] COMMAND [COMMAND OPTIONS]
+uv run opportunities [GLOBAL OPTIONS] COMMAND [COMMAND OPTIONS]
 ```
 
 Select an optional settings file:
 
 ```bash
-uv run internships --settings configs/settings.local.yml stats
+uv run opportunities --settings configs/settings.local.yml stats
 ```
 
 The global `--settings` option must appear before the command name.
@@ -57,7 +57,7 @@ Configuration sources and precedence are documented in [Configuration](../gettin
 ## `db-upgrade`
 
 ```bash
-uv run internships db-upgrade
+uv run opportunities db-upgrade
 ```
 
 Creates or upgrades the configured database to the single Alembic head.
@@ -77,7 +77,7 @@ Migration design, backup, and recovery belong to the [database lifecycle guide](
 ## `searches`
 
 ```bash
-uv run internships searches
+uv run opportunities searches
 ```
 
 Displays the effective search registry, including:
@@ -97,7 +97,7 @@ Search schema and tuning are documented in the [search registry guide](search-re
 ## `search-test`
 
 ```bash
-uv run internships search-test <slug>
+uv run opportunities search-test <slug>
 ```
 
 Runs one enabled search without persistence.
@@ -121,19 +121,19 @@ Use it for one authorized parser, query, or classification preview before persis
 Run every enabled search:
 
 ```bash
-uv run internships scrape
+uv run opportunities scrape
 ```
 
 Run one selected search:
 
 ```bash
-uv run internships scrape --search company-amazon
+uv run opportunities scrape --search company-amazon
 ```
 
 Persist state without modifying the README:
 
 ```bash
-uv run internships scrape --no-render
+uv run opportunities scrape --no-render
 ```
 
 The command:
@@ -162,13 +162,13 @@ The collection lifecycle is documented in [Architecture](../development/architec
 ## `check-availability`
 
 ```bash
-uv run internships check-availability
+uv run opportunities check-availability
 ```
 
 Check canonical state without updating generated documentation:
 
 ```bash
-uv run internships check-availability --no-render
+uv run opportunities check-availability --no-render
 ```
 
 The command requires the LinkedIn authorization interlock and requests the LinkedIn detail page for every job row, including rows currently marked closed. It then applies one transaction:
@@ -182,7 +182,7 @@ The command exits with code `2` when one or more checks are inconclusive. Confir
 ## `render`
 
 ```bash
-uv run internships render
+uv run opportunities render
 ```
 
 Regenerates generated documentation from canonical SQLite state.
@@ -210,7 +210,7 @@ Do not edit generated rows manually.
 ## `stats`
 
 ```bash
-uv run internships stats
+uv run opportunities stats
 ```
 
 Displays aggregate canonical state, including:
@@ -227,7 +227,7 @@ Use it after migration, collection, restoration, or deployment to verify that th
 ## `validate`
 
 ```bash
-uv run internships validate
+uv run opportunities validate
 ```
 
 Checks:
@@ -282,9 +282,9 @@ GitHub Actions handling of these codes is documented in [Automation](../operatio
 ### Initialize a local database
 
 ```bash
-uv run internships db-upgrade
-uv run internships searches
-uv run internships stats
+uv run opportunities db-upgrade
+uv run opportunities searches
+uv run opportunities stats
 ```
 
 A new database is expected to contain no listings.
@@ -292,21 +292,21 @@ A new database is expected to contain no listings.
 ### Inspect registry and canonical state
 
 ```bash
-uv run internships searches
-uv run internships stats
+uv run opportunities searches
+uv run opportunities stats
 ```
 
 ### Test one authorized search without persistence
 
 ```bash
-uv run internships search-test <slug>
+uv run opportunities search-test <slug>
 ```
 
 ### Persist one authorized search
 
 ```bash
-uv run internships scrape --search <slug>
-uv run internships validate
+uv run opportunities scrape --search <slug>
+uv run opportunities validate
 ```
 
 Validation assumes that the configured SQLite database and generated README represent the same canonical state.
@@ -314,21 +314,21 @@ Validation assumes that the configured SQLite database and generated README repr
 ### Collect without modifying the README
 
 ```bash
-uv run internships scrape --no-render
-uv run internships stats
+uv run opportunities scrape --no-render
+uv run opportunities stats
 ```
 
 ### Regenerate documentation from representative state
 
 ```bash
-uv run internships render
-uv run internships validate
+uv run opportunities render
+uv run opportunities validate
 ```
 
 ### Verify migrations during development
 
 ```bash
-uv run internships db-upgrade
+uv run opportunities db-upgrade
 uv run python scripts/check_migrations.py
 ```
 

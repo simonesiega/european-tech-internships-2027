@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from opportunities.models.enums import EmploymentType, InternshipCategory, JobStatus
+from opportunities.models.enums import EmploymentType, JobStatus, OpportunityCategory
 from opportunities.models.job import StoredJob
 from opportunities.readme import (
     ReadmeMetadata,
@@ -21,7 +21,7 @@ def stored_job(index: int, employment_type: EmploymentType, first_seen_at: datet
         title=f"Software Engineer 2027 #{index}",
         location="London, UK",
         link=f"https://www.linkedin.com/jobs/view/{1_000_000_000 + index}",
-        category=InternshipCategory.SOFTWARE_ENGINEERING,
+        category=OpportunityCategory.SOFTWARE_ENGINEERING,
         employment_type=employment_type,
         first_seen_at=first_seen_at,
         last_seen_at=first_seen_at,
@@ -53,7 +53,7 @@ def test_readme_contains_type_sections_and_escapes_values(tmp_path: Path) -> Non
 
     readme = tmp_path / "README.md"
     readme.write_text(
-        "# Test\n\n<!-- BEGIN INTERNSHIPS -->\nold\n<!-- END INTERNSHIPS -->\n",
+        "# Test\n\n<!-- BEGIN OPPORTUNITIES -->\nold\n<!-- END OPPORTUNITIES -->\n",
         encoding="utf-8",
     )
     render_readme(readme, [job], metadata)

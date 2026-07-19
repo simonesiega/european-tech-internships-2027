@@ -47,9 +47,9 @@ jobs:
         run: uv run python scripts/check_docs.py
       - name: Smoke-test migration and rendering
         env:
-          INTERNSHIPS_DATABASE_URL: sqlite:///data/ci.db
+          OPPORTUNITIES_DATABASE_URL: sqlite:///data/ci.db
         run: |
           mkdir -p data
-          uv run internships db-upgrade
-          uv run internships render
-          uv run internships validate
+          uv run opportunities db-upgrade
+          uv run opportunities render
+          uv run opportunities validate

@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 DEFAULT_USER_AGENT = (
-    "european-tech-opportunities-27/0.1 "
+    "european-tech-opportunities-2027/0.1 "
     "(+https://github.com/simonesiega/european-tech-opportunities-2027)"
 )
 
@@ -104,8 +104,8 @@ def load_settings(path: Path | None = None, *, dotenv_path: Path = Path(".env"))
         key: value.strip() for key, value in dotenv_values(dotenv_path).items() if value is not None
     }
     configured_path = path
-    settings_file_value = os.getenv("INTERNSHIPS_SETTINGS_FILE") or dotenv.get(
-        "INTERNSHIPS_SETTINGS_FILE"
+    settings_file_value = os.getenv("OPPORTUNITIES_SETTINGS_FILE") or dotenv.get(
+        "OPPORTUNITIES_SETTINGS_FILE"
     )
     if configured_path is None and settings_file_value:
         configured_path = Path(settings_file_value.strip())
@@ -155,7 +155,7 @@ def _environment_values(source: Mapping[str, str | None]) -> dict[str, str]:
     """Collect supported settings from environment variables."""
     values: dict[str, str] = {}
     for environment_name, field_name in _ENV_FIELDS.items():
-        value = source.get(f"INTERNSHIPS_{environment_name}")
+        value = source.get(f"OPPORTUNITIES_{environment_name}")
         if value is not None:
             values[field_name] = str(value).strip()
     return values

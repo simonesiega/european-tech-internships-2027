@@ -5,8 +5,8 @@ from __future__ import annotations
 from enum import StrEnum
 
 
-class InternshipCategory(StrEnum):
-    """Enumerate supported technology internship categories."""
+class OpportunityCategory(StrEnum):
+    """Enumerate supported technology opportunity categories."""
 
     ARTIFICIAL_INTELLIGENCE = "artificial-intelligence"
     CLOUD_DEVOPS_INFRASTRUCTURE = "cloud-devops-infrastructure"

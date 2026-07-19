@@ -1,8 +1,8 @@
 # European Tech Opportunities 2027 Website Guide
 
-[← Documentation](../README.md) · [Open the live site](https://internship2027.simonesiega.com/)
+[← Documentation](../README.md) · [Open the live site](https://opportunities2027.simonesiega.com/)
 
-The [live website](https://internship2027.simonesiega.com/) is the project’s primary public interface. It displays every currently open internship and New Grad position in canonical SQLite state, while the root README intentionally shows bounded previews for both types.
+The [live website](https://opportunities2027.simonesiega.com/) is the project’s primary public interface. It displays every currently open internship and New Grad position in canonical SQLite state, while the root README intentionally shows bounded previews for both types.
 
 ## Contents
 
@@ -148,7 +148,7 @@ The directory recognizes these query parameters:
 For example:
 
 ```text
-https://internship2027.simonesiega.com/?q=security&country=Germany
+https://opportunities2027.simonesiega.com/?q=security&country=Germany
 ```
 
 Selecting a filter adds it to browser history, clearing a filter removes its parameter, and browser back/forward navigation restores earlier filter selections. Search typing replaces the current history entry to avoid creating one entry per keystroke. Reset removes only directory-owned parameters.
@@ -175,7 +175,7 @@ Website database access lives under:
 site/src/lib/
 ```
 
-`site/src/lib/internships.ts` opens SQLite in read-only mode and queries currently open jobs in stable publication order.
+`site/src/lib/opportunities.ts` opens SQLite in read-only mode and queries currently open jobs in stable publication order.
 
 It also reads the latest completed collection timestamp from `search_runs` for public status metadata.
 
@@ -228,8 +228,8 @@ The root Dockerfile’s `site` target:
 Production variables:
 
 ```dotenv
-SITE_URL=https://internship2027.simonesiega.com
-INTERNSHIPS_DATABASE_PATH=/app/data/opportunities.db
+SITE_URL=https://opportunities2027.simonesiega.com
+OPPORTUNITIES_DATABASE_PATH=/app/data/opportunities.db
 ```
 
 `SITE_URL` defines the canonical public origin used by website metadata.
@@ -256,7 +256,7 @@ Workflow orchestration belongs to [Automation](../operations/automation.md), and
 
 ## Privacy and browser integrations
 
-The canonical production layout loads the hosted Umami analytics script from `https://cloud.umami.is/script.js` and restricts collection to `internship2027.simonesiega.com`. The script is not rendered in development, tests, or noncanonical deployments. This third-party browser integration must remain within privacy and security review.
+The canonical production layout loads the hosted Umami analytics script from `https://cloud.umami.is/script.js` and restricts collection to `opportunities2027.simonesiega.com`. The script is not rendered in development, tests, or noncanonical deployments. This third-party browser integration must remain within privacy and security review.
 
 The directory itself requires no:
 

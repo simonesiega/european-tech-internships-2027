@@ -7,7 +7,7 @@ from pathlib import Path
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from opportunities.models.enums import InternshipCategory
+from opportunities.models.enums import OpportunityCategory
 
 
 class ClassificationRules(BaseModel):
@@ -19,7 +19,7 @@ class ClassificationRules(BaseModel):
     internship_keywords: tuple[str, ...]
     new_grad_keywords: tuple[str, ...]
     excluded_role_keywords: tuple[str, ...]
-    categories: dict[InternshipCategory, tuple[str, ...]]
+    categories: dict[OpportunityCategory, tuple[str, ...]]
 
     @field_validator(
         "internship_keywords", "new_grad_keywords", "excluded_role_keywords", mode="before"

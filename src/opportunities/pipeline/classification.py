@@ -8,7 +8,7 @@ from datetime import datetime
 
 from opportunities.config.policy import MINIMUM_POSTED_AT
 from opportunities.config.rules import ClassificationRules
-from opportunities.models.enums import EmploymentType, InternshipCategory
+from opportunities.models.enums import EmploymentType, OpportunityCategory
 from opportunities.normalization.location import EUROPEAN_COUNTRY_CODES, LocationResult
 from opportunities.utils.text import html_to_text, normalized_key
 from opportunities.utils.time import ensure_utc
@@ -68,7 +68,7 @@ class ClassificationDecision:
     """Describe the acceptance decision for one job."""
 
     include: bool
-    category: InternshipCategory
+    category: OpportunityCategory
     employment_type: EmploymentType | None = None
     exclusion_reason: str | None = None
 
@@ -116,11 +116,11 @@ class Classifier:
         category = self.classify_category(title_key)
         # Description fallback is deliberately narrow: generic technology titles may
         # use it, but an unrelated explicit title cannot be reclassified by body text.
-        if category == InternshipCategory.UNKNOWN and self._description_can_define_category(
+        if category == OpportunityCategory.UNKNOWN and self._description_can_define_category(
             title_key
         ):
             category = self.classify_category("", description_key)
-        if category == InternshipCategory.UNKNOWN:
+        if category == OpportunityCategory.UNKNOWN:
             return self._exclude("title has no technology-role signal")
 
         cycle = self.classify_cycle(title_key, description_key, employment_type)
@@ -165,15 +165,15 @@ class Classifier:
             return EmploymentType.NEW_GRAD
         return None
 
-    def classify_category(self, title_key: str, description_key: str = "") -> InternshipCategory:
+    def classify_category(self, title_key: str, description_key: str = "") -> OpportunityCategory:
         """Return the first configured category found in title-first order."""
         for text in (title_key, description_key):
             for category, keywords in self._categories.items():
                 if self._contains_any(text, keywords):
                     return category
         if self._contains_any(f"{title_key} {description_key}", _OTHER_TECH_KEYWORDS):
-            return InternshipCategory.OTHER_TECH
-        return InternshipCategory.UNKNOWN
+            return OpportunityCategory.OTHER_TECH
+        return OpportunityCategory.UNKNOWN
 
     def classify_cycle(
         self, title_key: str, description_key: str, employment_type: EmploymentType
@@ -220,7 +220,7 @@ class Classifier:
         """Build an excluded classification decision."""
         return ClassificationDecision(
             include=False,
-            category=InternshipCategory.UNKNOWN,
+            category=OpportunityCategory.UNKNOWN,
             exclusion_reason=reason,
         )
 

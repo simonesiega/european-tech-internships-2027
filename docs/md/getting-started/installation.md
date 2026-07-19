@@ -1,8 +1,8 @@
 # European Tech Opportunities 2027 Installation Guide
 
-[← Documentation](../README.md) · [Configuration](configuration.md) · [Open the opportunity directory](https://internship2027.simonesiega.com/)
+[← Documentation](../README.md) · [Configuration](configuration.md) · [Open the opportunity directory](https://opportunities2027.simonesiega.com/)
 
-You do not need to install the project to browse internships. Use the [live directory](https://internship2027.simonesiega.com/).
+You do not need to install the project to browse internships. Use the [live directory](https://opportunities2027.simonesiega.com/).
 
 This guide covers local installation, database initialization, the first website launch, and basic verification. Runtime settings, production operation, and contribution procedures belong to their dedicated guides.
 
@@ -71,14 +71,14 @@ The default configuration keeps LinkedIn collection disabled. Review the [config
 Create or upgrade the SQLite schema:
 
 ```bash
-uv run internships db-upgrade
+uv run opportunities db-upgrade
 ```
 
 Verify that the search registry and database load:
 
 ```bash
-uv run internships searches
-uv run internships stats
+uv run opportunities searches
+uv run opportunities stats
 ```
 
 The default database is created at:
@@ -146,8 +146,8 @@ cd ..
 From the repository root, verify the Python project:
 
 ```bash
-uv run internships --help
-uv run internships stats
+uv run opportunities --help
+uv run opportunities stats
 uv run pytest -m "not live"
 ```
 

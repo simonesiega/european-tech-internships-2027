@@ -19,19 +19,19 @@ ROOT = find_project_root(Path(__file__))
 
 def cli_env(tmp_path: Path) -> dict[str, str]:
     return {
-        "INTERNSHIPS_DATABASE_URL": f"sqlite:///{(tmp_path / 'opportunities.db').as_posix()}",
-        "INTERNSHIPS_SEARCH_CONFIG_DIR": str(ROOT / "configs" / "searches"),
-        "INTERNSHIPS_CATEGORY_CONFIG_PATH": str(ROOT / "configs" / "categories.yml"),
-        "INTERNSHIPS_README_PATH": str(tmp_path / "README.md"),
-        "INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED": "true",
-        "INTERNSHIPS_RATE_LIMIT_SECONDS": "0",
+        "OPPORTUNITIES_DATABASE_URL": f"sqlite:///{(tmp_path / 'opportunities.db').as_posix()}",
+        "OPPORTUNITIES_SEARCH_CONFIG_DIR": str(ROOT / "configs" / "searches"),
+        "OPPORTUNITIES_CATEGORY_CONFIG_PATH": str(ROOT / "configs" / "categories.yml"),
+        "OPPORTUNITIES_README_PATH": str(tmp_path / "README.md"),
+        "OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED": "true",
+        "OPPORTUNITIES_RATE_LIMIT_SECONDS": "0",
     }
 
 
 def test_database_render_stats_and_validate_commands(tmp_path: Path) -> None:
     environment = cli_env(tmp_path)
     (tmp_path / "README.md").write_text(
-        "# Test\n\n<!-- BEGIN INTERNSHIPS -->\nold\n<!-- END INTERNSHIPS -->\n",
+        "# Test\n\n<!-- BEGIN OPPORTUNITIES -->\nold\n<!-- END OPPORTUNITIES -->\n",
         encoding="utf-8",
     )
     docs_path = tmp_path / "docs" / "md" / "user-guide" / "search-registry.md"
@@ -171,7 +171,7 @@ def test_disposal_failure_does_not_replace_command_error(
 
 def test_scrape_requires_permission_even_when_dotenv_enables_it(tmp_path: Path) -> None:
     environment = cli_env(tmp_path)
-    environment["INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED"] = "false"
+    environment["OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED"] = "false"
     result = runner.invoke(app, ["scrape"], env=environment)
     assert result.exit_code == 2
     assert "LinkedIn collection is disabled" in result.output

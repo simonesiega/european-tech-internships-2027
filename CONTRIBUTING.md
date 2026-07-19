@@ -65,7 +65,7 @@ Use the [installation guide](docs/md/getting-started/installation.md) for local 
 |---|---|---|
 | Python pipeline, CLI, classification, or persistence | [Development](docs/md/development/development.md) | `make check` |
 | Website or UI | [Website](docs/md/user-guide/website.md) and [Development](docs/md/development/development.md) | `cd site && bun run ci` |
-| Search configuration | [Search registry](docs/md/user-guide/search-registry.md) | `internships searches` and focused config tests |
+| Search configuration | [Search registry](docs/md/user-guide/search-registry.md) | `opportunities searches` and focused config tests |
 | Database schema or migrations | [Database lifecycle](docs/md/operations/database.md) | Migration consistency and upgrade tests |
 | Documentation only | [Documentation hub](docs/md/README.md) | Documentation checks and `git diff --check` |
 | Docker or deployment | [Docker](docs/md/operations/docker.md) and [Automation](docs/md/operations/automation.md) | Image or Compose checks for the affected path |
@@ -176,14 +176,14 @@ A search contribution must:
 Run:
 
 ```bash
-uv run internships searches
+uv run opportunities searches
 uv run pytest tests/unit/test_config.py
 ```
 
 An authorized maintainer may additionally run one non-persisting preview:
 
 ```bash
-uv run internships search-test <slug>
+uv run opportunities search-test <slug>
 ```
 
 Do not require reviewers or CI to contact LinkedIn.
@@ -305,7 +305,7 @@ Keep:
 - public claims aligned with implemented behavior;
 - examples consistent with authorization and one-writer constraints.
 
-The root README contains one generated internship marker pair. Never edit generated rows manually or include a second complete marker pair in examples.
+The root README contains one generated opportunity marker pair. Never edit generated rows manually or include a second complete marker pair in examples.
 
 For documentation-only changes, run the documentation checks and:
 

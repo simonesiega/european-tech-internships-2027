@@ -20,7 +20,7 @@ on:
         type: boolean
 
 concurrency:
-  group: internship-collection
+  group: opportunity-collection
   cancel-in-progress: false
 
 permissions:
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
-      INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED: ${{ vars.LINKEDIN_CRAWL_AUTHORIZED }}
+      OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED: ${{ vars.LINKEDIN_CRAWL_AUTHORIZED }}
     steps:
       - name: Verify LinkedIn crawl authorization
         if: inputs.deploy_to_vps != true && vars.LINKEDIN_CRAWL_AUTHORIZED != 'true'
@@ -104,7 +104,7 @@ jobs:
           mkdir -p data
           ssh -i "$HOME/.ssh/id_ed25519" -p "$VPS_PORT" -o BatchMode=yes \
             "${VPS_USER}@${VPS_HOST}" \
-            "cat /srv/european-tech-opportunities-27/data/opportunities.db" \
+            "cat /srv/european-tech-opportunities-2027/data/opportunities.db" \
             > data/opportunities.db
           uv run python -c "import sqlite3; db=sqlite3.connect('file:data/opportunities.db?mode=ro', uri=True); result=db.execute('PRAGMA integrity_check').fetchone(); db.close(); assert result == ('ok',), result"
 
@@ -116,12 +116,12 @@ jobs:
       - name: Migrate database
         shell: bash
         run: |
-          if uv run internships db-upgrade; then
+          if uv run opportunities db-upgrade; then
             exit 0
           fi
           if [ "${{ inputs.allow_state_rebuild }}" = "true" ]; then
             rm -f data/opportunities.db data/opportunities.db-*
-            uv run internships db-upgrade
+            uv run opportunities db-upgrade
           else
             echo "Migration failed; use allow_state_rebuild only after backing up state."
             exit 1
@@ -132,7 +132,7 @@ jobs:
         shell: bash
         run: |
           set +e
-          uv run internships scrape
+          uv run opportunities scrape
           code=$?
           set -e
           if [ "$code" -eq 1 ] || [ "$code" -eq 3 ]; then
@@ -143,7 +143,7 @@ jobs:
           fi
 
       - name: Validate database and README
-        run: uv run internships validate
+        run: uv run opportunities validate
       - name: Checkpoint SQLite
         run: uv run python -c "import sqlite3; db=sqlite3.connect('data/opportunities.db'); db.execute('PRAGMA wal_checkpoint(TRUNCATE)'); db.close()"
 
@@ -225,11 +225,11 @@ jobs:
             exit 1
           fi
 
-          remote_dir="/srv/european-tech-opportunities-27/data"
+          remote_dir="/srv/european-tech-opportunities-2027/data"
           remote_database="$remote_dir/opportunities.db"
           remote_previous="$remote_dir/opportunities.db.previous"
-          remote_upload="$remote_dir/.internships-${GITHUB_RUN_ID}.db.upload"
-          remote_lock="/srv/european-tech-opportunities-27/.database-deploy.lock"
+          remote_upload="$remote_dir/.opportunities-${GITHUB_RUN_ID}.db.upload"
+          remote_lock="/srv/european-tech-opportunities-2027/.database-deploy.lock"
 
           database_sha=$(sha256sum data/opportunities.db | cut -d ' ' -f 1)
           ssh_target="${VPS_USER}@${VPS_HOST}"
@@ -260,7 +260,7 @@ jobs:
             cp -p "$DATABASE_FILE" "$PREVIOUS_FILE"
           fi
 
-          chgrp internships-site "$IMPORT_FILE"
+          chgrp opportunities-site "$IMPORT_FILE"
           chmod 660 "$IMPORT_FILE"
           rm -f "${DATABASE_FILE}-wal" "${DATABASE_FILE}-shm" "${DATABASE_FILE}-journal"
           mv "$IMPORT_FILE" "$DATABASE_FILE"

@@ -47,15 +47,15 @@ Prefer one clear source for each setting. Define the same value in several layer
 
 The optional settings YAML is selected in this order:
 
-1. global CLI option `internships --settings <path> <command>`;
-2. process variable `INTERNSHIPS_SETTINGS_FILE`;
-3. `.env` value `INTERNSHIPS_SETTINGS_FILE`;
+1. global CLI option `opportunities --settings <path> <command>`;
+2. process variable `OPPORTUNITIES_SETTINGS_FILE`;
+3. `.env` value `OPPORTUNITIES_SETTINGS_FILE`;
 4. `configs/settings.yml`, when present.
 
 The global option must appear before the subcommand:
 
 ```bash
-uv run internships --settings configs/settings.local.yml stats
+uv run opportunities --settings configs/settings.local.yml stats
 ```
 
 Relative paths resolve from the current working directory. Run commands from the repository root unless every configured path is absolute.
@@ -65,12 +65,12 @@ Relative paths resolve from the current working directory. Run commands from the
 A typical local `.env` contains:
 
 ```dotenv
-INTERNSHIPS_DATABASE_URL=sqlite:///data/opportunities.db
-INTERNSHIPS_README_PATH=README.md
-INTERNSHIPS_SEARCH_CONFIG_DIR=configs/searches
-INTERNSHIPS_CATEGORY_CONFIG_PATH=configs/categories.yml
-INTERNSHIPS_TARGET_CYCLE=2027
-INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED=false
+OPPORTUNITIES_DATABASE_URL=sqlite:///data/opportunities.db
+OPPORTUNITIES_README_PATH=README.md
+OPPORTUNITIES_SEARCH_CONFIG_DIR=configs/searches
+OPPORTUNITIES_CATEGORY_CONFIG_PATH=configs/categories.yml
+OPPORTUNITIES_TARGET_CYCLE=2027
+OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED=false
 ```
 
 `configs/categories.yml` defines separate title keywords for internships and New Grad roles. Accepted employment types are fixed to `internship` and `new-grad`; source-site full-time, part-time, or contract criteria are not published as employment types.
@@ -85,41 +85,41 @@ Do not commit, paste, or attach them to public issues.
 
 | Variable | Default | Validation and behavior |
 |---|---:|---|
-| `INTERNSHIPS_DATABASE_URL` | `sqlite:///data/opportunities.db` | SQLAlchemy URL containing `://` |
-| `INTERNSHIPS_SEARCH_CONFIG_DIR` | `configs/searches` | Recursive YAML search-registry directory |
-| `INTERNSHIPS_CATEGORY_CONFIG_PATH` | `configs/categories.yml` | Classification-rules file |
-| `INTERNSHIPS_README_PATH` | `README.md` | Existing UTF-8 file containing exactly one internship marker pair |
-| `INTERNSHIPS_TARGET_CYCLE` | `2027` | Integer from 2020 through 2100 |
-| `INTERNSHIPS_SETTINGS_FILE` | unset | Selects an optional settings YAML file |
+| `OPPORTUNITIES_DATABASE_URL` | `sqlite:///data/opportunities.db` | SQLAlchemy URL containing `://` |
+| `OPPORTUNITIES_SEARCH_CONFIG_DIR` | `configs/searches` | Recursive YAML search-registry directory |
+| `OPPORTUNITIES_CATEGORY_CONFIG_PATH` | `configs/categories.yml` | Classification-rules file |
+| `OPPORTUNITIES_README_PATH` | `README.md` | Existing UTF-8 file containing exactly one opportunity marker pair |
+| `OPPORTUNITIES_TARGET_CYCLE` | `2027` | Integer from 2020 through 2100 |
+| `OPPORTUNITIES_SETTINGS_FILE` | unset | Selects an optional settings YAML file |
 
 ### Search limits
 
 | Variable | Default | Validation and behavior |
 |---|---:|---|
-| `INTERNSHIPS_SEARCH_MAX_PAGES` | unset | Global override from 1 through 10 pages |
-| `INTERNSHIPS_SEARCH_MAX_RESULTS` | unset | Global override from 1 through 250 and no greater than pages × 25 |
-| `INTERNSHIPS_SEARCH_MAX_RECHECKS` | unset | Global override from 0 through 250 known-job rechecks |
+| `OPPORTUNITIES_SEARCH_MAX_PAGES` | unset | Global override from 1 through 10 pages |
+| `OPPORTUNITIES_SEARCH_MAX_RESULTS` | unset | Global override from 1 through 250 and no greater than pages × 25 |
+| `OPPORTUNITIES_SEARCH_MAX_RECHECKS` | unset | Global override from 0 through 250 known-job rechecks |
 
 ### HTTP transport and safety
 
 | Variable | Default | Validation and behavior |
 |---|---:|---|
-| `INTERNSHIPS_REQUEST_TIMEOUT_SECONDS` | `20` | Overall timeout greater than 0 and at most 120 seconds |
-| `INTERNSHIPS_CONNECT_TIMEOUT_SECONDS` | `10` | Connection timeout greater than 0 and at most 60 seconds |
-| `INTERNSHIPS_MAX_RETRIES` | `3` | Retry count from 0 through 10 |
-| `INTERNSHIPS_RETRY_BACKOFF_SECONDS` | `0.5` | Exponential base delay from 0 through 30 seconds |
-| `INTERNSHIPS_RATE_LIMIT_SECONDS` | `2.0` | Minimum same-host request-start interval from 0 through 60 seconds |
-| `INTERNSHIPS_MAX_CONCURRENCY` | `3` | Concurrent searches and connections from 1 through 16 |
-| `INTERNSHIPS_MAX_RESPONSE_BYTES` | `15000000` | Declared and actual response limit from 10,000 through 100,000,000 bytes |
-| `INTERNSHIPS_USER_AGENT` | project identifier | Identifying request value from 20 through 300 characters |
-| `INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED` | `false` | LinkedIn-request interlock; it does not grant permission |
+| `OPPORTUNITIES_REQUEST_TIMEOUT_SECONDS` | `20` | Overall timeout greater than 0 and at most 120 seconds |
+| `OPPORTUNITIES_CONNECT_TIMEOUT_SECONDS` | `10` | Connection timeout greater than 0 and at most 60 seconds |
+| `OPPORTUNITIES_MAX_RETRIES` | `3` | Retry count from 0 through 10 |
+| `OPPORTUNITIES_RETRY_BACKOFF_SECONDS` | `0.5` | Exponential base delay from 0 through 30 seconds |
+| `OPPORTUNITIES_RATE_LIMIT_SECONDS` | `2.0` | Minimum same-host request-start interval from 0 through 60 seconds |
+| `OPPORTUNITIES_MAX_CONCURRENCY` | `3` | Concurrent searches and connections from 1 through 16 |
+| `OPPORTUNITIES_MAX_RESPONSE_BYTES` | `15000000` | Declared and actual response limit from 10,000 through 100,000,000 bytes |
+| `OPPORTUNITIES_USER_AGENT` | project identifier | Identifying request value from 20 through 300 characters |
+| `OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED` | `false` | LinkedIn-request interlock; it does not grant permission |
 
 ### Lifecycle and logging
 
 | Variable | Default | Validation and behavior |
 |---|---:|---|
-| `INTERNSHIPS_CLOSURE_CONFIRMATION_RUNS` | `2` | Required explicit unavailability confirmations from 1 through 10 |
-| `INTERNSHIPS_LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL` |
+| `OPPORTUNITIES_CLOSURE_CONFIRMATION_RUNS` | `2` | Required explicit unavailability confirmations from 1 through 10 |
+| `OPPORTUNITIES_LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL` |
 
 Environment strings are converted into their declared types by Pydantic. Invalid configuration exits with code `2` before collection begins.
 
@@ -150,7 +150,7 @@ log_level: INFO
 Use a settings file explicitly:
 
 ```bash
-uv run internships --settings configs/settings.local.yml stats
+uv run opportunities --settings configs/settings.local.yml stats
 ```
 
 YAML keys are validated. Unknown fields and invalid values fail before command execution.
@@ -164,9 +164,9 @@ Individual search files contain evidence-based limits. Global overrides exist fo
 Example:
 
 ```dotenv
-INTERNSHIPS_SEARCH_MAX_PAGES=2
-INTERNSHIPS_SEARCH_MAX_RESULTS=50
-INTERNSHIPS_SEARCH_MAX_RECHECKS=10
+OPPORTUNITIES_SEARCH_MAX_PAGES=2
+OPPORTUNITIES_SEARCH_MAX_RESULTS=50
+OPPORTUNITIES_SEARCH_MAX_RECHECKS=10
 ```
 
 Rules:
@@ -214,19 +214,19 @@ Do not increase concurrency, retries, or request limits to bypass throttling, ac
 ### Relative SQLite path
 
 ```dotenv
-INTERNSHIPS_DATABASE_URL=sqlite:///data/opportunities.db
+OPPORTUNITIES_DATABASE_URL=sqlite:///data/opportunities.db
 ```
 
 ### Absolute Linux path
 
 ```dotenv
-INTERNSHIPS_DATABASE_URL=sqlite:////srv/internships/opportunities.db
+OPPORTUNITIES_DATABASE_URL=sqlite:////srv/opportunities/opportunities.db
 ```
 
 ### Absolute Windows path
 
 ```dotenv
-INTERNSHIPS_DATABASE_URL=sqlite:///C:/data/opportunities.db
+OPPORTUNITIES_DATABASE_URL=sqlite:///C:/data/opportunities.db
 ```
 
 The engine creates the parent directory and enables SQLite foreign keys.
@@ -241,7 +241,7 @@ The Next.js website uses two runtime or build variables:
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `INTERNSHIPS_DATABASE_PATH` | `../data/opportunities.db` | Read-only SQLite file used by server requests |
+| `OPPORTUNITIES_DATABASE_PATH` | `../data/opportunities.db` | Read-only SQLite file used by server requests |
 | `SITE_URL` | `http://localhost:3000` | Canonical public origin used by metadata |
 
 Create the local website environment file:
@@ -260,8 +260,8 @@ The production container reads:
 Production uses:
 
 ```dotenv
-SITE_URL=https://internship2027.simonesiega.com
-INTERNSHIPS_DATABASE_PATH=/app/data/opportunities.db
+SITE_URL=https://opportunities2027.simonesiega.com
+OPPORTUNITIES_DATABASE_PATH=/app/data/opportunities.db
 ```
 
 The website must retain read-only database access.
@@ -273,7 +273,7 @@ Authentication, user-provided content, write APIs, or other mutation paths requi
 The local application and Docker pipeline use:
 
 ```text
-INTERNSHIPS_LINKEDIN_CRAWL_AUTHORIZED=true
+OPPORTUNITIES_LINKEDIN_CRAWL_AUTHORIZED=true
 ```
 
 The GitHub nightly, scrape-only, and availability-only workflows use the repository variable:
@@ -329,14 +329,14 @@ Workflow behavior is documented in [Automation](../operations/automation.md#coll
 Verify the effective Python configuration:
 
 ```bash
-uv run internships stats
-uv run internships searches
+uv run opportunities stats
+uv run opportunities searches
 ```
 
 Validate a specific settings YAML:
 
 ```bash
-uv run internships --settings configs/settings.local.yml stats
+uv run opportunities --settings configs/settings.local.yml stats
 ```
 
 A configuration error reports the invalid field or value and exits before network access.

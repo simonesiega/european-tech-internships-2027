@@ -4,7 +4,7 @@ import type {ReactNode} from "react";
 import "./globals.css";
 
 const siteUrl = process.env.SITE_URL ?? "http://localhost:3000";
-const analyticsDomain = "internship2027.simonesiega.com";
+const analyticsDomain = "opportunities2027.simonesiega.com";
 const analyticsEnabled =
   process.env.NODE_ENV === "production" && new URL(siteUrl).hostname === analyticsDomain;
 const title = "European Tech Opportunities 2027";
@@ -57,7 +57,7 @@ export default function RootLayout({children}: Readonly<{children: ReactNode}>) 
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-          storageKey="internships-theme"
+          storageKey="opportunities-theme"
         >
           {children}
         </ThemeProvider>

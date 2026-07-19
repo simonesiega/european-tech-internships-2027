@@ -27,7 +27,7 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 120_000,
     env: {
-      INTERNSHIPS_DATABASE_PATH: testDatabasePath,
+      OPPORTUNITIES_DATABASE_PATH: testDatabasePath,
       SITE_URL: "http://127.0.0.1:3100",
     },
   },

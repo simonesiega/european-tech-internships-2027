@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from opportunities.config.settings import Settings
 from opportunities.database.models import JobRow, JobSearchRow
 from opportunities.database.repository import Repository
-from opportunities.models.enums import EmploymentType, InternshipCategory, JobStatus
+from opportunities.models.enums import EmploymentType, JobStatus, OpportunityCategory
 from opportunities.models.job import DiscoveredJob
 from opportunities.models.search import LinkedInSearchConfig
 from opportunities.pipeline.availability import audit_job_availability
@@ -44,7 +44,7 @@ def test_availability_audit_checks_every_row_deletes_only_explicit_unavailabilit
             title=f"Software Engineering Intern 2027 ({job_id})",
             location="London, UK",
             link=f"https://www.linkedin.com/jobs/view/{job_id}",
-            category=InternshipCategory.SOFTWARE_ENGINEERING,
+            category=OpportunityCategory.SOFTWARE_ENGINEERING,
             employment_type=EmploymentType.INTERNSHIP,
         )
         for job_id in ("1111111111", "2222222222", "3333333333")

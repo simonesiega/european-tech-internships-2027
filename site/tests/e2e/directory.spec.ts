@@ -104,7 +104,7 @@ test("paginates results and persists the selected theme", async ({page}) => {
   await page.getByRole("button", {name: "Toggle color theme"}).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect
-    .poll(() => page.evaluate(() => localStorage.getItem("internships-theme")))
+    .poll(() => page.evaluate(() => localStorage.getItem("opportunities-theme")))
     .toBe("dark");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
