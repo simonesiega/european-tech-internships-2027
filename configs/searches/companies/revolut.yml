@@ -1,0 +1,15 @@
+name: Revolut European technology internships and New Grad roles
+slug: company-revolut
+keywords: 'Revolut (intern OR "new grad" OR graduate OR "early career" OR "entry level")'
+location: Europe
+geo_id: "91000000"
+company_names:
+  - Revolut
+workplace: any
+date_posted: cycle
+max_pages: 3
+max_results: 75
+max_rechecks: 15
+enabled: true
+verified_at: 2026-07-19
+notes: High-yield employer path for the current European internship and graduate programme.

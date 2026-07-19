@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import math
 import re
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -123,7 +124,12 @@ class LinkedInScrapeResult:
     confirmed_unavailable_ids: tuple[str, ...] = ()
 
 
-def build_search_url(search: LinkedInSearchConfig, *, start: int) -> str:
+def build_search_url(
+    search: LinkedInSearchConfig,
+    *,
+    start: int,
+    observed_at: datetime | None = None,
+) -> str:
     """Build a bounded LinkedIn guest-search URL."""
     parameters: list[tuple[str, str]] = [
         ("keywords", search.keywords),
@@ -132,7 +138,11 @@ def build_search_url(search: LinkedInSearchConfig, *, start: int) -> str:
     if search.geo_id:
         parameters.append(("geoId", search.geo_id))
     parameters.append(("start", str(start)))
-    if search.date_posted != "any":
+    if search.date_posted == "cycle":
+        age = ensure_utc(observed_at or utc_now()) - MINIMUM_POSTED_AT
+        seconds = max(1, math.ceil(age.total_seconds()))
+        parameters.append(("f_TPR", f"r{seconds}"))
+    elif search.date_posted != "any":
         parameters.append(("f_TPR", _DATE_POSTED_PARAMETERS[search.date_posted]))
     if search.workplace != "any":
         parameters.append(("f_WT", _WORKPLACE_PARAMETERS[search.workplace]))
@@ -302,7 +312,13 @@ class LinkedInScraper:
         pages_fetched = 0
 
         for page in range(search.max_pages):
-            html = await fetcher.get_text(build_search_url(search, start=page * LINKEDIN_PAGE_SIZE))
+            html = await fetcher.get_text(
+                build_search_url(
+                    search,
+                    start=page * LINKEDIN_PAGE_SIZE,
+                    observed_at=observed_at,
+                )
+            )
             pages_fetched += 1
             parsed = parse_search_page(html)
             warnings.extend(parsed.warnings)

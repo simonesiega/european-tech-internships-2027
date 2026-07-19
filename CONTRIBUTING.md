@@ -165,7 +165,8 @@ A search contribution must:
 - use the correct role, company, or country directory;
 - keep a stable, unique lowercase kebab-case slug;
 - use an effective query identity not already present;
-- include the standard internship and New Grad query terms plus `2027`;
+- include the standard internship and New Grad query terms without a year restriction;
+- use the dynamic `cycle` posting filter to cover every listing since May 1, 2026;
 - use exact normalized company names for employer searches;
 - avoid invented geography IDs;
 - start with the smallest defensible request tier;

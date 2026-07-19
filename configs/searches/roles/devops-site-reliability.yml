@@ -1,11 +1,11 @@
 name: European DevOps and site-reliability internships and New Grad roles 2027
 slug: devops-site-reliability
-keywords: 'devops (intern OR "new grad" OR graduate OR "early career" OR "entry level") 2027'
+keywords: 'devops (intern OR "new grad" OR graduate OR "early career" OR "entry level")'
 location: Europe
 geo_id: "91000000"
 company_names: []
 workplace: any
-date_posted: any
+date_posted: cycle
 max_pages: 3
 max_results: 75
 max_rechecks: 15

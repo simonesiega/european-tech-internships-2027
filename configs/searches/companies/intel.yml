@@ -1,13 +1,13 @@
 name: Intel European technology internships and New Grad roles 2027
 slug: company-intel
-keywords: 'Intel (intern OR "new grad" OR graduate OR "early career" OR "entry level") 2027'
+keywords: 'Intel (intern OR "new grad" OR graduate OR "early career" OR "entry level")'
 location: Europe
 geo_id: "91000000"
 company_names:
   - Intel Corporation
   - Intel
 workplace: any
-date_posted: any
+date_posted: cycle
 max_pages: 2
 max_results: 50
 max_rechecks: 10

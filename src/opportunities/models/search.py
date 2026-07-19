@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 from opportunities.utils.text import clean_text, normalized_key
 
-DatePosted = Literal["any", "day", "week", "month"]
+DatePosted = Literal["any", "day", "week", "month", "cycle"]
 WorkplaceFilter = Literal["any", "on-site", "remote", "hybrid"]
 
 

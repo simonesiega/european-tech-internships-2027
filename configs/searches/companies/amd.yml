@@ -1,12 +1,12 @@
 name: AMD European technology internships and New Grad roles 2027
 slug: company-amd
-keywords: 'AMD (intern OR "new grad" OR graduate OR "early career" OR "entry level") 2027'
+keywords: 'AMD (intern OR "new grad" OR graduate OR "early career" OR "entry level")'
 location: Europe
 geo_id: "91000000"
 company_names:
   - AMD
 workplace: any
-date_posted: any
+date_posted: cycle
 max_pages: 2
 max_results: 50
 max_rechecks: 10

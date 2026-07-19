@@ -17,7 +17,7 @@ ROOT = find_project_root(Path(__file__))
 def test_production_search_registry_is_bounded_and_scope_specific() -> None:
     search_root = ROOT / "configs" / "searches"
     searches = load_search_registry(search_root)
-    assert len(searches) == 69
+    assert len(searches) == 89
     assert {path.parent.name for path in search_root.rglob("*.yml")} == {
         "roles",
         "companies",
@@ -28,7 +28,10 @@ def test_production_search_registry_is_bounded_and_scope_specific() -> None:
     assert role_names <= category_names
     assert all(search.enabled for search in searches)
     for search in searches:
-        assert "2027" in search.keywords
+        # Discovery covers the complete cycle window. Explicit years are resolved
+        # from detail pages, where conflicting 2025/2026 roles are rejected.
+        assert "2027" not in search.keywords
+        assert search.date_posted == "cycle"
         assert "intern" in search.keywords.casefold()
         assert "new grad" in search.keywords.casefold()
         assert "graduate" in search.keywords.casefold()

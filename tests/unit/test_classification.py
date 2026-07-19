@@ -96,6 +96,7 @@ def test_canonical_2025_2026_graduate_listing_is_rejected(
             "teams around the world."
         ),
         locations=["EMEA"],
+        posted_at=datetime(2026, 7, 13, tzinfo=UTC),
     )
 
     assert not result.include

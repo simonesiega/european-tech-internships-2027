@@ -172,6 +172,18 @@ def test_linkedin_scraper_paginates_and_deduplicates_job_ids(
     assert job_without_industries.industries is None
 
 
+def test_cycle_search_url_covers_every_posting_since_may_cutoff() -> None:
+    search = configured_search(date_posted="cycle")
+
+    url = build_search_url(
+        search,
+        start=0,
+        observed_at=datetime(2026, 7, 20, tzinfo=UTC),
+    )
+
+    assert "f_TPR=r6912000" in url
+
+
 def test_title_prefilter_selects_new_grad_cards() -> None:
     search = configured_search(max_pages=1, max_results=25)
     job_id = "4444444444"

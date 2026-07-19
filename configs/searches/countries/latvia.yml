@@ -1,10 +1,10 @@
 name: Latvia broad technology internships and New Grad roles 2027
 slug: country-latvia
-keywords: 'technology (intern OR "new grad" OR graduate OR "early career" OR "entry level") 2027'
+keywords: 'technology (intern OR "new grad" OR graduate OR "early career" OR "entry level")'
 location: Latvia
 company_names: []
 workplace: any
-date_posted: any
+date_posted: cycle
 max_pages: 1
 max_results: 25
 max_rechecks: 5

@@ -1,0 +1,15 @@
+name: Booking.com European technology internships and New Grad roles
+slug: company-booking-com
+keywords: 'Booking.com (intern OR "new grad" OR graduate OR "early career" OR "entry level")'
+location: Europe
+geo_id: "91000000"
+company_names:
+  - Booking.com
+workplace: any
+date_posted: cycle
+max_pages: 1
+max_results: 25
+max_rechecks: 5
+enabled: true
+verified_at: 2026-07-19
+notes: Initial targeted path for European early-career technology hiring.

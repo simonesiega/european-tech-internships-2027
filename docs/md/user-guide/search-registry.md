@@ -35,7 +35,7 @@ The loader scans `configs/searches/` recursively:
 ```text
 configs/searches/
 ├── roles/       # 23 technology paths
-├── companies/   # 13 targeted employers
+├── companies/   # 33 targeted employers
 └── countries/   # 33 country partitions
 ```
 
@@ -62,12 +62,12 @@ Example role search:
 ```yaml
 name: European software testing internships and New Grad roles 2027
 slug: software-testing
-keywords: 'software test (intern OR "new grad" OR graduate OR "early career" OR "entry level") 2027'
+keywords: 'software test (intern OR "new grad" OR graduate OR "early career" OR "entry level")'
 location: Europe
 geo_id: "91000000"
 company_names: []
 workplace: any
-date_posted: any
+date_posted: cycle
 max_pages: 3
 max_results: 75
 max_rechecks: 15
@@ -85,7 +85,7 @@ notes: Medium role tier covering QA and test automation.
 | `geo_id` | Numeric string or `null` | Optional independently verified LinkedIn geography ID |
 | `company_names` | List of strings | Exact normalized employer allowlist |
 | `workplace` | `any`, `on-site`, `remote`, `hybrid` | Optional workplace filter |
-| `date_posted` | `any`, `day`, `week`, `month` | Optional listing-age filter |
+| `date_posted` | `any`, `day`, `week`, `month`, `cycle` | Listing-age filter; `cycle` dynamically covers every posting since May 1, 2026 |
 | `max_pages` | Integer, 1–10 | Maximum number of 25-card result pages |
 | `max_results` | Integer, 1–250 | Maximum eligible detail candidates; no greater than pages × 25 |
 | `max_rechecks` | Integer, 0–250 | Absent known jobs that may receive bounded detail rechecks |
@@ -114,7 +114,8 @@ Conventions:
 
 - filenames and slugs remain stable lowercase kebab-case;
 - role filenames map to `InternshipCategory`;
-- keywords request both internship and New Grad terminology and include `2027`;
+- every query requests both internship and New Grad terminology without requiring a year;
+- every production search uses the dynamic `cycle` posting filter, covering May 1, 2026 through collection time;
 - employer searches use exact normalized `company_names`;
 - country searches use explicit country location text;
 - numeric geography IDs are never invented;
@@ -167,7 +168,7 @@ Collection stops when:
 
 A page containing cards but no title-explicit internship or New Grad matches does **not** stop pagination.
 
-Before detail requests, cards pass two low-cost checks:
+Before detail requests, search cards pass two low-cost checks:
 
 1. exact normalized employer allowlist matching, when configured;
 2. explicit internship or New Grad terminology in the title.
@@ -205,7 +206,7 @@ Global diagnostic overrides belong to [Configuration](../getting-started/configu
 
 1. Create `configs/searches/roles/<slug>.yml`.
 2. Choose one coherent technology discipline.
-3. Include the standard internship/New Grad Boolean terms and `2027` in `keywords`.
+3. Include the standard internship/New Grad Boolean terms without a year restriction.
 4. Use the verified Europe geography configuration for Europe-wide discovery.
 5. Start with the smallest defensible tier.
 6. Explain role scope and tuning in `notes`.
@@ -232,6 +233,7 @@ Requirements:
 
 - prefix the slug with `company-`;
 - use broad but explicit keywords that include both internship and New Grad terms;
+- omit `2027` so current yearless vacancies are discoverable, and use `date_posted: cycle` to cover the complete May 1 publication window;
 - list legitimate LinkedIn employer-name variants in `company_names`;
 - retain exact matching after normalization;
 - do not use substring matching;
@@ -242,14 +244,14 @@ Example:
 ```yaml
 name: Amazon internships and New Grad roles 2027
 slug: company-amazon
-keywords: 'Amazon (intern OR "new grad" OR graduate OR "early career" OR "entry level") 2027'
+keywords: 'Amazon (intern OR "new grad" OR graduate OR "early career" OR "entry level")'
 location: Europe
 geo_id: "91000000"
 company_names:
   - Amazon
   - Amazon Web Services
 workplace: any
-date_posted: any
+date_posted: cycle
 max_pages: 2
 max_results: 50
 max_rechecks: 10
@@ -258,7 +260,7 @@ verified_at: 2026-07-17
 notes: Targeted employer discovery with exact normalized company matching.
 ```
 
-The allowlist restricts discovery. It does not bypass classification.
+The allowlist restricts discovery. It does not bypass classification. Listings must be discovered from search results and pass every publication check.
 
 ## Add a country search
 
@@ -273,7 +275,7 @@ Requirements:
 - prefix the slug with `country-`;
 - use the explicit country name as `location`;
 - omit `geo_id` unless independently verified;
-- include both internship and New Grad terminology plus `2027`;
+- include both internship and New Grad terminology without a year restriction;
 - start unobserved or low-volume countries at the minimal tier;
 - avoid claiming complete national coverage.
 
@@ -282,12 +284,12 @@ Example:
 ```yaml
 name: Portugal technology internships and New Grad roles 2027
 slug: country-portugal
-keywords: 'software (intern OR "new grad" OR graduate OR "early career" OR "entry level") 2027'
+keywords: 'software (intern OR "new grad" OR graduate OR "early career" OR "entry level")'
 location: Portugal
 geo_id: null
 company_names: []
 workplace: any
-date_posted: any
+date_posted: cycle
 max_pages: 1
 max_results: 25
 max_rechecks: 5

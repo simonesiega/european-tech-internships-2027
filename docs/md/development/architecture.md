@@ -129,7 +129,7 @@ Classification checks require explicit evidence for:
 - the target opportunity cycle;
 - a European location.
 
-Graduation-year eligibility language is not internship-cycle evidence. For title-explicit New Grad roles, a title year identifies the hiring cycle. Malformed or ambiguous candidates are excluded without failing unrelated candidates.
+Graduation-year eligibility language is not internship-cycle evidence. For title-explicit New Grad roles, a title or contextual opportunity year identifies the hiring cycle, so explicit 2025 or 2026 roles are rejected. Malformed or ambiguous candidates are excluded without failing unrelated candidates.
 
 Search schema and pagination rules are documented in the [search registry guide](../user-guide/search-registry.md).
 

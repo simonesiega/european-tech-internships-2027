@@ -1,13 +1,13 @@
 name: Amazon European technology internships and New Grad roles 2027
 slug: company-amazon
-keywords: 'Amazon (intern OR "new grad" OR graduate OR "early career" OR "entry level") 2027'
+keywords: 'Amazon (intern OR "new grad" OR graduate OR "early career" OR "entry level")'
 location: Europe
 geo_id: "91000000"
 company_names:
   - Amazon
   - Amazon Web Services (AWS)
 workplace: any
-date_posted: any
+date_posted: cycle
 max_pages: 3
 max_results: 75
 max_rechecks: 15
