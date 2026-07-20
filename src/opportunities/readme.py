@@ -34,12 +34,14 @@ def render_readme(path: Path, jobs: list[StoredJob], metadata: ReadmeMetadata) -
     if not path.is_file():
         raise ValueError(f"README does not exist: {path}")
     content = path.read_text(encoding="utf-8")
-    begin, end = _marker_bounds(content)
-    summary_begin, summary_end = _marker_bounds(
-        content, SUMMARY_BEGIN_MARKER, SUMMARY_END_MARKER
-    )
+    summary_begin, summary_end = _marker_bounds(content, SUMMARY_BEGIN_MARKER, SUMMARY_END_MARKER)
     internship_count, new_grad_count = _type_counts(jobs)
-    summary = opportunity_count_cards(metadata.open_positions, internship_count, new_grad_count)
+    summary = opportunity_count_cards(
+        metadata.open_positions,
+        internship_count,
+        new_grad_count,
+        metadata.last_successful_collection,
+    )
     content = (
         content[:summary_begin]
         + SUMMARY_BEGIN_MARKER
@@ -76,14 +78,29 @@ def markdown_block(jobs: list[StoredJob], metadata: ReadmeMetadata) -> str:
     )
 
 
-def opportunity_count_cards(total: int, internships: int, new_grad: int) -> str:
-    """Build three colored, generated count cards for the README header."""
+def opportunity_count_cards(
+    total: int,
+    internships: int,
+    new_grad: int,
+    last_successful_collection: datetime | None,
+) -> str:
+    """Build the generated update and count cards for the README header."""
+    updated_text = (
+        _format_collection_time(last_successful_collection)
+        if last_successful_collection is not None
+        else "Never"
+    )
     return (
         '<p align="center">\n'
-        f'  <img src="https://img.shields.io/badge/Total%20opportunities-{total}-2563eb?style=for-the-badge" alt="Total opportunities: {total}" />\n'
-        f'  <img src="https://img.shields.io/badge/Internships-{internships}-16a34a?style=for-the-badge" alt="Internships: {internships}" />\n'
-        f'  <img src="https://img.shields.io/badge/New%20Grad-{new_grad}-9333ea?style=for-the-badge" alt="New Grad opportunities: {new_grad}" />\n'
-        '</p>\n'
+        f"  <strong>Last updated: {updated_text}</strong><br>\n"
+        '  <img src="https://img.shields.io/badge/Total%20opportunities-'
+        f'{total}-2563eb?style=for-the-badge" alt="Total opportunities: {total}" />\n'
+        '  <img src="https://img.shields.io/badge/Internships-'
+        f'{internships}-16a34a?style=for-the-badge" alt="Internships: {internships}" />\n'
+        '  <img src="https://img.shields.io/badge/New%20Grad-'
+        f'{new_grad}-9333ea?style=for-the-badge" '
+        f'alt="New Grad opportunities: {new_grad}" />\n'
+        "</p>\n"
     )
 
 
@@ -159,11 +176,12 @@ def validate_readme(
     block = content[begin + len(BEGIN_MARKER) : end].strip()
     if jobs is not None and metadata is not None:
         internship_count, new_grad_count = _type_counts(jobs)
-        summary = content[
-            summary_begin + len(SUMMARY_BEGIN_MARKER) : summary_end
-        ].strip()
+        summary = content[summary_begin + len(SUMMARY_BEGIN_MARKER) : summary_end].strip()
         expected_summary = opportunity_count_cards(
-            metadata.open_positions, internship_count, new_grad_count
+            metadata.open_positions,
+            internship_count,
+            new_grad_count,
+            metadata.last_successful_collection,
         ).strip()
         if summary != expected_summary:
             errors.append("README opportunity count cards do not match open jobs in SQLite")

@@ -6,6 +6,7 @@
 
 <!-- BEGIN OPPORTUNITY COUNTS -->
 <p align="center">
+  <strong>Last updated: July 20, 2026 at 13:06 UTC</strong><br>
   <img src="https://img.shields.io/badge/Total%20opportunities-416-2563eb?style=for-the-badge" alt="Total opportunities: 416" />
   <img src="https://img.shields.io/badge/Internships-241-16a34a?style=for-the-badge" alt="Internships: 241" />
   <img src="https://img.shields.io/badge/New%20Grad-175-9333ea?style=for-the-badge" alt="New Grad opportunities: 175" />
