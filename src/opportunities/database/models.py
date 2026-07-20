@@ -44,7 +44,15 @@ class SearchRunRow(Base):
     error_code: Mapped[str | None] = mapped_column(String(100))
     error_message: Mapped[str | None] = mapped_column(String(500))
 
-    __table_args__ = (Index("ix_search_runs_latest", "search_slug", "finished_at"),)
+    __table_args__ = (
+        CheckConstraint("status IN ('success', 'failed')", name="ck_search_runs_status"),
+        CheckConstraint("duration_ms >= 0", name="ck_search_runs_duration_ms_nonnegative"),
+        CheckConstraint("found_count >= 0", name="ck_search_runs_found_count_nonnegative"),
+        CheckConstraint("accepted_count >= 0", name="ck_search_runs_accepted_count_nonnegative"),
+        CheckConstraint("excluded_count >= 0", name="ck_search_runs_excluded_count_nonnegative"),
+        CheckConstraint("warning_count >= 0", name="ck_search_runs_warning_count_nonnegative"),
+        Index("ix_search_runs_latest", "search_slug", "finished_at"),
+    )
 
 
 class JobRow(Base):
@@ -71,6 +79,8 @@ class JobRow(Base):
             "employment_type IN ('internship', 'new-grad')",
             name="ck_jobs_employment_type",
         ),
+        CheckConstraint("status IN ('open', 'closed')", name="ck_jobs_status"),
+        CheckConstraint("last_seen_at >= first_seen_at", name="ck_jobs_seen_at_order"),
         Index("ix_jobs_readme", "status", "company", "title"),
     )
 
@@ -93,3 +103,14 @@ class JobSearchRow(Base):
     )
     unavailable_confirmations: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, index=True)
+
+    __table_args__ = (
+        CheckConstraint(
+            "unavailable_confirmations >= 0",
+            name="ck_job_searches_unavailable_confirmations_nonnegative",
+        ),
+        CheckConstraint(
+            "last_seen_at >= first_seen_at",
+            name="ck_job_searches_seen_at_order",
+        ),
+    )

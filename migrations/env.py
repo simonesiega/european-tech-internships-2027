@@ -40,14 +40,23 @@ def run_migrations_online() -> None:
         poolclass=pool.NullPool,
     )
 
-    # Enable foreign key constraints for SQLite databases.
     with connectable.connect() as connection:
-        if connection.dialect.name == "sqlite":
-            connection.exec_driver_sql("PRAGMA foreign_keys=ON")
+        is_sqlite = connection.dialect.name == "sqlite"
+        if is_sqlite:
+            # SQLite table-rebuilding migrations cannot safely run while foreign keys
+            # are enabled: dropping a referenced table can cascade-delete child rows.
+            connection.exec_driver_sql("PRAGMA foreign_keys=OFF")
             connection.commit()
         context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)
         with context.begin_transaction():
             context.run_migrations()
+        if is_sqlite:
+            violations = connection.exec_driver_sql("PRAGMA foreign_key_check").fetchall()
+            connection.commit()
+            if violations:
+                raise RuntimeError(f"SQLite foreign key violations after migration: {violations!r}")
+            connection.exec_driver_sql("PRAGMA foreign_keys=ON")
+            connection.commit()
 
 
 # Determine whether to run migrations in offline or online mode
