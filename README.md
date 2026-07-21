@@ -6,10 +6,10 @@
 
 <!-- BEGIN OPPORTUNITY COUNTS -->
 <p align="center">
-  <strong>Last updated: July 20, 2026 at 13:06 UTC</strong><br>
-  <img src="https://img.shields.io/badge/Total%20opportunities-416-2563eb?style=for-the-badge" alt="Total opportunities: 416" />
+  <strong>Last updated: July 21, 2026 at 06:33 UTC</strong><br>
+  <img src="https://img.shields.io/badge/Total%20opportunities-417-2563eb?style=for-the-badge" alt="Total opportunities: 417" />
   <img src="https://img.shields.io/badge/Internships-241-16a34a?style=for-the-badge" alt="Internships: 241" />
-  <img src="https://img.shields.io/badge/New%20Grad-175-9333ea?style=for-the-badge" alt="New Grad opportunities: 175" />
+  <img src="https://img.shields.io/badge/New%20Grad-176-9333ea?style=for-the-badge" alt="New Grad opportunities: 176" />
 </p>
 <!-- END OPPORTUNITY COUNTS -->
 
@@ -110,17 +110,18 @@ Browse every internship and New Grad listing currently marked open at [opportuni
 The repository shows only the latest ten positions of each employment type so the landing page remains readable as canonical state grows.
 
 <!-- BEGIN OPPORTUNITIES -->
-**Open positions:** 416 (Internships: 241 · New Grad: 175)<br>
-**Last successful collection:** July 20, 2026 at 13:06 UTC
+**Open positions:** 417 (Internships: 241 · New Grad: 176)<br>
+**Last successful collection:** July 21, 2026 at 06:33 UTC
 
 Browse and filter the complete directory at **[https://opportunities2027.simonesiega.com/](https://opportunities2027.simonesiega.com/)**.
 
 ### Latest New Grad positions
 
-Showing the 10 most recently posted of 175 open New Grad positions:
+Showing the 10 most recently posted of 176 open New Grad positions:
 
 | Company | Title | Location | Listing |
 |---|---|---|---|
+| IMC Trading | Graduate Software Engineer \(Digital Assets\) | Zug, Zug, Switzerland | [View](<https://www.linkedin.com/jobs/view/4442067662>) |
 | Bending Spoons | Graduate data scientist | Paris, Île-de-France, France | [View](<https://www.linkedin.com/jobs/view/4442010651>) |
 | Bending Spoons | Graduate data scientist | Rome, Latium, Italy | [View](<https://www.linkedin.com/jobs/view/4442022266>) |
 | Bending Spoons | Graduate data scientist | France | [View](<https://www.linkedin.com/jobs/view/4442016497>) |
@@ -130,7 +131,6 @@ Showing the 10 most recently posted of 175 open New Grad positions:
 | Bending Spoons | Graduate data scientist | Milan, Lombardy, Italy | [View](<https://www.linkedin.com/jobs/view/4441791785>) |
 | Bending Spoons | Graduate data scientist | Barcelona, Catalonia, Spain | [View](<https://www.linkedin.com/jobs/view/4441784965>) |
 | Bending Spoons | Graduate data scientist | Madrid, Community of Madrid, Spain | [View](<https://www.linkedin.com/jobs/view/4441782968>) |
-| Bending Spoons | Graduate data scientist | Pisa, Tuscany, Italy | [View](<https://www.linkedin.com/jobs/view/4441797524>) |
 
 ### Latest internships
 
@@ -139,7 +139,7 @@ Showing the 10 most recently posted of 241 open internships:
 | Company | Title | Location | Listing |
 |---|---|---|---|
 | IGEL Technology | Working Student/Intern, Quality Assurance \(m/f/d\) | Bucharest, Bucharest, Romania | [View](<https://www.linkedin.com/jobs/view/4442068468>) |
-| Dassault Systèmes | DevOps Engineer Intern | Cracow, Małopolskie, Poland | [View](<https://www.linkedin.com/jobs/view/4442710159>) |
+| Medidata Solutions | DevOps Engineer Intern | Cracow, Małopolskie, Poland | [View](<https://www.linkedin.com/jobs/view/4442710159>) |
 | Toyota Motor Europe | Data Science internship | Evere, Brussels Region, Belgium | [View](<https://www.linkedin.com/jobs/view/4433637570>) |
 | onsemi | INTERN | Bratislava, Bratislava, Slovakia | [View](<https://www.linkedin.com/jobs/view/4440124621>) |
 | NXP Semiconductors | Web Application Developer Intern | Sibiu, Sibiu, Romania | [View](<https://www.linkedin.com/jobs/view/4395383181>) |
